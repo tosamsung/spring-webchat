@@ -1,0 +1,78 @@
+import React from "react";
+import { NavLink, Outlet } from "react-router-dom";
+function Layout() {
+  const showNavbar = () => {
+    const toggle = document.getElementById("header-toggle"),
+      nav = document.getElementById("nav-bar"),
+      bodypd = document.getElementById("body-pd"),
+      headerpd = document.getElementById("header");
+
+    // Validate that all variables exist
+    if (nav && bodypd && headerpd) {
+      // show navbar
+      nav.classList.toggle("show");
+      // change icon
+      toggle.classList.toggle("fa-circle-xmark");
+      // add padding to body
+      bodypd.classList.toggle("body-pd");
+      // add padding to header
+      // headerpd.classList.toggle('body-pd')
+    }
+  };
+
+  return (
+    <>
+          <link rel="stylesheet" href="css/layout.css"/>
+
+      <header className="header d-flex" id="header">
+        <div className="header_toggle d-inline-block">
+          <i
+            className="fa-solid fa-bars text-white fs-2"
+            id="header-toggle"
+            onClick={() => {
+              showNavbar();
+            }}
+          />
+        </div>
+        <div className="d-inline-block d-flex justify-content-end p-2 bg-light rounded-2 btn">
+          <img
+            src="https://i.pinimg.com/736x/f9/4f/e3/f94fe3bd5ff54e08ee5e9e352384ca14.jpg"
+            className="rounded-circle user-img img-fluid "
+            alt="Mô tả ảnh"
+          />
+          <p className="m-0 px-2">User A</p>
+        </div>
+      </header>
+      <div className="l-navbar" id="nav-bar">
+        <nav className="nav">
+          <div>
+            <NavLink to="/" className="nav_logo">
+              <i className="bx bx-layer nav_logo-icon" />
+              <span className="nav_logo-name">WebChat</span>
+            </NavLink>
+            <div className="nav_list">
+              <NavLink href="/chats" className="nav_link">
+                <i className="bx bx-conversation nav_icon" />
+                <span className="nav_name">Chats</span>
+              </NavLink>
+              <NavLink href="#" className="nav_link">
+                <i className="bx bx-user nav_icon" />
+                <span className="nav_name">Users</span> {/* chỉnh lại active */}
+              </NavLink>
+            </div>
+          </div>
+          <a href="#" className="nav_link">
+            <i className="bx bx-log-out nav_icon" />
+            <span className="nav_name">SignOut</span>
+          </a>
+        </nav>
+      </div>
+      {/*Container Main start*/}
+      <div className="container-fluid ">
+        <Outlet></Outlet>
+      </div>
+      {/*Container Main end*/}
+    </>
+  );
+}
+export default Layout;
