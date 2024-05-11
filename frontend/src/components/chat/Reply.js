@@ -8,10 +8,10 @@ function Reply() {
             
             src="https://www.youtube.com/embed/oTIJunBa6MA?si=9c3vjGwI0IeFZBoU"
             title="YouTube video player"
-            frameborder="0"
+            className="img-fluid"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
           ></iframe>
         </p>
         {/* <p className="d-inline-block chat-content-image p-2 m-0 rounded-3">

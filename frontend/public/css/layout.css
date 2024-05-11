@@ -34,6 +34,7 @@ body{
     background-color:rgb(67, 132, 245);
     z-index: var(--z-fixed);
     transition: .5s
+    
 }
 .header .user-img{
     max-width: 30px;
@@ -116,7 +117,9 @@ body{
 .nav_link:hover {
     color: var(--white-color)
 }
-
+.user{
+    max-width: 115px;
+}
 .nav_icon {
     font-size: 1.25rem
 }
@@ -126,7 +129,7 @@ body{
 }
 
 .body-pd {
-    padding-left: calc(var(--nav-width) + 1rem)
+    padding-left: calc(var(--nav-width) + 0rem)
 }
 
 .active {
