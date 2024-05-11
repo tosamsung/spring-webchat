@@ -4,6 +4,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.duanWebChat.WebChatApplication.entity.message.Message;
 
-public interface MessageRepository extends MongoRepository<Message, Integer>{
+public interface MessageRepository extends MongoRepository<Message, Long>{
 
 }

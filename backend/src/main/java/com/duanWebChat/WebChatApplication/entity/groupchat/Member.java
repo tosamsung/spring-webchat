@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
-	private Integer id;
+	private Long id;
 	private String name;
 	private String image;
 	private Date joinDate;

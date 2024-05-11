@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Friend {
-	private Integer id;
+	private Long id;
 	private String name;
 	private String image;
 }

@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User {
 	@Id
-	private Integer id;
+	private Long id;
 	private String lastName;
 	private String firstName;
 	private String userName;
