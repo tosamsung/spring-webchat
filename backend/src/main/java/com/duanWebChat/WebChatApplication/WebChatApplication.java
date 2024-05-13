@@ -19,5 +19,5 @@ public class WebChatApplication {
 //		String[] beanNames = context.getBeanDefinitionNames();
 //        Arrays.stream(beanNames).forEach(System.out::println);
 	}
-
+	
 }

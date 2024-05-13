@@ -1,6 +1,16 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import UserService from "../Service/UserService";
 function Layout() {
+  const handleLogout = () => {
+    const confirm = window.confirm(
+      "Are you sure you want to logout this user?"
+    );
+    if (confirm) {
+      UserService.logout();
+    }
+  };
+
   const showNavbar = () => {
     const toggle = document.getElementById("header-toggle"),
       nav = document.getElementById("nav-bar"),
@@ -48,7 +58,7 @@ function Layout() {
       <div className="l-navbar" id="nav-bar">
         <nav className="nav">
           <div>
-            <NavLink to="/" className="nav_logo">
+            <NavLink to="/chats" className="nav_logo">
               <i className="bx bx-layer nav_logo-icon" />
               <span className="nav_logo-name">WebChat</span>
             </NavLink>
@@ -63,10 +73,10 @@ function Layout() {
               </NavLink>
             </div>
           </div>
-          <a href="#" className="nav_link">
+          <NavLink to="/" className="nav_link" onClick={handleLogout}>
             <i className="bx bx-log-out nav_icon" />
             <span className="nav_name">SignOut</span>
-          </a>
+          </NavLink>
         </nav>
       </div>
       {/*Container Main start*/}

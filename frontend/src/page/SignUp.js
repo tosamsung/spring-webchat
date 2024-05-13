@@ -1,5 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import UserService from "../Service/UserService";
+import { toast } from "react-toastify";
+
 function Signup() {
+  const Navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+    birthDate: "",
+    gender: "",
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {
+      firstName,
+      lastName,
+      userName,
+      email,
+      password,
+      birthDate,
+      gender,
+    } = formData;
+
+    // Kiểm tra các trường có được nhập đầy đủ hay không
+    if (
+      !firstName ||
+      !lastName ||
+      !userName ||
+      !email ||
+      !password ||
+      !birthDate ||
+      !gender
+    ) {
+      toast.error("All fields are required.");
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      await UserService.register(formData, token);
+
+      setFormData({
+        firstName: "",
+        lastName: "",
+        userName: "",
+        email: "",
+        password: "",
+        birthDate: "",
+        gender: "",
+      });
+      toast.success("User registerd successfully");
+      Navigate("/signIn");
+    } catch (error) {
+      console.error("Error registering user", error);
+      alert("An error occurred while registering user");
+    }
+  };
+
   return (
     <>
       <link rel="stylesheet" href="css/sign-up.css" />
@@ -20,20 +87,52 @@ function Signup() {
                     <h2 className="text-uppercase text-center mb-5">
                       Create an account
                     </h2>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
+                          name="firstName"
+                          value={formData.firstName}
+                          onChange={handleInputChange}
                           type="text"
                           id="form3Example1cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example1cg">
-                          Your Name
+                          First Name
+                        </label>
+                      </div>
+                      <div data-mdb-input-init className="form-outline mb-4">
+                        <input
+                          name="lastName"
+                          value={formData.lastName}
+                          onChange={handleInputChange}
+                          type="text"
+                          id="form3Example1cg"
+                          className="form-control form-control-lg"
+                        />
+                        <label className="form-label" htmlFor="form3Example1cg">
+                          Last Name
+                        </label>
+                      </div>
+                      <div data-mdb-input-init className="form-outline mb-4">
+                        <input
+                          name="userName"
+                          value={formData.userName}
+                          onChange={handleInputChange}
+                          type="text"
+                          id="form3Example1cg"
+                          className="form-control form-control-lg"
+                        />
+                        <label className="form-label" htmlFor="form3Example1cg">
+                          User Name
                         </label>
                       </div>
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
                           id="form3Example3cg"
                           className="form-control form-control-lg"
                         />
@@ -41,8 +140,12 @@ function Signup() {
                           Your Email
                         </label>
                       </div>
+
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
+                          name="password"
+                          value={formData.password}
+                          onChange={handleInputChange}
                           type="password"
                           id="form3Example4cg"
                           className="form-control form-control-lg"
@@ -51,19 +154,38 @@ function Signup() {
                           Password
                         </label>
                       </div>
+
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
-                          type="password"
-                          id="form3Example4cdg"
+                          name="birthDate"
+                          value={formData.birthDate}
+                          onChange={handleInputChange}
+                          type="date"
+                          id="form3Example4cg"
                           className="form-control form-control-lg"
                         />
-                        <label
-                          className="form-label"
-                          htmlFor="form3Example4cdg"
-                        >
-                          Repeat your password
+                        <label className="form-label" htmlFor="form3Example4cg">
+                          Birth Date
                         </label>
                       </div>
+
+                      <div data-mdb-input-init className="form-outline mb-4">
+                        <select
+                          name="gender"
+                          value={formData.gender}
+                          onChange={handleInputChange}
+                          className="form-select form-select-lg"
+                          aria-label="Gender"
+                        >
+                          <option value="">Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                        <label className="form-label" htmlFor="form3Example1cg">
+                          Gender
+                        </label>
+                      </div>
+
                       <div className="form-check d-flex justify-content-center mb-5">
                         <input
                           className="form-check-input me-2"
@@ -83,7 +205,7 @@ function Signup() {
                       </div>
                       <div className="d-flex justify-content-center">
                         <button
-                          type="button"
+                          type="submit"
                           data-mdb-button-init
                           data-mdb-ripple-init
                           className="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
@@ -93,7 +215,7 @@ function Signup() {
                       </div>
                       <p className="text-center text-muted mt-5 mb-0">
                         Have already an account?{"{"}" "{"}"}
-                        <a href="#!" className="fw-bold text-body">
+                        <a href="signIn" className="fw-bold text-body">
                           <u>Login here</u>
                         </a>
                       </p>
