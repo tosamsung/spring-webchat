@@ -1,8 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import UserService from "../Service/UserService";
+import { toast } from "react-toastify";
+
 function Signin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const Navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error("Email and password are required.");
+      return;
+    }
+    try {
+      const userDate = await UserService.login(email, password);
+      if (userDate.token) {
+        const oneMinuteFromNow = new Date();
+        oneMinuteFromNow.setMinutes(oneMinuteFromNow.getMinutes() + 1);
+
+        document.cookie = `token=${
+          userDate.token
+        }; expires=${oneMinuteFromNow.toUTCString()}; httpOnly=true`;
+
+        alert(userDate.token);
+        Navigate("/chats");
+      } else {
+        setError(userDate.error);
+      }
+    } catch (error) {
+      console.log(error);
+      setError(error);
+      setTimeout(() => {
+        setError("");
+      }, 5000);
+    }
+  };
+
   return (
     <>
-      <link rel="stylesheet" href="css/sign-in.css"/>
+      <link rel="stylesheet" href="css/sign-in.css" />
       <section
         className="vh-100 bg-image"
         style={{
@@ -20,10 +59,13 @@ function Signin() {
                       <i class="bx bx-conversation"></i>
                       Sign In
                     </h2>
-                    <form>
+                    {/* {error && <p className="error">{error}</p>} */}
+                    <form onSubmit={handleSubmit}>
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
                           id="form3Example3cg"
                           className="form-control form-control-lg"
                           placeholder="Email"
@@ -31,13 +73,15 @@ function Signin() {
                       </div>
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
                           type="password"
                           id="form3Example4cg"
                           className="form-control form-control-lg"
                           placeholder="Password"
                         />
                       </div>
-                      <div data-mdb-input-init className="form-outline mb-3">
+                      {/* <div data-mdb-input-init className="form-outline mb-3">
                         <p
                           className="form-label text-danger text-center"
                           htmlFor="form3Example4cg"
@@ -45,10 +89,10 @@ function Signin() {
                           <i class="bx bx-tired me-1"></i>
                           Email hoặc mật khẩu không chính xác
                         </p>
-                      </div>
+                      </div> */}
                       <div className="d-flex justify-content-center">
                         <button
-                          type="button"
+                          type="submit"
                           data-mdb-button-init
                           data-mdb-ripple-init
                           className="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
@@ -58,8 +102,8 @@ function Signin() {
                       </div>
                       <p className="text-center text-muted mt-5 mb-0">
                         Have already an account?{" "}
-                        <a href="#!" className="fw-bold text-body">
-                          <u>Login here</u>
+                        <a href="/signup" className="fw-bold text-body">
+                          <u>register here</u>
                         </a>
                       </p>
                     </form>
