@@ -39,6 +39,7 @@
 .list-friends {
   max-height: 690px;
   overflow-y: auto;
+  overflow-x: auto;
 }
 .contact{
   cursor: pointer;

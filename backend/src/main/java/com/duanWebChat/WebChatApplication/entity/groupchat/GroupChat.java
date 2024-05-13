@@ -18,7 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GroupChat {
 	@Id
-	private Integer id;
+	private Long id;
 	private GroupChatType groupChatType;
 	private GroupSetting setting;
 	private List<Member>listMembers;

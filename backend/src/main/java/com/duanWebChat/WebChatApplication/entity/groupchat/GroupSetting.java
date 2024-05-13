@@ -15,6 +15,6 @@ public class GroupSetting {
 	private String image;
 	private Theme theme;
 	private String name;
-	private Integer groupleader;
+	private Long groupleader;
 
 }

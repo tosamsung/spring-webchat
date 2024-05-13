@@ -8,7 +8,7 @@ import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 
 
-public interface UserRepository extends MongoRepository<User, String>{
-	
-	Optional<User> findByEmail(String email);
+
+public interface UserRepository extends MongoRepository<User, Long>{
+Optional<User> findByEmail(String email);
 }
