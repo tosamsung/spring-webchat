@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import UserService from "../Service/UserService";
+import Cookies from "js-cookie";
 function Layout() {
   const handleLogout = () => {
     const confirm = window.confirm(
@@ -29,12 +30,14 @@ function Layout() {
       // headerpd.classList.toggle('body-pd')
     }
   };
-
+  const testUser=()=>{
+    alert(Cookies.get('token'))
+  }
   return (
     <>
       <link rel="stylesheet" href="css/layout.css" />
 
-      <header className="header border-bottom border-dark border-3" id="header">
+      <header className="header" id="header">
         <div className="row h-100 p-1">
           <div className="header_toggle d-inline-block col">
             <i
@@ -45,7 +48,7 @@ function Layout() {
               }}
             />
           </div>
-          <div className="col d-flex justify-content-end p-2 bg-light rounded-2 btn user">
+          <div className="col d-flex justify-content-end p-2 bg-light rounded-2 btn user" onClick={()=>{testUser()}}>
             <img
               src="https://i.pinimg.com/736x/f9/4f/e3/f94fe3bd5ff54e08ee5e9e352384ca14.jpg"
               className="rounded-circle user-img img-fluid "

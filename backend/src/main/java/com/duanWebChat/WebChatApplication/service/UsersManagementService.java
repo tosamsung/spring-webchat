@@ -1,5 +1,6 @@
 package com.duanWebChat.WebChatApplication.service;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.duanWebChat.WebChatApplication.dto.ReqRes;
+import com.duanWebChat.WebChatApplication.dto.user.UserSignIn;
+import com.duanWebChat.WebChatApplication.dto.user.UserSignUp;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
+import com.duanWebChat.WebChatApplication.entity.user.UserStatus;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
+import com.duanWebChat.WebChatApplication.util.SequenceGeneratorService;
 import com.nimbusds.jwt.JWT;
 
 @Service
@@ -24,58 +28,40 @@ public class UsersManagementService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
-	public ReqRes register(ReqRes registrationRequest) {
-		ReqRes resp = new ReqRes();
-		try {
-			User user = new User();
-			user.setFirstName(registrationRequest.getFirstName());
-			user.setLastName(registrationRequest.getLastName());
-			user.setUserName(registrationRequest.getUserName());
-			user.setImage(registrationRequest.getImage());
-			user.setEmail(registrationRequest.getEmail());
-			user.setPhone(registrationRequest.getPhone());
-			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
-			user.setBirthDate(registrationRequest.getBirthDate());
-			
-			user.setUserStatus(registrationRequest.getUserStatus());
-			user.setLastTimeActive(registrationRequest.getLastTimeActive());
-			user.setGender(registrationRequest.getGender());
-			user.setCreateDate(registrationRequest.getCreateDate());
-			user.setFriendship(registrationRequest.getFriendship());
-			
-			User userResult = userRepository.save(user);
-			
-			if(userResult.getId() != null) {
-				resp.setUser(userResult);
-				resp.setMessage("User saves successfuly");
-				resp.setStatusCode(200);
-			}
-			
-			
-		} catch (Exception e) {
-			resp.setStatusCode(500);
-			resp.setError(e.getMessage());
-		}
+	@Autowired
+	private SequenceGeneratorService sequenceGeneratorService;
+
+	public UserSignUp register(UserSignUp registrationRequest) {
+		UserSignUp resp = new UserSignUp();
+		User user = new User();
+		user.setId(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME));
+		user.setFirstName(registrationRequest.getFirstName());
+		user.setLastName(registrationRequest.getLastName());
+		user.setUserName(registrationRequest.getUserName());
+		user.setEmail(registrationRequest.getEmail());
+		user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
+		user.setBirthDate(registrationRequest.getBirthDate());
+
+		user.setUserStatus(UserStatus.ACTIVE);
+		user.setGender(registrationRequest.getGender());
+		user.setCreateDate(new Date());
+
+		User userResult = userRepository.save(user);
+
 		return resp;
 	}
-	
-	public ReqRes login(ReqRes loginRequest) {
-		ReqRes response = new ReqRes();
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-			var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
-			var jwt = jwtUtils.generateToken(user); 
-			var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-			response.setStatusCode(200);
-			response.setToken(jwt);
-			response.setRefreshToken(refreshToken);
-			response.setExpirationTime("24Hrs");
-			response.setMessage("successfuly login in");
-		} catch (Exception e) {
-			response.setStatusCode(500);
-			response.setMessage(e.getMessage());
-		}
+
+	public UserSignIn login(UserSignIn loginRequest) {
+		UserSignIn response = new UserSignIn();
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+		User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+		String jwt = jwtUtils.generateToken(user);
+		String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+		response.setToken(jwt);
+		response.setRefreshToken(refreshToken);
+		response.setExpirationTime("24Hrs");
+
 		return response;
 	}
 }
