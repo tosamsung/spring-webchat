@@ -17,20 +17,19 @@ function Signin() {
     }
     try {
       const userDate = await UserService.login(email, password);
-      // if (userDate.token) {
-      //   function setSecureCookie(name, value, expires) {
-      //     document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; Secure; HttpOnly; SameSite=Strict`;
-      //   }
-        
-      //   const oneMinuteFromNow = new Date(Date.now() + 300 * 1000); // Set the expiration time to 1 minute from now
-        
-      //   setSecureCookie('token', userDate.token, oneMinuteFromNow);
+      if (userDate.token) {
+        const oneMinuteFromNow = new Date();
+        oneMinuteFromNow.setMinutes(oneMinuteFromNow.getMinutes() + 1);
 
-      //   alert(userDate.token);
+        document.cookie = `token=${
+          userDate.token
+        }; expires=${oneMinuteFromNow.toUTCString()}; httpOnly=true`;
+
+        alert(userDate.token);
         Navigate("/chats");
-      // } else {
-      //   setError(userDate.error);
-      // }
+      } else {
+        setError(userDate.error);
+      }
     } catch (error) {
       console.log(error);
       setError(error);
@@ -57,7 +56,7 @@ function Signin() {
                 <div className="card" style={{ borderRadius: 15 }}>
                   <div className="card-body p-5">
                     <h2 className="text-uppercase text-center mb-5">
-                      <i className="bx bx-conversation"></i>
+                      <i class="bx bx-conversation"></i>
                       Sign In
                     </h2>
                     {/* {error && <p className="error">{error}</p>} */}
@@ -67,6 +66,7 @@ function Signin() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
+                          id="form3Example3cg"
                           className="form-control form-control-lg"
                           placeholder="Email"
                         />
@@ -76,6 +76,7 @@ function Signin() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           type="password"
+                          id="form3Example4cg"
                           className="form-control form-control-lg"
                           placeholder="Password"
                         />

@@ -94,6 +94,7 @@ function Signup() {
                           value={formData.firstName}
                           onChange={handleInputChange}
                           type="text"
+                          id="form3Example1cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example1cg">
@@ -106,6 +107,7 @@ function Signup() {
                           value={formData.lastName}
                           onChange={handleInputChange}
                           type="text"
+                          id="form3Example1cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example1cg">
@@ -118,6 +120,7 @@ function Signup() {
                           value={formData.userName}
                           onChange={handleInputChange}
                           type="text"
+                          id="form3Example1cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example1cg">
@@ -130,6 +133,7 @@ function Signup() {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
+                          id="form3Example3cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example3cg">
@@ -143,6 +147,7 @@ function Signup() {
                           value={formData.password}
                           onChange={handleInputChange}
                           type="password"
+                          id="form3Example4cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example4cg">
@@ -156,6 +161,7 @@ function Signup() {
                           value={formData.birthDate}
                           onChange={handleInputChange}
                           type="date"
+                          id="form3Example4cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example4cg">
@@ -185,6 +191,7 @@ function Signup() {
                           className="form-check-input me-2"
                           type="checkbox"
                           defaultValue
+                          id="form2Example3cg"
                         />
                         <label
                           className="form-check-label"
