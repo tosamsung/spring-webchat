@@ -12,6 +12,7 @@ import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
+import com.duanWebChat.WebChatApplication.util.SequenceGeneratorService;
 import com.nimbusds.jwt.JWT;
 
 @Service
@@ -24,11 +25,14 @@ public class UsersManagementService {
 	private AuthenticationManager authenticationManager;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private SequenceGeneratorService sequenceGeneratorService;
 	
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
 		try {
 			User user = new User();
+			user.setId(sequenceGeneratorService.generateSequence(User.SEQUENCE_NAME));
 			user.setFirstName(registrationRequest.getFirstName());
 			user.setLastName(registrationRequest.getLastName());
 			user.setUserName(registrationRequest.getUserName());

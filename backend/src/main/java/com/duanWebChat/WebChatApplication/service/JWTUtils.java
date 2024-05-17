@@ -16,7 +16,8 @@ import com.duanWebChat.WebChatApplication.entity.user.User;
 import java.util.function.Function;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts; 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.SignatureException; 
 
 
 @Component
@@ -56,7 +57,12 @@ public class JWTUtils {
 	public String extractUsername(String token) {
 		return extractClaims(token, Claims::getSubject);
 	}
-	
+	public Claims getAllClaimsFromToken(String token) {
+	    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+	}
+	 public void getClaimValueByName(String token,String name) {
+		 getAllClaimsFromToken(token).get(name);
+	 }
 	public boolean inTokenValid(String token, UserDetails userDetails) {
 		final String username = extractUsername(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
