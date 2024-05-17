@@ -34,7 +34,7 @@ function Layout() {
     <>
       <link rel="stylesheet" href="css/layout.css" />
 
-      <header className="header border-bottom border-dark border-3" id="header">
+      <header className="header sticky-top" id="header">
         <div className="row h-100 p-1">
           <div className="header_toggle d-inline-block col">
             <i
