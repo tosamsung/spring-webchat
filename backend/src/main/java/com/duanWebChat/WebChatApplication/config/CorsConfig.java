@@ -12,9 +12,11 @@ public class CorsConfig {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedMethods("GET","POST","PUT","DELETE")
-				.allowedOrigins("*");
+				 registry.addMapping("/**")
+	                .allowedOrigins("http://localhost:3000")
+	                .allowedMethods("GET", "POST", "PUT", "DELETE")
+	                .allowedHeaders("*")
+	                .allowCredentials(true); // Cho phép gửi cookies khi yêu cầu
 			}
 		};
 	}

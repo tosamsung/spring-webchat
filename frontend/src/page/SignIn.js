@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../Service/UserService";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 function Signin() {
   const [email, setEmail] = useState("");
@@ -9,6 +10,16 @@ function Signin() {
   const [error, setError] = useState("");
   const Navigate = useNavigate();
 
+  const getTokenFromCookie = () => {
+    const cookies = document.cookie.split("; ");
+    for (const cookie of cookies) {
+      const [name, value] = cookie.split("=");
+      if (name === "token") {
+        return value;
+      }
+    }
+    return null; // Trả về null nếu không tìm thấy cookie có tên 'token'
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -17,25 +28,11 @@ function Signin() {
     }
     try {
       const userDate = await UserService.login(email, password);
-      if (userDate.token) {
-        const oneMinuteFromNow = new Date();
-        oneMinuteFromNow.setMinutes(oneMinuteFromNow.getMinutes() + 1);
-
-        document.cookie = `token=${
-          userDate.token
-        }; expires=${oneMinuteFromNow.toUTCString()}; httpOnly=true`;
-
-        alert(userDate.token);
         Navigate("/chats");
-      } else {
-        setError(userDate.error);
-      }
+     
     } catch (error) {
       console.log(error);
-      setError(error);
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+     
     }
   };
 
@@ -56,7 +53,7 @@ function Signin() {
                 <div className="card" style={{ borderRadius: 15 }}>
                   <div className="card-body p-5">
                     <h2 className="text-uppercase text-center mb-5">
-                      <i class="bx bx-conversation"></i>
+                      <i className="bx bx-conversation"></i>
                       Sign In
                     </h2>
                     {/* {error && <p className="error">{error}</p>} */}

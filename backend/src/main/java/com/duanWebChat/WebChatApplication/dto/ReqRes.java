@@ -12,8 +12,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReqRes {
@@ -39,4 +41,12 @@ public class ReqRes {
 	private List<Friend> friendship;
 	private User user;
 	private List<User> listUser;
+	public ReqRes(int statusCode, String error, String message) {
+		super();
+		this.statusCode = statusCode;
+		this.error = error;
+		this.message = message;
+	}
+	
+	
 }

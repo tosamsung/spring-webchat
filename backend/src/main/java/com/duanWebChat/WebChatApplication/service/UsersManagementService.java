@@ -12,6 +12,7 @@ import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
+import com.duanWebChat.WebChatApplication.util.JWTUtils;
 import com.duanWebChat.WebChatApplication.util.SequenceGeneratorService;
 import com.nimbusds.jwt.JWT;
 
@@ -69,7 +70,7 @@ public class UsersManagementService {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 			var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
-			var jwt = jwtUtils.generateToken(user); 
+			var jwt = jwtUtils.generateAccessToken(user); 
 			var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 			response.setStatusCode(200);
 			response.setToken(jwt);
