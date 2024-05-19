@@ -1,6 +1,7 @@
 package com.duanWebChat.WebChatApplication.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,8 @@ import com.duanWebChat.WebChatApplication.repository.MessageRepository;
 import com.duanWebChat.WebChatApplication.repository.ThemeRepository;
 import com.duanWebChat.WebChatApplication.util.SequenceGeneratorService;
 
-
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/test")
@@ -35,31 +37,55 @@ public class testController {
 	public Theme createTheme(@RequestBody Theme theme) {
 		return themeRepository.save(theme);
 	}
+
+	@PostMapping("/testToken")
+	public void testToken(HttpServletRequest request ) {
+		 Cookie[] cookies = request.getCookies();
+		 for (Cookie cookie2 : cookies) {
+			System.out.println(cookie2.getName());
+		}
+	        if (cookies != null) {
+	            Cookie tokenCookie = Arrays.stream(cookies)
+	                                       .filter(cookie -> "token".equals(cookie.getName()))
+	                                       .findFirst()
+	                                       .orElse(null);
+
+	            if (tokenCookie != null) {
+	                String token = tokenCookie.getValue();
+	                // Kiểm tra và xử lý token tại đây
+	                System.out.println("khong có cookie");
+	            }
+	        }
+	}
+
 	@GetMapping("/testCreateMess")
 	public void testCreateMess() {
-        // Tạo danh sách UserInteract
-        List<UserInteract> userInteracts = new ArrayList<>();
-        userInteracts.add(new UserInteract("user1.jpg", "User 1", "icon1.png"));
-        userInteracts.add(new UserInteract("user2.jpg", "User 2", "icon2.png"));
-        userInteracts.add(new UserInteract("user3.jpg", "User 3", "icon3.png"));
+		// Tạo danh sách UserInteract
+		List<UserInteract> userInteracts = new ArrayList<>();
+		userInteracts.add(new UserInteract("user1.jpg", "User 1", "icon1.png"));
+		userInteracts.add(new UserInteract("user2.jpg", "User 2", "icon2.png"));
+		userInteracts.add(new UserInteract("user3.jpg", "User 3", "icon3.png"));
 
-        // Tạo các message test
-        Message message1 = new Message( 1, 1, "Hello", ContentType.TEXT, MessageStatus.SENT, userInteracts);
-        message1.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
-        Message message2 = new Message( 1, 2, "How are you?", ContentType.TEXT, MessageStatus.DELIVERED, userInteracts);
-        message2.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
-        Message message3 = new Message( 1, 3, "Check out this image", ContentType.IMAGE, MessageStatus.SEEN, userInteracts);
-        message3.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
-        Message message4 = new Message( 2, 1, "Watch this video", ContentType.VIDEO, MessageStatus.PENDING, userInteracts);
-        message4.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
-        messRepo.save(message1);
-        messRepo.save(message2);
-        messRepo.save(message3);
-        messRepo.save(message4);
-        
+		// Tạo các message test
+		Message message1 = new Message(1, 1, "Hello", ContentType.TEXT, MessageStatus.SENT, userInteracts);
+		message1.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
+		Message message2 = new Message(1, 2, "How are you?", ContentType.TEXT, MessageStatus.DELIVERED, userInteracts);
+		message2.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
+		Message message3 = new Message(1, 3, "Check out this image", ContentType.IMAGE, MessageStatus.SEEN,
+				userInteracts);
+		message3.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
+		Message message4 = new Message(2, 1, "Watch this video", ContentType.VIDEO, MessageStatus.PENDING,
+				userInteracts);
+		message4.setId(sequenceGeneratorService.generateSequence(Message.SEQUENCE_NAME));
+		messRepo.save(message1);
+		messRepo.save(message2);
+		messRepo.save(message3);
+		messRepo.save(message4);
+
 	}
+
 	@GetMapping("/testFindAll")
-	public List<Message> findAll(){
+	public List<Message> findAll() {
 		return messRepo.findAll();
 	}
 }

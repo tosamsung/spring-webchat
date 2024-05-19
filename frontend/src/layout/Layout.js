@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import UserService from "../Service/UserService";
+import api from "../util/AxiosUtil";
 function Layout() {
   const handleLogout = () => {
     const confirm = window.confirm(
@@ -10,7 +11,16 @@ function Layout() {
       UserService.logout();
     }
   };
-
+  const testAuth= async ()=>{
+    try {
+      const test1= await api.post('/test/testToken')
+    } catch (error) {
+      
+    }
+  }
+  const handleclick=()=>{
+    testAuth()
+  }
   const showNavbar = () => {
     const toggle = document.getElementById("header-toggle"),
       nav = document.getElementById("nav-bar"),
@@ -45,7 +55,7 @@ function Layout() {
               }}
             />
           </div>
-          <div className="col d-flex justify-content-end p-2 bg-light rounded-2 btn user">
+          <div className="col d-flex justify-content-end p-2 bg-light rounded-2 btn user" onClick={()=>{handleclick()}}>
             <img
               src="https://i.pinimg.com/736x/f9/4f/e3/f94fe3bd5ff54e08ee5e9e352384ca14.jpg"
               className="rounded-circle user-img img-fluid "
