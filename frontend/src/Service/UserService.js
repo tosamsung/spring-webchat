@@ -1,12 +1,20 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import api from "../util/AxiosUtil";
 
 class UserService {
   static BASE_URL = "http://localhost:8080";
 
+  static async getUser() {
+    try {
+      const response = await api.post(`/auth/user`);
+      console.log(response.data);
+    } catch (error) {}
+  }
+
   static async login(email, password) {
     try {
-      const response = await axios.post(`${UserService.BASE_URL}/auth/login`, {
+      const response = await api.post(`/auth/login`, {
         email,
         password,
       });
@@ -21,10 +29,7 @@ class UserService {
     try {
       const response = await axios.post(
         `${UserService.BASE_URL}/auth/register`,
-        userData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        userData
       );
       return response.data;
     } catch (error) {

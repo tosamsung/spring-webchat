@@ -35,14 +35,14 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		System.out.println("\n jwtfilter");
+		
 		// Lấy token từ cookie
 		String accessToken = getAccessTokeFromCookie(request);
 		if (accessToken == null || accessToken.isBlank()) {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		System.out.println(accessToken);
+		
 		String userEmail = jwtUtils.extractUsername(accessToken);
 
 		if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {

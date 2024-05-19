@@ -1,15 +1,10 @@
 package com.duanWebChat.WebChatApplication;
 
-import java.util.Arrays;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication(exclude = {
-        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class}
-        )
+@SpringBootApplication()
 @ComponentScan
 public class WebChatApplication {
 
@@ -19,5 +14,5 @@ public class WebChatApplication {
 //		String[] beanNames = context.getBeanDefinitionNames();
 //        Arrays.stream(beanNames).forEach(System.out::println);
 	}
-	
+
 }

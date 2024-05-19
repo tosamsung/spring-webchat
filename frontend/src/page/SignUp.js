@@ -47,8 +47,8 @@ function Signup() {
       return;
     }
     try {
-      const token = localStorage.getItem("token");
-      await UserService.register(formData, token);
+      // const token = localStorage.getItem("token");
+      await UserService.register(formData);
 
       setFormData({
         firstName: "",

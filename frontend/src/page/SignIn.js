@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserService from "../Service/UserService";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
+
 
 function Signin() {
   const [email, setEmail] = useState("");
@@ -10,16 +10,7 @@ function Signin() {
   const [error, setError] = useState("");
   const Navigate = useNavigate();
 
-  const getTokenFromCookie = () => {
-    const cookies = document.cookie.split("; ");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.split("=");
-      if (name === "token") {
-        return value;
-      }
-    }
-    return null; // Trả về null nếu không tìm thấy cookie có tên 'token'
-  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
