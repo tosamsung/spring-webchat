@@ -30,10 +30,11 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		System.out.println("security filter");
-		httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults())
+		httpSecurity.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**").permitAll()
-						.requestMatchers("/admin/**").hasAnyAuthority("ADMIN").requestMatchers("/user/**")
-						.hasAnyAuthority("USER").anyRequest().authenticated())
+						.requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+						.requestMatchers("/user/**").hasAnyAuthority("USER")
+						.anyRequest().authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authticationProvider())
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

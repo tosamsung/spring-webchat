@@ -7,7 +7,11 @@ class UserService {
 
   static async getUser() {
     try {
-      const response = await api.post(`/auth/user`);
+      const response = await axios.post(
+        `http://localhost:8080/auth/user`,
+        {},
+        { withCredentials: true }
+      );
       console.log(response.data);
     } catch (error) {}
   }

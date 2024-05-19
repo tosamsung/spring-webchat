@@ -40,14 +40,13 @@ public class UserController {
 		return ResponseEntity.ok(usersManagementService.register(reqRes));
 	}
 
-	@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 	@PostMapping("/auth/login")
 	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response) {
 		ReqRes result = usersManagementService.login(reqRes);
-		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(false)
+		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(true)
 				.path("/").maxAge(900).sameSite("None").build();
 		ResponseCookie cookie2 = ResponseCookie.from("refreshToken", result.getRefreshToken()).httpOnly(true)
-				.secure(false).path("/").maxAge(518400).sameSite("None").build();
+				.secure(true).path("/").maxAge(518400).sameSite("None").build();
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
 
@@ -65,10 +64,10 @@ public class UserController {
 
 	@PostMapping("/auth/logout")
 	public ResponseEntity<ReqRes> logout(HttpServletResponse response) {
-		ResponseCookie expiredAccessTokenCookie = ResponseCookie.from("accessToken", "").httpOnly(true).secure(false)
+		ResponseCookie expiredAccessTokenCookie = ResponseCookie.from("accessToken", "").httpOnly(true).secure(true)
 				.path("/").maxAge(0).build();
 
-		ResponseCookie expiredRefreshTokenCookie = ResponseCookie.from("refreshToken", "").httpOnly(true).secure(false)
+		ResponseCookie expiredRefreshTokenCookie = ResponseCookie.from("refreshToken", "").httpOnly(true).secure(true)
 				.path("/").maxAge(0).build();
 
 		response.addHeader(HttpHeaders.SET_COOKIE, expiredAccessTokenCookie.toString());
@@ -77,12 +76,11 @@ public class UserController {
 		return ResponseEntity.ok(new ReqRes(200, "", "Logout success"));
 	}
 
-	@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 	@PostMapping("/auth/user")
 	public UserDto getUserByToken(HttpServletRequest request) {
 
 		String token = null;
-
+		System.out.println("usercookie");
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if (cookie.getName().equals("accessToken")) {
@@ -90,7 +88,7 @@ public class UserController {
 				}
 				System.out.println(cookie.getName() + ": " + cookie.getValue());
 			}
-			
+
 		}
 		if (token == null) {
 			return null;
