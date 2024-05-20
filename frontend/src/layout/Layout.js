@@ -1,7 +1,9 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Navigate, NavLink, Outlet } from "react-router-dom";
 import UserService from "../Service/UserService";
 import api from "../util/AxiosUtil";
+import { useNavigate } from "react-router-dom";
+import Profile from "../components/profile/Profile";
 function Layout() {
   const handleLogout = () => {
     const confirm = window.confirm(
@@ -80,10 +82,15 @@ function Layout() {
                 <i className="bx bx-conversation nav_icon" />
                 <span className="nav_name">Chats</span>
               </NavLink>
-              <NavLink href="#" className="nav_link">
+              <a
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                to="/profile"
+                className="nav_link"
+              >
                 <i className="bx bx-user nav_icon" />
                 <span className="nav_name">Users</span> {/* chỉnh lại active */}
-              </NavLink>
+              </a>
             </div>
           </div>
           <NavLink to="/" className="nav_link" onClick={handleLogout}>
@@ -97,6 +104,13 @@ function Layout() {
         <Outlet></Outlet>
       </div>
       {/*Container Main end*/}
+      <Profile
+        id="exampleModal"
+        tabIndex={-1}
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+        className="modal fade"
+      ></Profile>
     </>
   );
 }

@@ -1,75 +1,70 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import UserService from "../Service/UserService";
+import React, { useEffect, useState } from "react";
+import UserService from "../../Service/UserService";
 import { toast } from "react-toastify";
 
-function Signup() {
-  const Navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
+function Edit() {
+  const [user, setUser] = useState({
     firstName: "",
     lastName: "",
     userName: "",
-    email: "",
+    image: "",
     phone: "",
-    password: "",
     birthDate: "",
     gender: "",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setUser({ ...user, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      firstName,
-      lastName,
-      userName,
-      email,
-      phone,
-      password,
-      birthDate,
-      gender,
-    } = formData;
+    const { firstName, lastName, userName, image, phone, birthDate, gender } =
+      user;
 
     // Kiểm tra các trường có được nhập đầy đủ hay không
     if (
       !firstName ||
       !lastName ||
       !userName ||
-      !email ||
       !phone ||
-      !password ||
       !birthDate ||
       !gender
     ) {
       toast.error("All fields are required.");
       return;
     }
-    try {
-      // const token = localStorage.getItem("token");
-      await UserService.register(formData);
 
-      setFormData({
+    try {
+      await UserService.updateUser(user);
+      setUser({
         firstName: "",
         lastName: "",
         userName: "",
-        email: "",
+        image: "",
         phone: "",
-        password: "",
         birthDate: "",
         gender: "",
       });
+
       toast.success("User registerd successfully");
-      Navigate("/signIn");
     } catch (error) {
-      console.error("Error registering user", error);
-      alert("An error occurred while registering user");
+      alert("An error occurred while update user");
     }
   };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await UserService.getUser();
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -89,13 +84,13 @@ function Signup() {
                 <div className="card" style={{ borderRadius: 15 }}>
                   <div className="card-body p-5">
                     <h2 className="text-uppercase text-center mb-5">
-                      Create an account
+                      Edit Profile
                     </h2>
                     <form onSubmit={handleSubmit}>
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           name="firstName"
-                          value={formData.firstName}
+                          value={user.firstName}
                           onChange={handleInputChange}
                           type="text"
                           id="form3Example1cg"
@@ -108,7 +103,7 @@ function Signup() {
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           name="lastName"
-                          value={formData.lastName}
+                          value={user.lastName}
                           onChange={handleInputChange}
                           type="text"
                           id="form3Example1cg"
@@ -121,7 +116,7 @@ function Signup() {
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           name="userName"
-                          value={formData.userName}
+                          value={user.userName}
                           onChange={handleInputChange}
                           type="text"
                           id="form3Example1cg"
@@ -131,51 +126,25 @@ function Signup() {
                           User Name
                         </label>
                       </div>
-                      <div data-mdb-input-init className="form-outline mb-4">
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          id="form3Example3cg"
-                          className="form-control form-control-lg"
-                        />
-                        <label className="form-label" htmlFor="form3Example3cg">
-                          Your Email
-                        </label>
-                      </div>
-                      <div data-mdb-input-init className="form-outline mb-4">
-                        <input
-                          type="text"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          id="form3Example3cg"
-                          className="form-control form-control-lg"
-                        />
-                        <label className="form-label" htmlFor="form3Example3cg">
-                          Phone Number
-                        </label>
-                      </div>
 
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
-                          name="password"
-                          value={formData.password}
+                          name="phone"
+                          value={user.phone}
                           onChange={handleInputChange}
-                          type="password"
+                          type="number"
                           id="form3Example4cg"
                           className="form-control form-control-lg"
                         />
                         <label className="form-label" htmlFor="form3Example4cg">
-                          Password
+                          Phone
                         </label>
                       </div>
 
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           name="birthDate"
-                          value={formData.birthDate}
+                          value={user.birthDate}
                           onChange={handleInputChange}
                           type="date"
                           id="form3Example4cg"
@@ -189,7 +158,7 @@ function Signup() {
                       <div data-mdb-input-init className="form-outline mb-4">
                         <select
                           name="gender"
-                          value={formData.gender}
+                          value={user.gender}
                           onChange={handleInputChange}
                           className="form-select form-select-lg"
                           aria-label="Gender"
@@ -247,4 +216,4 @@ function Signup() {
     </>
   );
 }
-export default Signup;
+export default Edit;

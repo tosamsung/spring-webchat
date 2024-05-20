@@ -7,6 +7,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,7 +42,8 @@ public class UserController {
 	}
 
 	@PostMapping("/auth/login")
-	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response) {
+	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response,
+			HttpServletRequest request) {
 		ReqRes result = usersManagementService.login(reqRes);
 		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(true)
 				.path("/").maxAge(900).sameSite("None").build();
@@ -50,14 +52,10 @@ public class UserController {
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
 
-//		 Cookie cookie = new Cookie("token", result.getRefreshToken());
-//         cookie.setHttpOnly(true);
-//         cookie.setSecure(true); // Chỉ sử dụng trên HTTPS
-//         cookie.setPath("/");
-//         cookie.setPath("");
-//         cookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-//        
-//         response.addCookie(cookie);
+		ResponseCookie email = ResponseCookie.from("email", result.getEmail()).httpOnly(true).secure(true)
+				.path("/").maxAge(51400).sameSite("None").build();
+		
+		response.addHeader(HttpHeaders.SET_COOKIE, email.toString());
 
 		return ResponseEntity.ok(new ReqRes(200, "", "Login success"));
 	}
@@ -80,13 +78,11 @@ public class UserController {
 	public UserDto getUserByToken(HttpServletRequest request) {
 
 		String token = null;
-		System.out.println("usercookie");
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if (cookie.getName().equals("accessToken")) {
 					token = cookie.getValue();
 				}
-				System.out.println(cookie.getName() + ": " + cookie.getValue());
 			}
 
 		}
@@ -97,6 +93,23 @@ public class UserController {
 		User user = userRepository.findByEmail(email).get();
 
 		return new UserDto(user);
+	}
+
+	@PutMapping("/auth/update")
+	public ResponseEntity<ReqRes> updateUser(@RequestBody ReqRes reqRes, HttpServletRequest request) {
+		String email = null;
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("email")) {
+					email = cookie.getValue();
+				}
+			}
+		}
+		
+		User user = userRepository.findByEmail(email).orElseThrow();
+
+		ReqRes response = usersManagementService.updateUser(user, reqRes);
+		return ResponseEntity.status(response.getStatusCode()).body(response);
 	}
 
 }
