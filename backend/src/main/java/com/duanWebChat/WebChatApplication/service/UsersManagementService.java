@@ -74,6 +74,7 @@ public class UsersManagementService {
 			var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 			response.setStatusCode(200);
 			response.setToken(jwt);
+			response.setEmail(user.getEmail());
 			response.setRefreshToken(refreshToken);
 			response.setExpirationTime("24Hrs");
 			response.setMessage("successfuly login in");
@@ -83,4 +84,27 @@ public class UsersManagementService {
 		}
 		return response;
 	}
+	
+	 public ReqRes updateUser(User user, ReqRes registrationRequest) {
+	        ReqRes response = new ReqRes();
+	        try {
+
+	            user.setFirstName(registrationRequest.getFirstName());
+				user.setLastName(registrationRequest.getLastName());
+				user.setUserName(registrationRequest.getUserName());
+				user.setImage(registrationRequest.getImage());
+				user.setPhone(registrationRequest.getPhone());
+				user.setBirthDate(registrationRequest.getBirthDate());
+				user.setGender(registrationRequest.getGender());
+
+	            userRepository.save(user);
+	            response.setStatusCode(200);
+	            response.setMessage("User updated successfully");
+	            response.setUser(user);
+	        } catch (Exception e) {
+	            response.setStatusCode(500);
+	            response.setMessage(e.getMessage());
+	        }
+	        return response;
+	    }
 }

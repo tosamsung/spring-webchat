@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,7 +72,8 @@ public class AuthUserController {
 		}
 	}
 	@PostMapping("/auth/login")
-	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response) {
+	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response,
+			HttpServletRequest request) {
 		ReqRes result = usersManagementService.login(reqRes);
 		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(true)
 				.path("/").maxAge(604800).sameSite("None").build();
@@ -79,6 +81,7 @@ public class AuthUserController {
 				.secure(true).path("/").maxAge(604800).sameSite("None").build();
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
+
 
 		return ResponseEntity.ok(new ReqRes(200, "", "Login success"));
 	}
@@ -127,6 +130,23 @@ public class AuthUserController {
 		} catch (ExpiredJwtException e) {
 			throw e;
 		}
+	}
+
+	@PutMapping("/auth/update")
+	public ResponseEntity<ReqRes> updateUser(@RequestBody ReqRes reqRes, HttpServletRequest request) {
+		String email = null;
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if (cookie.getName().equals("email")) {
+					email = cookie.getValue();
+				}
+			}
+		}
+		
+		User user = userRepository.findByEmail(email).orElseThrow();
+
+		ReqRes response = usersManagementService.updateUser(user, reqRes);
+		return ResponseEntity.status(response.getStatusCode()).body(response);
 	}
 
 }

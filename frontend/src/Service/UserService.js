@@ -5,6 +5,16 @@ import api from "../util/AxiosUtil";
 class UserService {
   static BASE_URL = "http://localhost:8080";
 
+  static async updateUser(userData) {
+    try {
+      const response = await axios.put(
+        `${UserService.BASE_URL}/auth/update`,
+        userData,
+        { withCredentials: true }
+      );
+    } catch (error) {}
+  }
+
   static async getUser() {
     try {
       const response = await api.post(
