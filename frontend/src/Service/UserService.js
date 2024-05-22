@@ -17,14 +17,14 @@ class UserService {
 
   static async getUser() {
     try {
-      const response = await axios.post(
-        `http://localhost:8080/auth/user`,
+      const response = await api.post(
+        `/auth/user`,
         {},
         { withCredentials: true }
       );
-      return response;
-      // console.log(response.data);
-    } catch (error) {}
+      console.log(response.data);
+    } catch (error) {
+    }
   }
 
   static async login(email, password) {
@@ -52,9 +52,15 @@ class UserService {
     }
   }
 
-  static logout() {
-    // localStorage.removeItem("token");
-    Cookies.remove("token");
+  static async logout() {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/auth/logout`,
+        {},
+        { withCredentials: true }
+      );
+      console.log(response.data);
+    } catch (error) {}
   }
 
   static isAuthenticated() {
