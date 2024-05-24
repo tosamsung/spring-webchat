@@ -1,20 +1,24 @@
 package com.duanWebChat.WebChatApplication.service;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
+import com.duanWebChat.WebChatApplication.dto.UserDto;
 import com.duanWebChat.WebChatApplication.entity.user.User;
-import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
+import com.duanWebChat.WebChatApplication.entity.user.UserStatus;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
 import com.duanWebChat.WebChatApplication.util.JWTUtils;
 import com.duanWebChat.WebChatApplication.util.SequenceGeneratorService;
-import com.nimbusds.jwt.JWT;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class UsersManagementService {
@@ -28,7 +32,7 @@ public class UsersManagementService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private SequenceGeneratorService sequenceGeneratorService;
-	
+
 	public ReqRes register(ReqRes registrationRequest) {
 		ReqRes resp = new ReqRes();
 		try {
@@ -42,69 +46,60 @@ public class UsersManagementService {
 			user.setPhone(registrationRequest.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 			user.setBirthDate(registrationRequest.getBirthDate());
-			
-			user.setUserStatus(registrationRequest.getUserStatus());
-			user.setLastTimeActive(registrationRequest.getLastTimeActive());
+			user.setUserStatus(UserStatus.ACTIVE);
 			user.setGender(registrationRequest.getGender());
-			user.setCreateDate(registrationRequest.getCreateDate());
-			user.setFriendship(registrationRequest.getFriendship());
-			
+			user.setCreateDate(new Date());
+
 			User userResult = userRepository.save(user);
-			
-			if(userResult.getId() != null) {
-				resp.setUser(userResult);
+
+			if (userResult.getId() != null) {
 				resp.setMessage("User saves successfuly");
 				resp.setStatusCode(200);
 			}
-			
-			
+
 		} catch (Exception e) {
 			resp.setStatusCode(500);
 			resp.setError(e.getMessage());
 		}
 		return resp;
 	}
-	
+
 	public ReqRes login(ReqRes loginRequest) {
-		ReqRes response = new ReqRes();
+		ReqRes reqRes = new ReqRes();
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-			var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
-			var jwt = jwtUtils.generateAccessToken(user); 
-			var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-			response.setStatusCode(200);
-			response.setToken(jwt);
-			response.setEmail(user.getEmail());
-			response.setRefreshToken(refreshToken);
-			response.setExpirationTime("24Hrs");
-			response.setMessage("successfuly login in");
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+			User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+			UserDto userDto = new UserDto(user);
+			String accessToken = jwtUtils.generateAccessToken(user);
+			String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+			reqRes.setUserDto(userDto);
+			reqRes.setStatusCode(200);
+			reqRes.setToken(accessToken);
+			reqRes.setEmail(user.getEmail());
+			reqRes.setRefreshToken(refreshToken);
+			reqRes.setMessage("successfuly login in");
 		} catch (Exception e) {
-			response.setStatusCode(500);
-			response.setMessage(e.getMessage());
+			throw new UsernameNotFoundException("User not found");
 		}
-		return response;
+		return reqRes;
 	}
-	
-	 public ReqRes updateUser(User user, ReqRes registrationRequest) {
-	        ReqRes response = new ReqRes();
-	        try {
 
-	            user.setFirstName(registrationRequest.getFirstName());
-				user.setLastName(registrationRequest.getLastName());
-				user.setUserName(registrationRequest.getUserName());
-				user.setImage(registrationRequest.getImage());
-				user.setPhone(registrationRequest.getPhone());
-				user.setBirthDate(registrationRequest.getBirthDate());
-				user.setGender(registrationRequest.getGender());
+	public UserDto updateUser(User user, ReqRes registrationRequest) {
+		try {
+			user.setFirstName(registrationRequest.getFirstName());
+			user.setLastName(registrationRequest.getLastName());
+			user.setUserName(registrationRequest.getUserName());
+			user.setImage(registrationRequest.getImage());
+			user.setPhone(registrationRequest.getPhone());
+			user.setBirthDate(registrationRequest.getBirthDate());
+			user.setGender(registrationRequest.getGender());
 
-	            userRepository.save(user);
-	            response.setStatusCode(200);
-	            response.setMessage("User updated successfully");
-	            response.setUser(user);
-	        } catch (Exception e) {
-	            response.setStatusCode(500);
-	            response.setMessage(e.getMessage());
-	        }
-	        return response;
-	    }
+			userRepository.save(user);
+		} catch (Exception e) {
+			throw e;
+		}
+		return new UserDto(user);
+	}
+
 }

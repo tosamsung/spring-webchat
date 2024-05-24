@@ -53,9 +53,7 @@ function Edit() {
       alert("An error occurred while update user");
     }
   };
-
-  useEffect(() => {
-    const fetchUser = async () => {
+const fetchUser = async () => {
       try {
         const response = await UserService.getUser();
         setUser(response.data);
@@ -63,6 +61,8 @@ function Edit() {
         console.error("Error fetching user data:", error);
       }
     };
+  useEffect(() => {
+    
     fetchUser();
   }, []);
 
@@ -71,17 +71,14 @@ function Edit() {
       <link rel="stylesheet" href="css/sign-up.css" />
 
       <section
-        className="vh-100 bg-image"
-        style={{
-          backgroundImage:
-            'url("https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp")',
-        }}
+        className="bg-image"
+       
       >
-        <div className="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div className="mask d-flex align-items-center h-100">
           <div className="container h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
-              <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                <div className="card" style={{ borderRadius: 15 }}>
+              <div className="col-12 col-md-9 col-lg-7 col-xl-6 w-100 p-0">
+                <div className="card">
                   <div className="card-body p-5">
                     <h2 className="text-uppercase text-center mb-5">
                       Edit Profile

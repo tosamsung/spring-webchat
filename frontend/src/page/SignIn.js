@@ -18,7 +18,8 @@ function Signin() {
       return;
     }
     try {
-      const userDate = await UserService.login(email, password);
+      const user= await UserService.login(email, password);
+      // console.log(user);
         Navigate("/chats");
      
     } catch (error) {

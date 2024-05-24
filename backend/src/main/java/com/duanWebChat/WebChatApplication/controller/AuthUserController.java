@@ -72,7 +72,7 @@ public class AuthUserController {
 		}
 	}
 	@PostMapping("/auth/login")
-	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response,
+	public UserDto login(@RequestBody ReqRes reqRes, HttpServletResponse response,
 			HttpServletRequest request) {
 		ReqRes result = usersManagementService.login(reqRes);
 		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(true)
@@ -83,7 +83,7 @@ public class AuthUserController {
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
 
 
-		return ResponseEntity.ok(new ReqRes(200, "", "Login success"));
+		return result.getUserDto();
 	}
 
 	@PostMapping("/auth/logout")
@@ -133,7 +133,7 @@ public class AuthUserController {
 	}
 
 	@PutMapping("/auth/update")
-	public ResponseEntity<ReqRes> updateUser(@RequestBody ReqRes reqRes, HttpServletRequest request) {
+	public UserDto updateUser(@RequestBody ReqRes reqRes, HttpServletRequest request) {
 		String email = null;
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
@@ -145,8 +145,8 @@ public class AuthUserController {
 		
 		User user = userRepository.findByEmail(email).orElseThrow();
 
-		ReqRes response = usersManagementService.updateUser(user, reqRes);
-		return ResponseEntity.status(response.getStatusCode()).body(response);
+		UserDto userDto = usersManagementService.updateUser(user, reqRes);
+		return userDto;
 	}
 
 }

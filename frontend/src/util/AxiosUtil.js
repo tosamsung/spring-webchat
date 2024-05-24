@@ -1,50 +1,37 @@
 import axios from "axios";
-const refreshToken = async () => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8080/auth/refreshToken`,
-      {},
-      { withCredentials: true }
-    );
-    console.log(response.data);
-  } catch (error) {}
-};
+import { Navigate } from "react-router-dom";
 const api = axios.create({
   withCredentials: true,
   baseURL: "http://localhost:8080",
 });
-// api.interceptors.response.use(response => {
-//   return response;
-// }, async error => {
-//   // console.log(error.response.data);
-//  if (error.response.status === 401) {
-//   await refreshToken()
-//   console.log("het han");
-//   return axios(error.config);
-//  }
-// });
-let lastRequest = null;
-api.interceptors.request.use(
-  (config) => {
-    // Lưu request hiện tại vào biến lastRequest
-    lastRequest = config;
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 api.interceptors.response.use(
   async (response) => {
-    if (response.data.statusCode === 401) {
-      await refreshToken();
-      console.log("het han");
-      const originalRequest = lastRequest;
-      lastRequest = null; // Đặt lại lastRequest để tránh việc thực hiện lại request khi có response tiếp theo
-      return axios(originalRequest);
-    }
     return response;
   },
-  (error) => {}
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; 
+
+      try {
+        // Gọi API refresh token
+        const response = await axios.post(
+          `http://localhost:8080/auth/refreshToken`,
+          {},
+          { withCredentials: true }
+        );
+
+
+        return api(originalRequest);
+      } catch (error) {
+        console.log("Refresh token hết hạn, yêu cầu đăng nhập lại.");
+       
+      }
+    }
+
+    // Nếu không phải lỗi 401 hoặc refresh token thất bại
+    return Promise.reject(error);
+  }
 );
 export default api;

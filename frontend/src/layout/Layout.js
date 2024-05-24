@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, NavLink, Outlet } from "react-router-dom";
 import UserService from "../Service/UserService";
 import api from "../util/AxiosUtil";
@@ -30,7 +30,7 @@ function Layout() {
     // Validate that all variables exist
     if (nav && bodypd && headerpd) {
       // show navbar
-      nav.classList.toggle("show");
+      nav.classList.toggle("showMenu");
       // change icon
       toggle.classList.toggle("fa-circle-xmark");
       // add padding to body
@@ -39,6 +39,15 @@ function Layout() {
       // headerpd.classList.toggle('body-pd')
     }
   };
+
+  useEffect(() => {
+    const user=UserService.getUser().then(
+      response=>{
+        console.log(response);
+      }
+    )
+    
+  }, []);
 
   return (
     <>
@@ -84,8 +93,8 @@ function Layout() {
               </NavLink>
               <a
                 data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                to="/profile"
+                href="#exampleModalToggle"
+                role="button"
                 className="nav_link"
               >
                 <i className="bx bx-user nav_icon" />
@@ -104,13 +113,7 @@ function Layout() {
         <Outlet></Outlet>
       </div>
       {/*Container Main end*/}
-      <Profile
-        id="exampleModal"
-        tabIndex={-1}
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-        className="modal fade"
-      ></Profile>
+      {/* <Profile></Profile> */}
     </>
   );
 }

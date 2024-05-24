@@ -42,6 +42,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	    String requestURI = request.getRequestURI();
 	    System.out.println(requestURI);
 	    if (requestURI.equals("/auth/refreshToken") || 
+	    		requestURI.equals("/auth/login") || 
 	    		requestURI.equals("/auth/logout") || 
 	    		requestURI.equals("/auth/register")) {
 	        filterChain.doFilter(request, response);
@@ -49,7 +50,12 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	    }
 	    String accessToken = CookieUtil.getCookieValueByName(request,"accessToken");
 	    if (accessToken == null || accessToken.isBlank()) {
-	    	 filterChain.doFilter(request, response);
+	    	   System.out.println("Access token not found");
+//		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		        response.setContentType("application/json");
+		        response.setCharacterEncoding("UTF-8");
+		        response.getWriter().write("{\"statusCode\": 401 ,"
+		        		+ "\"error\": \"Access token expired\"}");
 	        return;
 	    }
 
@@ -66,7 +72,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	        }
 	    } catch (ExpiredJwtException e) {
 	        System.out.println("Access token hết hạn");
-//	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	        response.setContentType("application/json");
 	        response.setCharacterEncoding("UTF-8");
 	        response.getWriter().write("{\"statusCode\": 401 ,"

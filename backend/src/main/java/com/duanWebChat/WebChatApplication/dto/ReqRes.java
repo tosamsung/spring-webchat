@@ -25,7 +25,6 @@ public class ReqRes {
 	private String message;
 	private String token;
 	private String refreshToken;
-	private String expirationTime;
 	private String lastName;
 	private String firstName;
 	private String userName;
@@ -38,9 +37,7 @@ public class ReqRes {
 	private Date lastTimeActive;
 	private Gender gender;
 	private Date createDate;
-	private List<Friend> friendship;
-	private User user;
-	private List<User> listUser;
+	private UserDto userDto;
 	public ReqRes(int statusCode, String error, String message) {
 		super();
 		this.statusCode = statusCode;
