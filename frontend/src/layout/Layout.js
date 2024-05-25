@@ -40,14 +40,14 @@ function Layout() {
     }
   };
 
-  useEffect(() => {
-    const user=UserService.getUser().then(
-      response=>{
-        console.log(response);
-      }
-    )
+  // useEffect(() => {
+  //   const user=UserService.getUser().then(
+  //     response=>{
+  //       console.log(response);
+  //     }
+  //   )
     
-  }, []);
+  // }, []);
 
   return (
     <>
@@ -73,7 +73,7 @@ function Layout() {
             <img
               src="https://i.pinimg.com/736x/f9/4f/e3/f94fe3bd5ff54e08ee5e9e352384ca14.jpg"
               className="rounded-circle user-img img-fluid "
-              alt="Mô tả ảnh"
+              alt="Mô tảx` ảnh"
             />
             <p className="m-0 px-2">User A</p>
           </div>
@@ -113,7 +113,7 @@ function Layout() {
         <Outlet></Outlet>
       </div>
       {/*Container Main end*/}
-      {/* <Profile></Profile> */}
+      <Profile></Profile>
     </>
   );
 }

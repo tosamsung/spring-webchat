@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 function Signin() {
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const Navigate = useNavigate();
@@ -23,7 +24,7 @@ function Signin() {
         Navigate("/chats");
      
     } catch (error) {
-      console.log(error);
+
      
     }
   };

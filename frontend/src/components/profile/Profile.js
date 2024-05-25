@@ -15,13 +15,27 @@ import {
 import Edit from "./Edit";
 
 function Profile() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState({
+    firstName: "",
+    lastName: "",
+    userName: "",
+    image: "",
+    phone: "",
+    birthDate: "",
+    gender: "",
+  });
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await UserService.getUser();
-        setUser(response.data);
+        const response = await UserService.getUser().then((data)=>{
+          console.log(data);
+          setUser(data)
+        }
+          
+        );
+        // response.userName=""
+        
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -164,7 +178,7 @@ function Profile() {
               </div>
               <div className="modal-footer">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-secondary"
                   data-bs-target="#exampleModalToggle"
                   data-bs-toggle="modal"
                   data-bs-dismiss="modal"
