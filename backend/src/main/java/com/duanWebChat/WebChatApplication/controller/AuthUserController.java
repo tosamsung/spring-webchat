@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,10 +33,10 @@ public class AuthUserController {
 
 	@Autowired
 	private UsersManagementService usersManagementService;
-	
+
 	@Autowired
 	private UserDetailsService detailsService;
-	
+
 	@Autowired
 	JWTUtils jwtUtils;
 
@@ -46,31 +47,32 @@ public class AuthUserController {
 	public ResponseEntity<ReqRes> register(@RequestBody ReqRes reqRes) {
 		return ResponseEntity.ok(usersManagementService.register(reqRes));
 	}
+
 	@PostMapping("/auth/refreshToken")
-	public ReqRes refreshToken(HttpServletRequest request,HttpServletResponse response) {
-		String refreshToken = CookieUtil.getCookieValueByName(request,"refreshToken");
+	public ReqRes refreshToken(HttpServletRequest request, HttpServletResponse response) {
+		String refreshToken = CookieUtil.getCookieValueByName(request, "refreshToken");
 		if (refreshToken != null && !refreshToken.isBlank()) {
 			try {
 				String newAccessToken = refreshAccessToken(refreshToken);
-				ResponseCookie newAccessTokenCookie = ResponseCookie.from("accessToken", newAccessToken)
-						.httpOnly(true).secure(false) 
-						.path("/").maxAge(900).build();
+				ResponseCookie newAccessTokenCookie = ResponseCookie.from("accessToken", newAccessToken).httpOnly(true)
+						.secure(false).path("/").maxAge(900).build();
 				response.addHeader(HttpHeaders.SET_COOKIE, newAccessTokenCookie.toString());
-				System.out.println("toke moi "+newAccessToken);	
-		        response.setStatus(HttpServletResponse.SC_OK);
-				return new ReqRes(200,"","Refresh successs");
+				System.out.println("toke moi " + newAccessToken);
+				response.setStatus(HttpServletResponse.SC_OK);
+				return new ReqRes(200, "", "Refresh successs");
 			} catch (ExpiredJwtException eJwt) {
 				// TODO: handle exception
 				System.out.println("refresh token hết hạn");
-		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-				return new ReqRes(401,"Refresh token expired","");
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				return new ReqRes(401, "Refresh token expired", "");
 			}
 		} else {
 			System.out.println("refresh token trống");
-	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-			return new ReqRes(401,"Refresh token is empty","");
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return new ReqRes(401, "Refresh token is empty", "");
 		}
 	}
+
 	@PostMapping("/auth/login")
 	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response,
 			HttpServletRequest request) {
@@ -81,7 +83,6 @@ public class AuthUserController {
 				.secure(true).path("/").maxAge(604800).sameSite("None").build();
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
-
 
 		return ResponseEntity.ok(new ReqRes(200, "", "Login success"));
 	}
@@ -104,8 +105,8 @@ public class AuthUserController {
 	public UserDto getUserByToken(HttpServletRequest request) {
 
 		String token = CookieUtil.getCookieValueByName(request, "accessToken");
-		
-		System.out.println("toke dc lay : "+token);
+
+		System.out.println("toke dc lay : " + token);
 		if (token == null) {
 			return null;
 		}
@@ -114,6 +115,7 @@ public class AuthUserController {
 
 		return new UserDto(user);
 	}
+
 	public String refreshAccessToken(String refreshToken) {
 		if (refreshToken == null || refreshToken.isBlank()) {
 			return null;
@@ -133,20 +135,9 @@ public class AuthUserController {
 	}
 
 	@PutMapping("/auth/update")
-	public ResponseEntity<ReqRes> updateUser(@RequestBody ReqRes reqRes, HttpServletRequest request) {
-		String email = null;
-		if (request.getCookies() != null) {
-			for (Cookie cookie : request.getCookies()) {
-				if (cookie.getName().equals("email")) {
-					email = cookie.getValue();
-				}
-			}
-		}
-		
-		User user = userRepository.findByEmail(email).orElseThrow();
-
-		ReqRes response = usersManagementService.updateUser(user, reqRes);
-		return ResponseEntity.status(response.getStatusCode()).body(response);
+	public UserDto updateUser(@RequestBody UserDto userDto) {
+		UserDto response = usersManagementService.updateUser(userDto);
+		return response;
 	}
 
 }

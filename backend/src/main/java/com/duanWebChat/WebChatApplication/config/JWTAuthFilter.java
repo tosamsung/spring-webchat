@@ -43,6 +43,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	    System.out.println(requestURI);
 	    if (requestURI.equals("/auth/refreshToken") || 
 	    		requestURI.equals("/auth/logout") || 
+	    		requestURI.equals("/auth/login") || 
 	    		requestURI.equals("/auth/register")) {
 	        filterChain.doFilter(request, response);
 	        return;

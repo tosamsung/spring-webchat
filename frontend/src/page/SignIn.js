@@ -3,28 +3,27 @@ import { useNavigate } from "react-router-dom";
 import UserService from "../Service/UserService";
 import { toast } from "react-toastify";
 
-
 function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const Navigate = useNavigate();
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Email and password are required.");
       return;
     }
-    try {
-      const userDate = await UserService.login(email, password);
+
+    const userDate = await UserService.login(email, password)
+      .then((userDate) => {
         Navigate("/chats");
-     
-    } catch (error) {
-      console.log(error);
-     
-    }
+      })
+      .catch((error) => {
+        console.log("haha");
+        toast.error("haha");
+      });
   };
 
   return (
