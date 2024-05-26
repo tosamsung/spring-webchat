@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserService from "../../Service/UserService";
 import { NavLink, Outlet } from "react-router-dom";
 import {
@@ -13,35 +13,29 @@ import {
   MDBIcon,
 } from "mdb-react-ui-kit";
 import Edit from "./Edit";
+import { AppContext } from "../../context/AppContext";
 
 function Profile() {
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    userName: "",
-    image: "",
-    phone: "",
-    birthDate: "",
-    gender: "",
-  });
+  const {user}=useContext(AppContext)
+  
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await UserService.getUser().then((data)=>{
-          console.log(data);
-          setUser(data)
-        }
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const response = await UserService.getUser().then((data)=>{
+  //         console.log(data);
+  //         setUser(data)
+  //       }
           
-        );
-        // response.userName=""
+  //       );
+  //       // response.userName=""
         
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchUser();
-  }, []);
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
 
   return (
     <>
@@ -174,7 +168,7 @@ function Profile() {
                 />
               </div>
               <div className="modal-body p-0">
-                <Edit></Edit>
+                {/* <Edit></Edit> */}
               </div>
               <div className="modal-footer">
                 <button

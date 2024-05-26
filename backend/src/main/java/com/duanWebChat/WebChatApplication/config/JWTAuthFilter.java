@@ -51,7 +51,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	    String accessToken = CookieUtil.getCookieValueByName(request,"accessToken");
 	    if (accessToken == null || accessToken.isBlank()) {
 	    	   System.out.println("Access token not found");
-//		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		        response.setContentType("application/json");
 		        response.setCharacterEncoding("UTF-8");
 		        response.getWriter().write("{\"statusCode\": 401 ,"

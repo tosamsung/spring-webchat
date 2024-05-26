@@ -85,21 +85,5 @@ public class UsersManagementService {
 		return reqRes;
 	}
 
-	public UserDto updateUser(User user, ReqRes registrationRequest) {
-		try {
-			user.setFirstName(registrationRequest.getFirstName());
-			user.setLastName(registrationRequest.getLastName());
-			user.setUserName(registrationRequest.getUserName());
-			user.setImage(registrationRequest.getImage());
-			user.setPhone(registrationRequest.getPhone());
-			user.setBirthDate(registrationRequest.getBirthDate());
-			user.setGender(registrationRequest.getGender());
-
-			userRepository.save(user);
-		} catch (Exception e) {
-			throw e;
-		}
-		return new UserDto(user);
-	}
 
 }

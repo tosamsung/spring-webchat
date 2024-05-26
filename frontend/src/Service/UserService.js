@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import api from "../util/AxiosUtil";
 
 class UserService {
@@ -17,7 +16,7 @@ class UserService {
 
   static async getUser() {
     const response = await api.post(`/auth/user`).catch((error) => {
-      console.log(error);
+      // console.log(error);
     });
     return response.data;
   }
@@ -28,7 +27,6 @@ class UserService {
         email,
         password,
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw error;

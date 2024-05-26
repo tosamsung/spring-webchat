@@ -1,11 +1,10 @@
 package com.duanWebChat.WebChatApplication.entity.user;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -35,6 +34,6 @@ public class User {
 	private Date lastTimeActive;
 	private Gender gender;
 	private Date createDate;
-	private List<Friend> friendship;
+	private Map<Long,Friend> friendship;
 
 }

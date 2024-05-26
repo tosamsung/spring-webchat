@@ -4,21 +4,27 @@ import ChatPage from "./page/ChatPage";
 import Page404 from "./page/Page404";
 import SignIn from "./page/SignIn";
 import SignUp from "./page/SignUp";
-import Profile from "./components/profile/Profile";
-import Edit from "./components/profile/Edit";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AppProvider } from "./context/AppContext";
 
 function App() {
   return (
     <>
       <Routes>
-
         <Route path="/signin" element={<SignIn></SignIn>}></Route>
         <Route path="/signup" element={<SignUp></SignUp>}></Route>
         {/* <Route path="/profile" element={<Profile></Profile>}></Route>
         <Route path="/edit" element={<Edit></Edit>}></Route> */}
-        <Route path="/" element={<Layout></Layout>}>
+        <Route
+          path="/"
+          element={
+            <AppProvider>
+              <Layout></Layout>
+            </AppProvider>
+          }
+        >
           <Route path="" element={<ChatPage></ChatPage>}></Route>
           <Route path="chats" element={<ChatPage></ChatPage>}></Route>
           <Route path="/*" element={<Page404></Page404>}></Route>

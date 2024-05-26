@@ -1,4 +1,4 @@
-package com.duanWebChat.WebChatApplication.entity.user;
+ package com.duanWebChat.WebChatApplication.entity.user;
 
 
 import lombok.AllArgsConstructor;
@@ -11,7 +11,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Friend {
-	private Long id;
 	private String name;
 	private String image;
+	public Friend(User user) {
+		super();
+		this.name = user.getUserName();
+		this.image = user.getImage();
+	}
+	
+	
 }
