@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +51,7 @@ public class AuthUserController {
 	}
 
 	@PostMapping("/refreshToken")
+
 	public ReqRes refreshToken(HttpServletRequest request, HttpServletResponse response) {
 		String refreshToken = CookieUtil.getCookieValueByName(request, "refreshToken");
 		if (refreshToken != null && !refreshToken.isBlank()) {
@@ -76,6 +78,7 @@ public class AuthUserController {
 
 	@PostMapping("/login")
 	public UserDto login(@RequestBody ReqRes reqRes, HttpServletResponse response, HttpServletRequest request) {
+
 		ReqRes result = usersManagementService.login(reqRes);
 		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(true)
 				.path("/").maxAge(604800).sameSite("None").build();
@@ -84,7 +87,9 @@ public class AuthUserController {
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
 
+
 		return result.getUserDto();
+
 	}
 
 	@PostMapping("/logout")

@@ -26,6 +26,7 @@ function App() {
           }
         >
           <Route path="" element={<ChatPage></ChatPage>}></Route>
+
           <Route path="chats" element={<ChatPage></ChatPage>}></Route>
           <Route path="/*" element={<Page404></Page404>}></Route>
         </Route>

@@ -19,6 +19,7 @@ class UserService {
       // console.log(error);
     });
     return response.data;
+
   }
 
   static async login(email, password) {
@@ -33,7 +34,7 @@ class UserService {
     }
   }
 
-  static async register(userData) {
+  static async register(userData, token) {
     try {
       const response = await axios.post(
         `${UserService.BASE_URL}/auth/register`,

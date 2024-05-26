@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+
 import UserService from "../Service/UserService";
 import Profile from "../components/profile/Profile";
 import { AppContext } from "../context/AppContext";
@@ -27,7 +28,7 @@ function Layout() {
     // Validate that all variables exist
     if (nav && bodypd && headerpd) {
       // show navbar
-      nav.classList.toggle("showMenu");
+      nav.classList.toggle("show");
       // change icon
       toggle.classList.toggle("fa-circle-xmark");
       // add padding to body
@@ -68,6 +69,7 @@ function Layout() {
               />
               <p className="m-0 px-2">User A</p>
             </div>
+
           </div>
         </header>
         <div className="l-navbar" id="nav-bar">
@@ -106,6 +108,7 @@ function Layout() {
         </div>
         {/*Container Main end*/}
         <Profile></Profile>
+
     </>
   );
 }

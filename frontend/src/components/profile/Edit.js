@@ -53,32 +53,35 @@ function Edit() {
       alert("An error occurred while update user");
     }
   };
-const fetchUser = async () => {
+
+  useEffect(() => {
+    const fetchUser = async () => {
       try {
         const response = await UserService.getUser();
-        setUser(response);
+        setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-  useEffect(() => {
-    
     fetchUser();
   }, []);
 
   return (
     <>
-      <link rel="stylesheet" href="css/edit-profile.css" />
+      <link rel="stylesheet" href="css/sign-up.css" />
 
       <section
-        className="bg-image"
-       
+        className="vh-100 bg-image"
+        style={{
+          backgroundImage:
+            'url("https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp")',
+        }}
       >
-        <div className="mask d-flex align-items-center h-100">
+        <div className="mask d-flex align-items-center h-100 gradient-custom-3">
           <div className="container h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
-              <div className="col-12 col-md-9 col-lg-7 col-xl-6 w-100 p-0">
-                <div className="card">
+              <div className="col-12 col-md-9 col-lg-7 col-xl-6">
+                <div className="card" style={{ borderRadius: 15 }}>
                   <div className="card-body p-5">
                     <h2 className="text-uppercase text-center mb-5">
                       Edit Profile
@@ -169,7 +172,23 @@ const fetchUser = async () => {
                         </label>
                       </div>
 
-                      
+                      <div className="form-check d-flex justify-content-center mb-5">
+                        <input
+                          className="form-check-input me-2"
+                          type="checkbox"
+                          defaultValue
+                          id="form2Example3cg"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="form2Example3g"
+                        >
+                          I agree all statements in{"{"}" "{"}"}
+                          <a href="#!" className="text-body">
+                            <u>Terms of service</u>
+                          </a>
+                        </label>
+                      </div>
                       <div className="d-flex justify-content-center">
                         <button
                           type="submit"
@@ -177,9 +196,15 @@ const fetchUser = async () => {
                           data-mdb-ripple-init
                           className="btn btn-success btn-block btn-lg gradient-custom-4 text-body"
                         >
-                          Save
+                          Register
                         </button>
                       </div>
+                      <p className="text-center text-muted mt-5 mb-0">
+                        Have already an account?{"{"}" "{"}"}
+                        <a href="signIn" className="fw-bold text-body">
+                          <u>Login here</u>
+                        </a>
+                      </p>
                     </form>
                   </div>
                 </div>

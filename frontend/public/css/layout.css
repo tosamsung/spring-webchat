@@ -174,17 +174,11 @@ body{
         padding: 1rem 1rem 0 0
     }
 
-    .showMenu {
+    .show {
         width: calc(var(--nav-width) + 156px)
     }
 
     .body-pd {
         padding-left: calc(var(--nav-width) + 156px)
     }
-}
-.modal-content{
-    min-width: 650px;
-}
-.modal-dialog{
-    min-width: 650px;
 }
