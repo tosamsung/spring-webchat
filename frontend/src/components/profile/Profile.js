@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserService from "../../Service/UserService";
 import { NavLink, Outlet } from "react-router-dom";
 import {
@@ -12,21 +12,31 @@ import {
   MDBTypography,
   MDBIcon,
 } from "mdb-react-ui-kit";
+import Edit from "./Edit";
+import { AppContext } from "../../context/AppContext";
 
 function Profile() {
-  const [user, setUser] = useState("");
+  const {user}=useContext(AppContext)
+  
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await UserService.getUser();
-        setUser(response.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchUser();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const response = await UserService.getUser().then((data)=>{
+  //         console.log(data);
+  //         setUser(data)
+  //       }
+          
+  //       );
+  //       // response.userName=""
+        
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //     }
+  //   };
+  //   fetchUser();
+  // }, []);
+
 
   return (
     <>
@@ -133,17 +143,39 @@ function Profile() {
                 </MDBContainer>
               </section>
             </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" className="btn btn-primary">
-                Save changes
-              </button>
+          </div>
+        </div>
+        <div
+          className="modal fade"
+          id="exampleModalToggle2"
+          aria-hidden="true"
+          aria-labelledby="exampleModalToggleLabel2"
+          tabIndex={-1}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header p-1">
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                />
+              </div>
+              <div className="modal-body p-0">
+                {/* <Edit></Edit> */}
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  data-bs-target="#exampleModalToggle"
+                  data-bs-toggle="modal"
+                  data-bs-dismiss="modal"
+                >
+                  Profile
+                </button>
+              </div>
+
             </div>
           </div>
         </div>

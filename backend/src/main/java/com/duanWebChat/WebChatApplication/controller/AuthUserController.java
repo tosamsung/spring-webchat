@@ -19,6 +19,7 @@ import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
+import com.duanWebChat.WebChatApplication.service.UserService;
 import com.duanWebChat.WebChatApplication.service.UsersManagementService;
 import com.duanWebChat.WebChatApplication.util.CookieUtil;
 import com.duanWebChat.WebChatApplication.util.JWTUtils;
@@ -29,6 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthUserController {
 
 	@Autowired
@@ -38,17 +40,18 @@ public class AuthUserController {
 	private UserDetailsService detailsService;
 
 	@Autowired
-	JWTUtils jwtUtils;
+	private UserService userService;
 
 	@Autowired
-	UserRepository userRepository;
+	JWTUtils jwtUtils;
 
-	@PostMapping("/auth/register")
+	@PostMapping("/register")
 	public ResponseEntity<ReqRes> register(@RequestBody ReqRes reqRes) {
 		return ResponseEntity.ok(usersManagementService.register(reqRes));
 	}
 
-	@PostMapping("/auth/refreshToken")
+	@PostMapping("/refreshToken")
+
 	public ReqRes refreshToken(HttpServletRequest request, HttpServletResponse response) {
 		String refreshToken = CookieUtil.getCookieValueByName(request, "refreshToken");
 		if (refreshToken != null && !refreshToken.isBlank()) {
@@ -73,9 +76,9 @@ public class AuthUserController {
 		}
 	}
 
-	@PostMapping("/auth/login")
-	public ResponseEntity<ReqRes> login(@RequestBody ReqRes reqRes, HttpServletResponse response,
-			HttpServletRequest request) {
+	@PostMapping("/login")
+	public UserDto login(@RequestBody ReqRes reqRes, HttpServletResponse response, HttpServletRequest request) {
+
 		ReqRes result = usersManagementService.login(reqRes);
 		ResponseCookie cookie1 = ResponseCookie.from("accessToken", result.getToken()).httpOnly(true).secure(true)
 				.path("/").maxAge(604800).sameSite("None").build();
@@ -84,10 +87,12 @@ public class AuthUserController {
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
 
-		return ResponseEntity.ok(new ReqRes(200, "", "Login success"));
+
+		return result.getUserDto();
+
 	}
 
-	@PostMapping("/auth/logout")
+	@PostMapping("/logout")
 	public ResponseEntity<ReqRes> logout(HttpServletResponse response) {
 		ResponseCookie expiredAccessTokenCookie = ResponseCookie.from("accessToken", "").httpOnly(true).secure(true)
 				.path("/").maxAge(0).build();
@@ -101,7 +106,7 @@ public class AuthUserController {
 		return ResponseEntity.ok(new ReqRes(200, "", "Logout success"));
 	}
 
-	@PostMapping("/auth/user")
+	@PostMapping("/user")
 	public UserDto getUserByToken(HttpServletRequest request) {
 
 		String token = CookieUtil.getCookieValueByName(request, "accessToken");
@@ -111,7 +116,7 @@ public class AuthUserController {
 			return null;
 		}
 		String email = jwtUtils.extractUsername(token);
-		User user = userRepository.findByEmail(email).get();
+		User user = userService.findByEmail(email);
 
 		return new UserDto(user);
 	}
@@ -132,12 +137,6 @@ public class AuthUserController {
 		} catch (ExpiredJwtException e) {
 			throw e;
 		}
-	}
-
-	@PutMapping("/auth/update")
-	public UserDto updateUser(@RequestBody UserDto userDto) {
-		UserDto response = usersManagementService.updateUser(userDto);
-		return response;
 	}
 
 }

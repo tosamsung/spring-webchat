@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 import api from "../util/AxiosUtil";
 
 class UserService {
@@ -16,15 +15,11 @@ class UserService {
   }
 
   static async getUser() {
-    try {
-      const response = await api.post(
-        `/auth/user`,
-        {},
-        { withCredentials: true }
-      );
-      console.log(response.data);
-    } catch (error) {
-    }
+    const response = await api.post(`/auth/user`).catch((error) => {
+      // console.log(error);
+    });
+    return response.data;
+
   }
 
   static async login(email, password) {
@@ -33,7 +28,6 @@ class UserService {
         email,
         password,
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw error;

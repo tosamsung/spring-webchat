@@ -85,21 +85,4 @@ public class UsersManagementService {
 		return response;
 	}
 
-	public UserDto updateUser(UserDto userDto) {
-		try {
-			User user = userRepository.findById(userDto.getId())
-					.orElseThrow(() -> new RuntimeException("User not found"));
-			user.setFirstName(userDto.getFirstName());
-			user.setLastName(userDto.getLastName());
-			user.setUserName(userDto.getUserName());
-			user.setImage(userDto.getImage());
-			user.setPhone(userDto.getPhone());
-			user.setBirthDate(userDto.getBirthDate());
-			user.setGender(userDto.getGender());
-			userRepository.save(user);
-			return new UserDto(user);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to update user: " + e.getMessage());
-		}
-	}
 }
