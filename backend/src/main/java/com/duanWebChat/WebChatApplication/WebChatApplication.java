@@ -1,4 +1,4 @@
-package com.duanWebChat.WebChatApplication;
+	package com.duanWebChat.WebChatApplication;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

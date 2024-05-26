@@ -16,10 +16,15 @@ class UserService {
   }
 
   static async getUser() {
-    const response = await api.post(`/auth/user`).catch((error) => {
-      console.log(error);
-    });
-    return response.data;
+    try {
+      const response = await api.post(
+        `/auth/user`,
+        {},
+        { withCredentials: true }
+      );
+      console.log(response.data);
+    } catch (error) {
+    }
   }
 
   static async login(email, password) {
@@ -35,7 +40,7 @@ class UserService {
     }
   }
 
-  static async register(userData) {
+  static async register(userData, token) {
     try {
       const response = await axios.post(
         `${UserService.BASE_URL}/auth/register`,

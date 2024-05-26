@@ -1,6 +1,7 @@
 package com.duanWebChat.WebChatApplication.service;
 
 import java.util.Date;
+
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,12 @@ import org.springframework.stereotype.Service;
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
 import com.duanWebChat.WebChatApplication.entity.user.User;
+import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 import com.duanWebChat.WebChatApplication.entity.user.UserStatus;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
 import com.duanWebChat.WebChatApplication.util.JWTUtils;
 import com.duanWebChat.WebChatApplication.util.SequenceGeneratorService;
-
-import jakarta.servlet.http.HttpServletResponse;
+import com.nimbusds.jwt.JWT;
 
 @Service
 public class UsersManagementService {
@@ -46,6 +47,7 @@ public class UsersManagementService {
 			user.setPhone(registrationRequest.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 			user.setBirthDate(registrationRequest.getBirthDate());
+
 			user.setUserStatus(UserStatus.ACTIVE);
 			user.setGender(registrationRequest.getGender());
 			user.setCreateDate(new Date());
@@ -53,53 +55,51 @@ public class UsersManagementService {
 			User userResult = userRepository.save(user);
 
 			if (userResult.getId() != null) {
+				resp.setUser(userResult);
 				resp.setMessage("User saves successfuly");
 				resp.setStatusCode(200);
 			}
-
 		} catch (Exception e) {
-			resp.setStatusCode(500);
-			resp.setError(e.getMessage());
+			throw new RuntimeException("Failed to register user: " + e.getMessage());
 		}
 		return resp;
 	}
 
 	public ReqRes login(ReqRes loginRequest) {
-		ReqRes reqRes = new ReqRes();
+		ReqRes response = new ReqRes();
 		try {
 			authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-			User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
-			UserDto userDto = new UserDto(user);
-			String accessToken = jwtUtils.generateAccessToken(user);
-			String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-			reqRes.setUserDto(userDto);
-			reqRes.setStatusCode(200);
-			reqRes.setToken(accessToken);
-			reqRes.setEmail(user.getEmail());
-			reqRes.setRefreshToken(refreshToken);
-			reqRes.setMessage("successfuly login in");
+			var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+			var jwt = jwtUtils.generateAccessToken(user);
+			var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+			response.setStatusCode(200);
+			response.setToken(jwt);
+			response.setEmail(user.getEmail());
+			response.setRefreshToken(refreshToken);
+			response.setExpirationTime("24Hrs");
+			response.setMessage("successfuly login in");
 		} catch (Exception e) {
-			throw new UsernameNotFoundException("User not found");
+			throw new RuntimeException("Failed to login user: " + e.getMessage());
 		}
-		return reqRes;
+		return response;
 	}
 
-	public UserDto updateUser(User user, ReqRes registrationRequest) {
+	public UserDto updateUser(UserDto userDto) {
 		try {
-			user.setFirstName(registrationRequest.getFirstName());
-			user.setLastName(registrationRequest.getLastName());
-			user.setUserName(registrationRequest.getUserName());
-			user.setImage(registrationRequest.getImage());
-			user.setPhone(registrationRequest.getPhone());
-			user.setBirthDate(registrationRequest.getBirthDate());
-			user.setGender(registrationRequest.getGender());
-
+			User user = userRepository.findById(userDto.getId())
+					.orElseThrow(() -> new RuntimeException("User not found"));
+			user.setFirstName(userDto.getFirstName());
+			user.setLastName(userDto.getLastName());
+			user.setUserName(userDto.getUserName());
+			user.setImage(userDto.getImage());
+			user.setPhone(userDto.getPhone());
+			user.setBirthDate(userDto.getBirthDate());
+			user.setGender(userDto.getGender());
 			userRepository.save(user);
+			return new UserDto(user);
 		} catch (Exception e) {
-			throw e;
+			throw new RuntimeException("Failed to update user: " + e.getMessage());
 		}
-		return new UserDto(user);
 	}
-
 }
