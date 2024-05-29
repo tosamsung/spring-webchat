@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
+import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 import com.duanWebChat.WebChatApplication.entity.user.UserStatus;
@@ -42,7 +43,8 @@ public class UsersManagementService {
 			user.setFirstName(registrationRequest.getFirstName());
 			user.setLastName(registrationRequest.getLastName());
 			user.setUserName(registrationRequest.getUserName());
-			user.setImage(registrationRequest.getImage());
+			user.setImage("https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg");
+			user.setConnectStatus(ConnectStatus.OFFLINE);
 			user.setEmail(registrationRequest.getEmail());
 			user.setPhone(registrationRequest.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
@@ -55,7 +57,6 @@ public class UsersManagementService {
 			User userResult = userRepository.save(user);
 
 			if (userResult.getId() != null) {
-				resp.setUser(userResult);
 				resp.setMessage("User saves successfuly");
 				resp.setStatusCode(200);
 			}
@@ -73,6 +74,7 @@ public class UsersManagementService {
 			var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 			var jwt = jwtUtils.generateAccessToken(user);
 			var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+			response.setUserDto(new UserDto(user));
 			response.setStatusCode(200);
 			response.setToken(jwt);
 			response.setEmail(user.getEmail());

@@ -39,7 +39,7 @@ public class ReqRes {
 	private Gender gender;
 	private Date createDate;
 	private List<Friend> friendship;
-	private User user;
+	private UserDto userDto;
 	private List<User> listUser;
 	public ReqRes(int statusCode, String error, String message) {
 		super();

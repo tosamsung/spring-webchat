@@ -6,45 +6,34 @@ const refreshToken = async () => {
       {},
       { withCredentials: true }
     );
-    console.log(response.data);
-  } catch (error) {}
+    return response.data; // Giả sử rằng token mới được trả về ở đây
+  } catch (error) {
+    console.error("Failed to refresh token", error);
+    throw error;
+  }
 };
+
 const api = axios.create({
   withCredentials: true,
   baseURL: "http://localhost:8080",
 });
-// api.interceptors.response.use(response => {
-//   return response;
-// }, async error => {
-//   // console.log(error.response.data);
-//  if (error.response.status === 401) {
-//   await refreshToken()
-//   console.log("het han");
-//   return axios(error.config);
-//  }
-// });
-let lastRequest = null;
-api.interceptors.request.use(
-  (config) => {
-    // Lưu request hiện tại vào biến lastRequest
-    lastRequest = config;
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+
+
 api.interceptors.response.use(
-  async (response) => {
-    if (response.data.statusCode === 401) {
-      await refreshToken();
-      console.log("het han");
-      const originalRequest = lastRequest;
-      lastRequest = null; // Đặt lại lastRequest để tránh việc thực hiện lại request khi có response tiếp theo
-      return axios(originalRequest);
-    }
+  (response) => {
     return response;
   },
-  (error) => {}
+  async (error) => {
+    if (error.response.status === 401 ) {
+      try {
+        const tokenData = await refreshToken();
+        return api(error.config);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
 );
 export default api;

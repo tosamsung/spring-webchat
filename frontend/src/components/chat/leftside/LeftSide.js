@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from "react";
-import ListContacts from "./ListContacts";
+import Contact from "../leftside/Contact"
 import ChatDetail from "./ChatDetail";
-function LeftSide() {
-  const openDetil=()=>{
-    let Detail=document.getElementById("detail")
-    let Contact=document.getElementById("listContacts")
-    let ButtonContact=document.getElementById("buttonContact")
-    let ButtonDetail=document.getElementById("buttonDetail")
-    if(Detail){
-      Detail.classList.add("show")
-      Detail.classList.add("active")
-      Contact.classList.remove("show")
-      Contact.classList.remove("active")
-      ButtonDetail.classList.add("active")
-      ButtonContact.classList.remove("active")
+function LeftSide(props) {
+  const [privateChat, setPrivateChat] = useState(new Map());
+
+  useEffect(() => {}, []);
+
+  const openDetil = () => {
+    let Detail = document.getElementById("detail");
+    let Contact = document.getElementById("listContacts");
+    let ButtonContact = document.getElementById("buttonContact");
+    let ButtonDetail = document.getElementById("buttonDetail");
+    if (Detail) {
+      Detail.classList.add("show");
+      Detail.classList.add("active");
+      Contact.classList.remove("show");
+      Contact.classList.remove("active");
+      ButtonDetail.classList.add("active");
+      ButtonContact.classList.remove("active");
     }
-  }
-  const openListContacts=()=>{
-    let Detail=document.getElementById("detail")
-    let Contact=document.getElementById("listContacts")
-    let ButtonContact=document.getElementById("buttonContact")
-    let ButtonDetail=document.getElementById("buttonDetail")
-    if(Detail){
-      Detail.classList.remove("show")
-      Detail.classList.remove("active")
-      Contact.classList.add("show")
-      Contact.classList.add("active")
-      ButtonDetail.classList.remove("active")
-      ButtonContact.classList.add("active")
+  };
+  const openListContacts = () => {
+    let Detail = document.getElementById("detail");
+    let Contact = document.getElementById("listContacts");
+    let ButtonContact = document.getElementById("buttonContact");
+    let ButtonDetail = document.getElementById("buttonDetail");
+    if (Detail) {
+      Detail.classList.remove("show");
+      Detail.classList.remove("active");
+      Contact.classList.add("show");
+      Contact.classList.add("active");
+      ButtonDetail.classList.remove("active");
+      ButtonContact.classList.add("active");
     }
-  }
+  };
   return (
     <>
       <div className="chatlist">
@@ -53,11 +57,25 @@ function LeftSide() {
                 </a>
               </div>
               <ul className="nav-tabs p-0 row" id="myTab" role="tablist">
-                <li className="nav-item col"  onClick={()=>{openListContacts()}}>
-                  <button className="nav-link active" id="buttonContact">Contact</button>
+                <li
+                  className="nav-item col"
+                  onClick={() => {
+                    openListContacts();
+                  }}
+                >
+                  <button className="nav-link active" id="buttonContact">
+                    Contact
+                  </button>
                 </li>
-                <li className="nav-item col" onClick={()=>{openDetil()}}>
-                  <button className="nav-link" id="buttonDetail">Detail</button>
+                <li
+                  className="nav-item col"
+                  onClick={() => {
+                    openDetil();
+                  }}
+                >
+                  <button className="nav-link" id="buttonDetail">
+                    Detail
+                  </button>
                 </li>
               </ul>
             </div>
@@ -67,10 +85,16 @@ function LeftSide() {
                 <div className="tab-content" id="myTabContent">
                   <div className="tab-pane fade show active" id="listContacts">
                     {/* chat-list */}
-                    <ListContacts></ListContacts>
+                    <div className="chat-list">
+                      {[...privateChat.keys()].map(()=>{
+                        
+                      })}
+                      <Contact></Contact>
+                    
+                    </div>
                     {/* chat-list */}
                   </div>
-                  <div className="tab-pane fade w-100" id="detail" >
+                  <div className="tab-pane fade w-100" id="detail">
                     {/* chat-list */}
                     <ChatDetail></ChatDetail>
                     {/* chat-list */}

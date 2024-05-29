@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, {useContext, useState, useEffect } from "react";
 import Sender from "./Sender";
 import Reply from "./Reply";
 import Divider from "./Divider";
-
+import { AppContext } from "../../../context/AppContext";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
 function ChatBox() {
+ 
   return (
     <>
       <div className="chatbox">
@@ -42,9 +45,6 @@ function ChatBox() {
                   <Sender></Sender>
                   <Divider></Divider>
                   <Reply></Reply>
-                
-                 
-                  
                 </ul>
               </div>
             </div>

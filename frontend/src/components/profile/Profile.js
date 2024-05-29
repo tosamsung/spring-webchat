@@ -16,8 +16,7 @@ import Edit from "./Edit";
 import { AppContext } from "../../context/AppContext";
 
 function Profile() {
-  const {user}=useContext(AppContext)
-  
+  const { user } = useContext(AppContext);
 
   // useEffect(() => {
   //   const fetchUser = async () => {
@@ -26,10 +25,10 @@ function Profile() {
   //         console.log(data);
   //         setUser(data)
   //       }
-          
+
   //       );
   //       // response.userName=""
-        
+
   //     } catch (error) {
   //       console.error("Error fetching user data:", error);
   //     }
@@ -37,13 +36,12 @@ function Profile() {
   //   fetchUser();
   // }, []);
 
-
   return (
     <>
       <link rel="stylesheet" href="css/profile.css" />
       <div
         className="modal fade"
-        id="exampleModal"
+        id="exampleModalToggle"
         tabIndex={-1}
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
@@ -63,12 +61,12 @@ function Profile() {
             </div>
             <div className="modal-body">
               <section
-                className="vh-100"
+                className="modal-body"
                 style={{ backgroundColor: "#f4f5f7" }}
               >
-                <MDBContainer className="py-5 h-100">
-                  <MDBRow className="justify-content-center align-items-center h-100">
-                    <MDBCol lg="6" className="mb-4 mb-lg-0">
+                <MDBContainer>
+                  <MDBRow className="justify-content-center align-items-center">
+                    <MDBCol lg="6" className="mb-4 mb-lg-0 w-100">
                       <MDBCard
                         className="mb-3"
                         style={{ borderRadius: ".5rem" }}
@@ -83,19 +81,23 @@ function Profile() {
                             }}
                           >
                             <MDBCardImage
-                              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                              src={user.image}
                               alt="Avatar"
-                              className="my-5"
+                              className="my-5 rounded-circle"
                               style={{ width: "80px" }}
                               fluid
                             />
 
                             <MDBTypography tag="h5"></MDBTypography>
                             <MDBCardText>{user.userName}</MDBCardText>
-                            <NavLink to="/edit">
-                              {" "}
+                            <a
+                              className="btn text-white"
+                              data-bs-target="#exampleModalToggle2"
+                              data-bs-toggle="modal"
+                              data-bs-dismiss="modal"
+                            >
                               <MDBIcon far icon="edit mb-5" />
-                            </NavLink>
+                            </a>
                           </MDBCol>
                           <MDBCol md="8">
                             <MDBCardBody className="p-4">
@@ -145,37 +147,36 @@ function Profile() {
             </div>
           </div>
         </div>
-        <div
-          className="modal fade"
-          id="exampleModalToggle2"
-          aria-hidden="true"
-          aria-labelledby="exampleModalToggleLabel2"
-          tabIndex={-1}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header p-1">
-                <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Close"
-                />
-              </div>
-              <div className="modal-body p-0">
-                {/* <Edit></Edit> */}
-              </div>
-              <div className="modal-footer">
-                <button
-                  className="btn btn-secondary"
-                  data-bs-target="#exampleModalToggle"
-                  data-bs-toggle="modal"
-                  data-bs-dismiss="modal"
-                >
-                  Profile
-                </button>
-              </div>
-
+      </div>
+      <div
+        className="modal fade"
+        id="exampleModalToggle2"
+        aria-hidden="true"
+        aria-labelledby="exampleModalToggleLabel2"
+        tabIndex={-1}
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content">
+            <div className="modal-header p-1">
+              <button
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              />
+            </div>
+            <div className="modal-body p-0">
+              <Edit></Edit>
+            </div>
+            <div className="modal-footer">
+              <button
+                className="btn btn-secondary"
+                data-bs-target="#exampleModalToggle"
+                data-bs-toggle="modal"
+                data-bs-dismiss="modal"
+              >
+                Profile
+              </button>
             </div>
           </div>
         </div>

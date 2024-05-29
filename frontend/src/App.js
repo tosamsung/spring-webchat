@@ -8,6 +8,7 @@ import SignUp from "./page/SignUp";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppProvider } from "./context/AppContext";
+import FriendsPage from "./page/FriendsPage";
 
 function App() {
   return (
@@ -26,8 +27,8 @@ function App() {
           }
         >
           <Route path="" element={<ChatPage></ChatPage>}></Route>
-
           <Route path="chats" element={<ChatPage></ChatPage>}></Route>
+          <Route path="friends" element={<FriendsPage></FriendsPage>}></Route>
           <Route path="/*" element={<Page404></Page404>}></Route>
         </Route>
       </Routes>

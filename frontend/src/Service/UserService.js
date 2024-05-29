@@ -13,13 +13,21 @@ class UserService {
       );
     } catch (error) {}
   }
-
+  // static async addFriend(){
+  //   try {
+  //     const user = await api.put(`/auth/user`);
+  //     return user.data;
+  //   } catch (error) {
+  //     throw error
+  //   }
+  // }
   static async getUser() {
-    const response = await api.post(`/auth/user`).catch((error) => {
-      // console.log(error);
-    });
-    return response.data;
-
+    try {
+      const user = await api.post(`/auth/user`);
+      return user.data;
+    } catch (error) {
+      throw error
+    }
   }
 
   static async login(email, password) {
@@ -57,10 +65,6 @@ class UserService {
     } catch (error) {}
   }
 
-  static isAuthenticated() {
-    const token = localStorage.getItem("token");
-    return !!token;
-  }
 
   //end
 }

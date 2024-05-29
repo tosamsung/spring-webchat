@@ -16,14 +16,14 @@
     box-sizing: border-box
 }
 
-a {
+ a {
     text-decoration: none
 }
 body{
     transition: .5s;
 
 }
-.header {
+ .header {
     width: 100%;
     height: var(--header-height);
     top: 0;
@@ -36,19 +36,19 @@ body{
     transition: .5s
     
 }
-.header .user-img{
+ .header .user-img{
     max-width: 30px;
     max-height: 30px;
     min-width: 30px;
     min-height: 30px;
 }
-.header_toggle {
+ .header_toggle {
     color: var(--first-color);
     font-size: 1.5rem;
     cursor: pointer
 }
 
-.header_img {
+ .header_img {
     width: 35px;
     height: 35px;
     display: flex;
@@ -57,11 +57,11 @@ body{
     overflow: hidden
 }
 
-.header_img img {
+ .header_img img {
     width: 40px
 }
 
-.l-navbar {
+ .lNavbar  {
     position: fixed;
     top: 0;
     left: -30%;
@@ -73,7 +73,7 @@ body{
     z-index: var(--z-fixed)
 }
 
-.nav {
+ .nav {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -81,8 +81,8 @@ body{
     overflow: hidden
 }
 
-.nav_logo,
-.nav_link {
+ .nav_logo,
+ .nav_link {
     display: grid;
     grid-template-columns: max-content max-content;
     align-items: center;
@@ -93,46 +93,46 @@ body{
     
 }
 
-.nav_logo {
+ .nav_logo {
     margin-bottom: 2rem
 }
 
-.nav_logo-icon {
+ .nav_logo_icon {
     font-size: 1.25rem;
     color: var(--white-color)
 }
 
-.nav_logo-name {
+ .nav_logo_name {
     color: var(--white-color);
     font-weight: 700
 }
 
-.nav_link {
+ .nav_link {
     position: relative;
     color: var(--first-color-light);
     margin-bottom: 1.5rem;
     transition: .3s
 }
 
-.nav_link:hover {
+ .nav_link:hover {
     color: var(--white-color)
 }
-.user{
+ .user{
     max-width: 115px;
 }
-.nav_icon {
+ .nav_icon {
     font-size: 1.25rem
 }
 
-.show {
+ .show {
     left: 0
 }
 
-.body-pd {
+ .body_pd {
     padding-left: calc(var(--nav-width) + 0rem)
 }
 
-.active {
+ .active {
     color: var(--white-color)
 }
 
@@ -145,40 +145,40 @@ body{
     background-color: var(--white-color)
 } */
 
-.height-100 {
+ .height-100 {
     height: 100vh
 }
 
 @media screen and (min-width: 768px) {
-    body {
+     body {
         margin: calc(var(--header-height) + 1rem) 0 0 0;
         padding-left: calc(var(--nav-width) )
     }
 
-    .header {
+     .header {
         height: calc(var(--header-height) + 1rem);
         /* padding: 0 2rem 0 calc(var(--nav-width)) */
     }
 
-    .header_img {
+     .header_img {
         width: 40px;
         height: 40px
     }
 
-    .header_img img {
+     .header_img img {
         width: 45px
     }
 
-    .l-navbar {
+     .lNavbar {
         left: 0;
         padding: 1rem 1rem 0 0
     }
 
-    .show {
+     .show {
         width: calc(var(--nav-width) + 156px)
     }
 
-    .body-pd {
+    .body_pd {
         padding-left: calc(var(--nav-width) + 156px)
     }
 }

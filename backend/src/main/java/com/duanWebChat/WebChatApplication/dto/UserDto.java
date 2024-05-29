@@ -2,9 +2,11 @@ package com.duanWebChat.WebChatApplication.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 
+import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.Friend;
 import com.duanWebChat.WebChatApplication.entity.user.Gender;
 import com.duanWebChat.WebChatApplication.entity.user.User;
@@ -30,10 +32,12 @@ public class UserDto {
     private String phone;
     private Date birthDate;
     private UserStatus userStatus;
+	private ConnectStatus connectStatus;
+
     private Date lastTimeActive;
     private Gender gender;
     private Date createDate;
-    private List<Friend> friendship;
+	private Map<Long,Friend> friendship;
 
     // Constructor to map User entity to UserDto
     public UserDto(User user) {

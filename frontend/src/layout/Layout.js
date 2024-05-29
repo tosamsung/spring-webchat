@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-
+import styles from "../css/layout.module.css"
 import UserService from "../Service/UserService";
 import Profile from "../components/profile/Profile";
 import { AppContext } from "../context/AppContext";
 function Layout() {
-  const navigate=useNavigate();
-  const auth=useContext(AppContext).auth
-  const setAuth=useContext(AppContext).setAuth
+  const navigate = useNavigate();
+  const auth = useContext(AppContext).auth;
+  const setAuth = useContext(AppContext).setAuth;
 
   const handleLogout = () => {
     const confirm = window.confirm(
@@ -15,7 +15,7 @@ function Layout() {
     );
     if (confirm) {
       UserService.logout();
-      setAuth()
+      setAuth();
     }
   };
 
@@ -28,11 +28,11 @@ function Layout() {
     // Validate that all variables exist
     if (nav && bodypd && headerpd) {
       // show navbar
-      nav.classList.toggle("show");
+      nav.classList.toggle(styles.show);
       // change icon
       toggle.classList.toggle("fa-circle-xmark");
       // add padding to body
-      bodypd.classList.toggle("body-pd");
+      bodypd.classList.toggle(styles.body_pd);
       // add padding to header
       // headerpd.classList.toggle('body-pd')
     }
@@ -42,15 +42,14 @@ function Layout() {
     if (!auth) {
       navigate("/signin");
     }
-
-  }, [auth]);
+  }, []);
 
   return (
     <>
-      <link rel="stylesheet" href="css/layout.css" />
-        <header className="header sticky-top" id="header">
+      {/* <link rel="stylesheet" href="css/layout.css" /> */}
+        <header className={`${styles.header}  sticky-top`} id="header">
           <div className="row h-100 p-1">
-            <div className="header_toggle d-inline-block col">
+            <div className={`${styles.header_toggle} d-inline-block col`}>
               <i
                 className="fa-solid fa-bars text-white fs-2"
                 id="header-toggle"
@@ -59,46 +58,39 @@ function Layout() {
                 }}
               />
             </div>
-            <div
-              className="col d-flex justify-content-end p-2 bg-light rounded-2 btn user"
-            >
-              <img
-                src="https://i.pinimg.com/736x/f9/4f/e3/f94fe3bd5ff54e08ee5e9e352384ca14.jpg"
-                className="rounded-circle user-img img-fluid "
-                alt="Mô tảx` ảnh"
-              />
-              <p className="m-0 px-2">User A</p>
-            </div>
-
           </div>
         </header>
-        <div className="l-navbar" id="nav-bar">
-          <nav className="nav">
+        <div className={styles.lNavbar} id="nav-bar">
+          <nav className={styles.nav}>
             <div>
-              <NavLink to="/chats" className="nav_logo">
-                <i className="bx bx-layer nav_logo-icon" />
-                <span className="nav_logo-name">WebChat</span>
+              <NavLink to="/chats" className={styles.nav_logo}>
+                <i className={`${styles.nav_logo_icon}  bx bx-layer`}/>
+                <span className={styles.nav_logo_name}>WebChat</span>
               </NavLink>
               <div className="nav_list">
-                <NavLink href="/chats" className="nav_link">
-                  <i className="bx bx-conversation nav_icon" />
-                  <span className="nav_name">Chats</span>
+                <NavLink to="/chats" className={styles.nav_logo}>
+                  <i className={`${styles.nav_icon}  bx bx-conversation`}/>
+                  <span className={styles.nav_name}>Chats</span>
+                </NavLink>
+                <NavLink to="/friends" className={styles.nav_logo}>
+                  <i className={`${styles.nav_icon}  bx bx-search-alt-2`}></i>
+                  <span className={styles.nav_name}>Friends</span>
                 </NavLink>
                 <a
                   data-bs-toggle="modal"
                   href="#exampleModalToggle"
                   role="button"
-                  className="nav_link"
+                  className={styles.nav_link}
                 >
-                  <i className="bx bx-user nav_icon" />
-                  <span className="nav_name">Users</span>{" "}
+                  <i className={`${styles.nav_icon} bx bx-user`} />
+                  <span className={styles.nav_name}>Users</span>
                   {/* chỉnh lại active */}
                 </a>
               </div>
             </div>
-            <NavLink to="/" className="nav_link" onClick={handleLogout}>
-              <i className="bx bx-log-out nav_icon" />
-              <span className="nav_name">SignOut</span>
+            <NavLink to="/" className={styles.nav_link} onClick={handleLogout}>
+              <i className={`${styles.nav_icon}  bx bx-log-out`}/>
+              <span className={styles.nav_name}>SignOut</span>
             </NavLink>
           </nav>
         </div>
@@ -108,7 +100,6 @@ function Layout() {
         </div>
         {/*Container Main end*/}
         <Profile></Profile>
-
     </>
   );
 }

@@ -74,7 +74,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	        }
 	    } catch (ExpiredJwtException e) {
 	        System.out.println("Access token hết hạn");
-//	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	        response.setContentType("application/json");
 	        response.setCharacterEncoding("UTF-8");
 	        response.getWriter().write("{\"statusCode\": 401 ,"

@@ -1,11 +1,15 @@
 package com.duanWebChat.WebChatApplication.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
+import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.Friend;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
@@ -14,6 +18,11 @@ import com.duanWebChat.WebChatApplication.repository.UserRepository;
 public class UserService {
 	@Autowired
 	private UserRepository userRepository;
+
+	public List<UserDto> findAll() {
+		List<User> list = userRepository.findAll();
+		return list.stream().map(UserDto::new).collect(Collectors.toList());
+	}
 
 	public UserDto updateUser(User user, ReqRes registrationRequest) {
 		try {
@@ -37,21 +46,35 @@ public class UserService {
 		return user;
 	}
 
+	public UserDto setUserOnline(Long id) {
+		User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		user.setConnectStatus(ConnectStatus.ONLINE);
+		userRepository.save(user);
+		return new UserDto(user);
+	}
+
+	public UserDto setUserOffline(Long id) {
+		User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		user.setConnectStatus(ConnectStatus.OFFLINE);
+		userRepository.save(user);
+		return new UserDto(user);
+	}
+
 	public void addFriend(Long idUser1, Long idUser2) {
 		User user1 = userRepository.findById(idUser1)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		User user2 = userRepository.findById(idUser2)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		if (user1.getFriendship().containsKey(user2.getId()) || user2.getFriendship().containsKey(user1.getId())) {
-			 throw new IllegalStateException("Users are already friends");
+			throw new IllegalStateException("Users are already friends");
 		}
-		if(user1.getFriendship().size()<=200 || user2.getFriendship().size()<=200) {
-			 throw new IllegalStateException("Max friends are 200");
+		if (user1.getFriendship().size() <= 200 || user2.getFriendship().size() <= 200) {
+			throw new IllegalStateException("Max friends are 200");
 		}
 		user1.getFriendship().put(idUser2, new Friend(user2));
 		user2.getFriendship().put(idUser1, new Friend(user1));
 		userRepository.save(user1);
 		userRepository.save(user2);
-		
+
 	}
 }

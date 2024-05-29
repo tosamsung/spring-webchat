@@ -16,3 +16,7 @@
     rgb(102, 202, 232)
   );
 }
+.modal-dialog{
+  max-width: 650px;
+}
+

@@ -8,13 +8,22 @@ export const AppProvider = ({ children }) => {
   const [auth, setAuth] = useState({});
 
   useEffect(() => {
-    UserService.getUser().then((data) => {
-      console.log(data);
-      setAuth(true);
-      setUser(data);
-    }).catch((error=>{
-      setAuth(false);
-    }));
+    const result = async () => {
+      try {
+        const user = await UserService.getUser();
+        console.log(user);
+        setUser(user);
+        setAuth(true);
+      } catch (error) {
+        setAuth(false);
+        console.log("err");
+      }
+    };
+    result();
   }, []);
-  return <AppContext.Provider value={{ user,auth,setAuth }}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={{ user, auth, setAuth }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
