@@ -32,8 +32,6 @@ public class SecurityConfig {
 		System.out.println("security filter");
 		httpSecurity.csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**").permitAll()
-						.requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-						.requestMatchers("/user/**").hasAnyAuthority("USER")
 						.anyRequest().authenticated())
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authticationProvider())

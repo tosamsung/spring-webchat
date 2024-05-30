@@ -1,28 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserService from "../../Service/UserService";
 import { toast } from "react-toastify";
-
-function Edit() {
-  const [user, setUser] = useState({
+import { AppContext } from "../../context/AppContext";
+function Edit(props) {
+  const { user } = useContext(AppContext);
+  const [userDto, setUserDto] = useState({
     firstName: "",
     lastName: "",
     userName: "",
-    image: "",
     phone: "",
     birthDate: "",
     gender: "",
   });
+  useEffect(() => {
+    setUserDto(user);
+  }, [user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+    setUserDto({ ...userDto, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { firstName, lastName, userName, image, phone, birthDate, gender } =
-      user;
-
+    const { firstName, lastName, userName, phone, birthDate, gender } =
+    userDto;
+    
     // Kiểm tra các trường có được nhập đầy đủ hay không
     if (
       !firstName ||
@@ -37,23 +40,12 @@ function Edit() {
     }
 
     try {
-      await UserService.updateUser(user);
-      setUser({
-        firstName: "",
-        lastName: "",
-        userName: "",
-        image: "",
-        phone: "",
-        birthDate: "",
-        gender: "",
-      });
-
+      await UserService.updateUser(userDto);
       toast.success("User registerd successfully");
     } catch (error) {
       alert("An error occurred while update user");
     }
   };
-
   return (
     <>
       <link rel="stylesheet" href="css/edit.css" />
@@ -71,8 +63,8 @@ function Edit() {
                     <div data-mdb-input-init className="form-outline mb-4">
                       <input
                         name="firstName"
-                        value={user.firstName}
-                        onChange={handleInputChange}
+                        value={userDto.firstName || ''}
+                        onChange={()=>{handleInputChange()}}
                         type="text"
                         id="form3Example1cg"
                         className="form-control form-control-lg"
@@ -84,8 +76,8 @@ function Edit() {
                     <div data-mdb-input-init className="form-outline mb-4">
                       <input
                         name="lastName"
-                        value={user.lastName}
-                        onChange={handleInputChange}
+                        value={userDto.lastName || ''}
+                        onChange={()=>{handleInputChange()}}
                         type="text"
                         id="form3Example1cg"
                         className="form-control form-control-lg"
@@ -97,8 +89,8 @@ function Edit() {
                     <div data-mdb-input-init className="form-outline mb-4">
                       <input
                         name="userName"
-                        value={user.userName}
-                        onChange={handleInputChange}
+                        value={userDto.userName || ''}
+                        onChange={()=>{handleInputChange()}}
                         type="text"
                         id="form3Example1cg"
                         className="form-control form-control-lg"
@@ -111,8 +103,8 @@ function Edit() {
                     <div data-mdb-input-init className="form-outline mb-4">
                       <input
                         name="phone"
-                        value={user.phone}
-                        onChange={handleInputChange}
+                        value={userDto.phone || ''}
+                        onChange={()=>{handleInputChange()}}
                         type="number"
                         id="form3Example4cg"
                         className="form-control form-control-lg"
@@ -125,8 +117,8 @@ function Edit() {
                     <div data-mdb-input-init className="form-outline mb-4">
                       <input
                         name="birthDate"
-                        value={user.birthDate}
-                        onChange={handleInputChange}
+                        value={userDto.birthDate || ''}
+                        onChange={()=>{handleInputChange()}}
                         type="date"
                         id="form3Example4cg"
                         className="form-control form-control-lg"
@@ -139,8 +131,8 @@ function Edit() {
                     <div data-mdb-input-init className="form-outline mb-4">
                       <select
                         name="gender"
-                        value={user.gender}
-                        onChange={handleInputChange}
+                        value={userDto.gender || ''}
+                        onChange={()=>{handleInputChange()}}
                         className="form-select form-select-lg"
                         aria-label="Gender"
                       >
@@ -153,7 +145,6 @@ function Edit() {
                       </label>
                     </div>
 
-                    
                     <div className="d-flex justify-content-center">
                       <button
                         type="submit"
@@ -164,7 +155,6 @@ function Edit() {
                         Register
                       </button>
                     </div>
-                  
                   </form>
                 </div>
               </div>

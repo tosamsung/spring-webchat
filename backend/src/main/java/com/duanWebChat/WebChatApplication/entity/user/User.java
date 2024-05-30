@@ -35,6 +35,6 @@ public class User {
 	private Date lastTimeActive;
 	private Gender gender;
 	private Date createDate;
-	private Map<Long,Friend> friendship;
+	private Map<Long,Relationships> relationships;
 
 }

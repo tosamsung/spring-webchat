@@ -6,10 +6,9 @@ class UserService {
 
   static async updateUser(userData) {
     try {
-      const response = await axios.put(
-        `${UserService.BASE_URL}/auth/update`,
+      const response = await api.put(
+        `/user/update`,
         userData,
-        { withCredentials: true }
       );
     } catch (error) {}
   }

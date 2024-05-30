@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 
 import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
-import com.duanWebChat.WebChatApplication.entity.user.Friend;
+import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.Gender;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserStatus;
@@ -16,9 +16,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
@@ -37,7 +39,7 @@ public class UserDto {
     private Date lastTimeActive;
     private Gender gender;
     private Date createDate;
-	private Map<Long,Friend> friendship;
+	private Map<Long,Relationships> relationships;
 
     // Constructor to map User entity to UserDto
     public UserDto(User user) {
@@ -53,6 +55,6 @@ public class UserDto {
         this.lastTimeActive = user.getLastTimeActive();
         this.gender = user.getGender();
         this.createDate = user.getCreateDate();
-        this.friendship = user.getFriendship();
+        this.relationships = user.getRelationships();
     }
 }

@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import UserService from "../../Service/UserService";
-import { NavLink, Outlet } from "react-router-dom";
 import {
   MDBCol,
   MDBContainer,
@@ -166,7 +164,7 @@ function Profile() {
               />
             </div>
             <div className="modal-body p-0">
-              <Edit></Edit>
+              <Edit ></Edit>
             </div>
             <div className="modal-footer">
               <button

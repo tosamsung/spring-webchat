@@ -3,7 +3,7 @@ package com.duanWebChat.WebChatApplication.dto;
 import java.util.Date; 
 import java.util.List;
 
-import com.duanWebChat.WebChatApplication.entity.user.Friend;
+import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.Gender;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
@@ -38,7 +38,7 @@ public class ReqRes {
 	private Date lastTimeActive;
 	private Gender gender;
 	private Date createDate;
-	private List<Friend> friendship;
+	private List<Relationships> friendship;
 	private UserDto userDto;
 	private List<User> listUser;
 	public ReqRes(int statusCode, String error, String message) {

@@ -10,14 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Friend {
+public class Relationships {
 	private String name;
 	private String image;
-	public Friend(User user) {
-		super();
-		this.name = user.getUserName();
-		this.image = user.getImage();
-	}
-	
-	
+	private RelationshipType type;
+
 }
