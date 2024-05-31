@@ -1,12 +1,19 @@
-import React, {useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Sender from "./Sender";
 import Reply from "./Reply";
 import Divider from "./Divider";
 import { AppContext } from "../../../context/AppContext";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
+import SocketService from "../../../Service/SocketService";
 function ChatBox() {
- 
+  const [chat, setChat] = useState([]);
+  const {user}=useContext(AppContext)
+  const handleSend = () => {
+    console.log("send");
+    // setChat([...chat, <Reply key={chat.length} />]);
+    SocketService.ConnectWs(user.id)
+  };
   return (
     <>
       <div className="chatbox">
@@ -45,6 +52,7 @@ function ChatBox() {
                   <Sender></Sender>
                   <Divider></Divider>
                   <Reply></Reply>
+                  {chat}
                 </ul>
               </div>
             </div>
@@ -57,7 +65,7 @@ function ChatBox() {
                   aria-label="message…"
                   placeholder="Write message…"
                 />
-                <button type="button">
+                <button type="button" onClick={handleSend}>
                   <i className="fa fa-paper-plane" aria-hidden="true" />
                   Send
                 </button>

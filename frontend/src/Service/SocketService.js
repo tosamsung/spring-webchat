@@ -1,25 +1,22 @@
 // const { over } = require("stompjs");
 import { over } from "stompjs";
 import SockJS from "sockjs-client";
-class SocketService {
-  static privateChat = new Map();
-  static BASE_URL_SOCKET = "http://localhost:8080";
+export default class SocketService {
+  static BASE_URL_SOCKET = "localhost:8080";
   static stompClient = null;
   static ConnectWs = (userid) => {
-    let Sock = new SockJS(this.BASE_URL_SOCKET + "/ws");
-    this.stompClient = over(Sock);
-    this.stompClient.connect({}, onConnected(userid), onError);
+     this.stompClient = new WebSocket("ws://" + this.BASE_URL_SOCKET + "/chat/" + userid);
+     console.log("ws://" + this.BASE_URL_SOCKET + "/chat/" + userid);
+    // this.stompClient = over(Sock);
+    // this.stompClient.connect({},this.onConnected(userid),this.onError);
   };
-  onConnected = (userid) => {
-    this.stompClient.subscribe(
-      "/user/" + userid + "/private",
-      receivePrivateMessage
-    );
+  static onConnected = (userid) => {
+   
   };
-  onError = (error) => {
+  static onError = (error) => {
     console.log(error);
   };
-  receivePrivateMessage = (payload) => {
+  static receiveMessage = (payload) => {
     let data = JSON.parse(payload.body);
     if (this.privateChat.has(data.id)) {
       this.privateChat.get(data.id).push(data);

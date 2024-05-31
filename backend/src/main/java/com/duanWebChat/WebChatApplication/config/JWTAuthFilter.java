@@ -37,10 +37,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		System.out.println("jwt filter");
 		// Lấy access token từ cookie
 		String requestURI = request.getRequestURI();
-		System.out.println(requestURI);
 		if (requestURI.equals("/auth/refreshToken") || requestURI.equals("/auth/logout")
 				|| requestURI.equals("/auth/login") || requestURI.equals("/auth/register")) {
 			filterChain.doFilter(request, response);
