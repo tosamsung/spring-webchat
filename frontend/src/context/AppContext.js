@@ -1,6 +1,7 @@
 import { createContext } from "react";
 import React, { useEffect, useState } from "react";
 import UserService from "../Service/UserService";
+import SocketService from "../Service/SocketService";
 
 export const AppContext = createContext({});
 export const AppProvider = ({ children }) => {
@@ -11,12 +12,13 @@ export const AppProvider = ({ children }) => {
     const result = async () => {
       try {
         const user = await UserService.getUser();
-        console.log(user);
+        // SocketService.ConnectWs(user.userName)
+        // console.log(user);
         setUser(user);
         setAuth(true);
       } catch (error) {
         setAuth(false);
-        console.log("err");
+        console.log(error);
       }
     };
     result();

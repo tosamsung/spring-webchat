@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import Sender from "./Sender";
 import Reply from "./Reply";
 import Divider from "./Divider";
@@ -6,13 +6,57 @@ import { AppContext } from "../../../context/AppContext";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
 import SocketService from "../../../Service/SocketService";
+import ValidateUtil from "../../../util/ValidateUtil";
+import TimeUtil from "../../../util/TimeUtil";
 function ChatBox() {
-  const [chat, setChat] = useState([]);
-  const {user}=useContext(AppContext)
-  const handleSend = () => {
-    console.log("send");
-    // setChat([...chat, <Reply key={chat.length} />]);
-    SocketService.ConnectWs(user.id)
+  const validateUtil = new ValidateUtil();
+  const timeUtil = new TimeUtil();
+  const inputRef = useRef(null);
+  const [chatList, setChatList] = useState([]);
+  // const [message, setMessage] = useState({
+  //   content: "",
+  //   time: "",
+  // });
+  const handleSend = (event) => {
+    const message = getContent();
+    if (validateUtil.isEmptyString(message)) {
+      console.log("empty");
+      return;
+    }
+    // console.log(timeUtil.getCurrentTime());
+    const newMessage = {
+      content: message,
+      time: timeUtil.getCurrentTime(),
+    };
+    console.log(newMessage);
+    const newChat = [
+      ...chatList,
+      <Reply message={newMessage} key={chatList.length} />,
+    ];
+    setChatList(newChat);
+    setContent("")
+    // setMessage({ content: "", time: "" });
+  };
+  // const handleContentMessage = (event) => {
+  //   const value = event.target.value;
+  //   setMessage({ content: value });
+  // };
+  const getContent = () => {
+    if (inputRef.current) {
+      const content = inputRef.current.innerHTML;
+      console.log(content); // hoặc làm bất kỳ điều gì bạn muốn với nội dung ở đây
+      return content;
+    }
+  };
+  const setContent = (content) => {
+    if (inputRef.current) {
+      inputRef.current.innerHTML = content;
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    handleSend();
   };
   return (
     <>
@@ -51,21 +95,35 @@ function ChatBox() {
                 <ul>
                   <Sender></Sender>
                   <Divider></Divider>
-                  <Reply></Reply>
-                  {chat}
+                  {chatList}
                 </ul>
               </div>
             </div>
             {/* chat form */}
             <div className="send-box">
-              <form>
-                <input
+              <form onSubmit={handleSubmit}>
+                {/* <input
                   type="text"
-                  className="form-control"
+                  className="form-control input_message"
+                  value={message.content}
+                  onChange={(event) => {
+                    handleContentMessage(event);
+                  }}
                   aria-label="message…"
                   placeholder="Write message…"
-                />
-                <button type="button" onClick={handleSend}>
+                /> */}
+                <div
+                  contentEditable="true"
+                  className="form-control input_message"
+                  placeholder="Write message ..."
+                  ref={inputRef}
+                ></div>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    handleSend(event);
+                  }}
+                >
                   <i className="fa fa-paper-plane" aria-hidden="true" />
                   Send
                 </button>

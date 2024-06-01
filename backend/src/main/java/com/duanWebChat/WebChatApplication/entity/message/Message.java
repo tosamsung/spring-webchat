@@ -28,7 +28,7 @@ public class Message {
 	@Id
 	private Long id;
 	private Long groupId;
-	private Long senderId;
+	private String senderUserName;
 	private UserDto toUser;
     private byte[] content;
 	private ContentType type;

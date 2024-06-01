@@ -8,6 +8,8 @@ function Layout() {
   const navigate = useNavigate();
   const auth = useContext(AppContext).auth;
   const setAuth = useContext(AppContext).setAuth;
+ 
+
 
   const handleLogout = () => {
     const confirm = window.confirm(
