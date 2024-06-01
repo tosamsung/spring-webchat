@@ -137,8 +137,20 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+.textreply {
+    word-wrap: break-word; /* Đảm bảo văn bản xuống dòng khi quá dài */
+    overflow-wrap: break-word; /* Cũng đảm bảo văn bản xuống dòng */
+    white-space: normal; /* Cho phép xuống dòng */
+    max-width: 100%; /* Đảm bảo không vượt quá kích thước của phần tử cha */
+}
 
-
+.input_message {
+   max-width: 640px;
+}
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    color: #ccc;
+  }
 /********************************
  Typography Style
 ******************************** */

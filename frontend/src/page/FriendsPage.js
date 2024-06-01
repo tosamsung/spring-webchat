@@ -84,12 +84,11 @@ function FriendsPage() {
             tabIndex={0}
           >
             <div className="row">
-              <Friend></Friend>
-              <Friend></Friend>
-              <Friend></Friend>
-              <Friend></Friend>
-              <Friend></Friend>
-              <Friend></Friend>
+
+              <Friend  type="FRIEND"></Friend>
+              <Friend type="FRIEND"></Friend>
+              <Friend type="FRIEND"></Friend>
+
             </div>
           </div>
         </div>

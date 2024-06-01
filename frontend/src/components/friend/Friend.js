@@ -1,5 +1,5 @@
 import React from "react";
-function Friend(params) {
+function Friend(props) {
   return (
     <>
       <div className="col-sm-6 col-lg-4">
@@ -15,11 +15,20 @@ function Friend(params) {
             <span className="text-dark fs-2">Medical Technician</span>
           </div>
           <ul className="px-2 py-2 bg-light list-unstyled d-flex align-items-center justify-content-center mb-0">
-            <li className="position-relative px-1">
-              <button type="button" className="btn btn-outline-success">
-                Add friend
-              </button>
-            </li>
+            {props.type != "FRIEND" && (
+              <li className="position-relative px-1">
+                <button type="button" className="btn btn-outline-success">
+                  Add friend
+                </button>
+              </li>
+            )}
+            {props.type == "FRIEND" && (
+              <li className="position-relative px-1">
+                <button type="button" className="btn btn-outline-success">
+                  Message
+                </button>
+              </li>
+            )}
             <li className="position-relative px-1">
               <button type="button" className="btn btn-outline-primary">
                 View

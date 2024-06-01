@@ -60,7 +60,6 @@ public class AuthUserController {
 				ResponseCookie newAccessTokenCookie = ResponseCookie.from("accessToken", newAccessToken).httpOnly(true)
 						.secure(false).path("/").maxAge(900).build();
 				response.addHeader(HttpHeaders.SET_COOKIE, newAccessTokenCookie.toString());
-				System.out.println("toke moi " + newAccessToken);
 				response.setStatus(HttpServletResponse.SC_OK);
 				return new ReqRes(200, "", "Refresh successs");
 			} catch (ExpiredJwtException eJwt) {
@@ -111,7 +110,6 @@ public class AuthUserController {
 
 		String token = CookieUtil.getCookieValueByName(request, "accessToken");
 
-		System.out.println("toke dc lay : " + token);
 		if (token == null) {
 			return null;
 		}

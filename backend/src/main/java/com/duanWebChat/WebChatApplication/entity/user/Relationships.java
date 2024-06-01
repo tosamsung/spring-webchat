@@ -14,5 +14,7 @@ public class Relationships {
 	private String name;
 	private String image;
 	private RelationshipType type;
+	private ConnectStatus connectStatus;
+
 
 }

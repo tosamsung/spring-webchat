@@ -64,7 +64,7 @@ function Edit(props) {
                       <input
                         name="firstName"
                         value={userDto.firstName || ''}
-                        onChange={()=>{handleInputChange()}}
+                        onChange={(event)=>{handleInputChange(event)}}
                         type="text"
                         id="form3Example1cg"
                         className="form-control form-control-lg"
@@ -77,7 +77,7 @@ function Edit(props) {
                       <input
                         name="lastName"
                         value={userDto.lastName || ''}
-                        onChange={()=>{handleInputChange()}}
+                        onChange={(event)=>{handleInputChange(event)}}
                         type="text"
                         id="form3Example1cg"
                         className="form-control form-control-lg"
@@ -90,7 +90,7 @@ function Edit(props) {
                       <input
                         name="userName"
                         value={userDto.userName || ''}
-                        onChange={()=>{handleInputChange()}}
+                        onChange={(event)=>{handleInputChange(event)}}
                         type="text"
                         id="form3Example1cg"
                         className="form-control form-control-lg"
@@ -104,7 +104,7 @@ function Edit(props) {
                       <input
                         name="phone"
                         value={userDto.phone || ''}
-                        onChange={()=>{handleInputChange()}}
+                        onChange={(event)=>{handleInputChange(event)}}
                         type="number"
                         id="form3Example4cg"
                         className="form-control form-control-lg"
@@ -118,7 +118,7 @@ function Edit(props) {
                       <input
                         name="birthDate"
                         value={userDto.birthDate || ''}
-                        onChange={()=>{handleInputChange()}}
+                        onChange={(event)=>{handleInputChange(event)}}
                         type="date"
                         id="form3Example4cg"
                         className="form-control form-control-lg"
@@ -132,7 +132,7 @@ function Edit(props) {
                       <select
                         name="gender"
                         value={userDto.gender || ''}
-                        onChange={()=>{handleInputChange()}}
+                        onChange={(event)=>{handleInputChange(event)}}
                         className="form-select form-select-lg"
                         aria-label="Gender"
                       >
