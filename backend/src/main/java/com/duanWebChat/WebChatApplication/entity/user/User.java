@@ -1,6 +1,7 @@
 package com.duanWebChat.WebChatApplication.entity.user;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.annotation.Id;
@@ -35,6 +36,5 @@ public class User {
 	private Date lastTimeActive;
 	private Gender gender;
 	private Date createDate;
-	private Map<Long,Relationships> relationships;
-
+	private List<Relationships> relationships;
 }

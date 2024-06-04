@@ -1,5 +1,6 @@
 package com.duanWebChat.WebChatApplication.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class UsersManagementService {
 			user.setUserName(registrationRequest.getUserName());
 			user.setImage("https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg");
 			user.setConnectStatus(ConnectStatus.OFFLINE);
+			user.setRelationships(new ArrayList<>());
 			user.setEmail(registrationRequest.getEmail());
 			user.setPhone(registrationRequest.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
@@ -82,7 +84,9 @@ public class UsersManagementService {
 			response.setExpirationTime("24Hrs");
 			response.setMessage("successfuly login in");
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to login user: " + e.getMessage());
+			e.printStackTrace();
+			throw e;
+			
 		}
 		return response;
 	}

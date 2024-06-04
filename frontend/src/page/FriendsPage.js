@@ -1,6 +1,56 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Friend from "../components/friend/Friend";
+import { AppContext } from "../context/AppContext";
+import FriendService from "../Service/FriendService";
 function FriendsPage() {
+  const { user } = useContext(AppContext);
+  const [notFriends, setNotFriends] = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [requestFriends, setRequestFriends] = useState([]);
+  const [sentRequest, setSentRequest] = useState([]);
+  useEffect(() => {
+    const fetchNotFriend = async () => {
+      try {
+        const notFriends = await FriendService.getAllNotFriend(user.id);
+        setNotFriends(notFriends);
+        // console.log("Not friends:", notFriends);
+      } catch (error) {
+        console.error("Error fetching not friends:", error);
+      }
+    };
+
+    const fetchFriend = async () => {
+      try {
+        const Friends = await FriendService.getAllFriend(user.id);
+        setFriends(Friends);
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+
+    const fetchRequestFriends = async () => {
+      try {
+        const requestFriends = await FriendService.getRequestFriend(user.id);
+        setRequestFriends(requestFriends);
+      } catch (error) {
+        console.error("Error fetching request friends:", error);
+      }
+    };
+
+    const fectSentRequest = async () => {
+      try {
+        const sentRequest = await FriendService.getSentRequest(user.id);
+        setSentRequest(sentRequest);
+      } catch (error) {
+        console.error("Error fetching sent request:", error);
+      }
+    };
+
+    fetchNotFriend();
+    fetchFriend();
+    fetchRequestFriends();
+    fectSentRequest();
+  }, [user]); // Thêm user như một dependency để re-run effect nếu user thay đổi
   return (
     <>
       <link rel="stylesheet" href="css/friendpage.css" />
@@ -25,7 +75,9 @@ function FriendsPage() {
                   tabIndex={-1}
                 >
                   <i className="fas fa-search me-2 fs-6 text-white"></i>
-                  <span className="d-none d-md-block text-white">Find user</span>
+                  <span className="d-none d-md-block text-white">
+                    Find user
+                  </span>
                 </button>
               </li>
               <li className="nav-item" role="presentation">
@@ -42,6 +94,42 @@ function FriendsPage() {
                 >
                   <i className="fa fa-users me-2 fs-6 text-white" />
                   <span className="d-none d-md-block text-white">Friends</span>
+                </button>
+              </li>
+              <li className="nav-item" role="presentation">
+                <button
+                  className="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+                  id="pills-gallery-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pills-request"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-gallery"
+                  aria-selected="false"
+                  tabIndex={-1}
+                >
+                  <i className="fa fa-users me-2 fs-6 text-white" />
+                  <span className="d-none d-md-block text-white">
+                    Friend Requests
+                  </span>
+                </button>
+              </li>
+              <li className="nav-item" role="presentation">
+                <button
+                  className="nav-link position-relative rounded-0 d-flex align-items-center justify-content-center bg-transparent fs-3 py-6"
+                  id="pills-gallery-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#pills-await"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-gallery"
+                  aria-selected="false"
+                  tabIndex={-1}
+                >
+                  <i className="fa fa-users me-2 fs-6 text-white" />
+                  <span className="d-none d-md-block text-white">
+                    Sent Requests
+                  </span>
                 </button>
               </li>
             </ul>
@@ -71,9 +159,14 @@ function FriendsPage() {
               </form>
             </div>
             <div className="row">
-              <Friend></Friend>
-              <Friend></Friend>
-              <Friend></Friend>
+              {notFriends.map((notFriend) => (
+                <Friend
+                  key={notFriend.id}
+                  userName={notFriend.userName}
+                  id={notFriend.id}
+                  image={notFriend.image}
+                />
+              ))}
             </div>
           </div>
           <div
@@ -84,11 +177,53 @@ function FriendsPage() {
             tabIndex={0}
           >
             <div className="row">
-
-              <Friend  type="FRIEND"></Friend>
-              <Friend type="FRIEND"></Friend>
-              <Friend type="FRIEND"></Friend>
-
+              {friends.map((friend) => (
+                <Friend
+                  type="FRIEND"
+                  key={friend.id}
+                  userName={friend.userName}
+                  id={friend.id}
+                  image={friend.image}
+                ></Friend>
+              ))}
+            </div>
+          </div>
+          <div
+            className="tab-pane fade show active"
+            id="pills-request"
+            role="tabpanel"
+            aria-labelledby="pills-friends-tab"
+            tabIndex={0}
+          >
+            <div className="row">
+              {requestFriends.map((requestFriends) => (
+                <Friend
+                  type="PENDING"
+                  key={requestFriends.id}
+                  userName={requestFriends.userName}
+                  id={requestFriends.id}
+                  image={requestFriends.image}
+                ></Friend>
+              ))}
+            </div>
+          </div>
+          <div
+            className="tab-pane fade show active"
+            id="pills-await"
+            role="tabpanel"
+            aria-labelledby="pills-friends-tab"
+            tabIndex={0}
+          >
+            <div className="row">
+              {sentRequest.map((sentRequest) => (
+                <Friend
+                  type="AWAIT"
+                  key={sentRequest.id}
+                  userName={sentRequest.userName}
+                  id={sentRequest.id}
+                  image={sentRequest.image}
+                ></Friend>
+              ))}
             </div>
           </div>
         </div>
