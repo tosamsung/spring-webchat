@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppProvider } from "./context/AppContext";
 import FriendsPage from "./page/FriendsPage";
+import { ChatProvider } from "./context/ChatContext";
 
 function App() {
   return (
@@ -22,7 +23,9 @@ function App() {
           path="/"
           element={
             <AppProvider>
-              <Layout></Layout>
+              <ChatProvider>
+                <Layout></Layout>
+              </ChatProvider>
             </AppProvider>
           }
         >

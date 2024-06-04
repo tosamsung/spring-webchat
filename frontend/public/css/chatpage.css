@@ -137,6 +137,17 @@ table {
     border-collapse: collapse;
     border-spacing: 0;
 }
+.contact_image{
+    max-width: 45px;
+    max-height: 45px;
+}
+.contact-item {
+    transition: background-color 0.3s ease;
+  }
+  
+  .contact-item:hover {
+    background-color: #f0f0f0; /* Thay đổi màu nền khi hover */
+  }
 .textreply {
     word-wrap: break-word; /* Đảm bảo văn bản xuống dòng khi quá dài */
     overflow-wrap: break-word; /* Cũng đảm bảo văn bản xuống dòng */
@@ -352,7 +363,7 @@ a.add img {
 }
 
 .chat-list a.d-flex {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     position: relative;
     text-decoration: none;
 }

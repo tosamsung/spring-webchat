@@ -1,8 +1,10 @@
+
 import React, { useContext, useEffect, useState } from "react";
 import Friend from "../components/friend/Friend";
 import { AppContext } from "../context/AppContext";
 import FriendService from "../Service/FriendService";
 function FriendsPage() {
+
   const { user } = useContext(AppContext);
   const [notFriends, setNotFriends] = useState([]);
   const [friends, setFriends] = useState([]);

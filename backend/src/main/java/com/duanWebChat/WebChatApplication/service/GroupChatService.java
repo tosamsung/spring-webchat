@@ -1,8 +1,9 @@
 package com.duanWebChat.WebChatApplication.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -28,7 +29,12 @@ public class GroupChatService {
 	@Autowired
 	private SequenceGeneratorService sequenceGeneratorService;
 
-	
+	public List<GroupChat> findGroupChatsByUserId(Long userId) {
+        return groupChatRepository.findByUserId(userId);
+    }
+	public GroupChat findGroupChatsById(Long id) {
+        return groupChatRepository.findById(id).orElseThrow();
+    }
 	public GroupChat createGroupChat(Long idLeader) {
 		GroupChat groupChat=new GroupChat();
 		
@@ -42,8 +48,8 @@ public class GroupChatService {
 		groupChat.setId(sequenceGeneratorService.generateSequence(GroupChat.SEQUENCE_NAME));
 		groupChat.setGroupChatType(GroupChatType.GROUP);
 		groupChat.setSetting(groupSetting);
-		groupChat.setMapMembers(new HashMap<Long, Member>());
-		groupChat.getMapMembers().put(idLeader,member);
+		groupChat.setMembers(new ArrayList<Member>());
+		groupChat.getMembers().add(member);
 		groupChat.setCreateDate(new Date());
 		GroupChat result=groupChatRepository.save(groupChat);
 		
@@ -58,18 +64,18 @@ public class GroupChatService {
 
 		Member member1=new Member(user1);
 		member1.setJoinDate(new Date());
-		member1.setGroupRole(GroupRole.MEMBER);
+		member1.setGroupRole(GroupRole.LEADER);
 		
-		Member member2=new Member(user1);
+		Member member2=new Member(user2);
 		member2.setJoinDate(new Date());
-		member2.setGroupRole(GroupRole.MEMBER);
+		member2.setGroupRole(GroupRole.LEADER);
 		
 		groupChat.setId(sequenceGeneratorService.generateSequence(GroupChat.SEQUENCE_NAME));
 		groupChat.setGroupChatType(GroupChatType.PRIVATE);
 		groupChat.setSetting(groupSetting);
-		groupChat.setMapMembers(new HashMap<Long, Member>());
-		groupChat.getMapMembers().put(idUser1,member1);
-		groupChat.getMapMembers().put(idUser2,member2);
+		groupChat.setMembers(new ArrayList<Member>());
+		groupChat.getMembers().add(member1);
+		groupChat.getMembers().add(member2);
 		groupChat.setCreateDate(new Date());
 		GroupChat result=groupChatRepository.save(groupChat);
 		
