@@ -2,49 +2,27 @@ import React, { useContext, useRef, useState, useEffect } from "react";
 import Sender from "./Sender";
 import Reply from "./Reply";
 import Divider from "./Divider";
-import { AppContext } from "../../../context/AppContext";
-import SockJS from "sockjs-client";
-import { over } from "stompjs";
-import SocketService from "../../../Service/SocketService";
+import { ChatContext } from "../../../context/ChatContext";
 import ValidateUtil from "../../../util/ValidateUtil";
 import TimeUtil from "../../../util/TimeUtil";
 function ChatBox() {
-  const validateUtil = new ValidateUtil();
-  const timeUtil = new TimeUtil();
+
   const inputRef = useRef(null);
   const [chatList, setChatList] = useState([]);
-  // const [message, setMessage] = useState({
-  //   content: "",
-  //   time: "",
-  // });
+  const { userInBox,stompClient,handleSendMessage,listMessage } = useContext(ChatContext);
+
+
+
+
+  // --------------------------------send message----------------------------------
   const handleSend = (event) => {
-    const message = getContent();
-    if (validateUtil.isEmptyString(message)) {
-      console.log("empty");
-      return;
-    }
-    // console.log(timeUtil.getCurrentTime());
-    const newMessage = {
-      content: message,
-      time: timeUtil.getCurrentTime(),
-    };
-    console.log(newMessage);
-    const newChat = [
-      ...chatList,
-      <Reply message={newMessage} key={chatList.length} />,
-    ];
-    setChatList(newChat);
+    handleSendMessage(getContent())
     setContent("")
-    // setMessage({ content: "", time: "" });
   };
-  // const handleContentMessage = (event) => {
-  //   const value = event.target.value;
-  //   setMessage({ content: value });
-  // };
+
   const getContent = () => {
     if (inputRef.current) {
       const content = inputRef.current.innerHTML;
-      console.log(content); // hoặc làm bất kỳ điều gì bạn muốn với nội dung ở đây
       return content;
     }
   };
@@ -56,35 +34,29 @@ function ChatBox() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleSend();
+    handleSendMessage(getContent())
+    setContent("")
   };
   return (
     <>
       <div className="chatbox">
         <div className="modal-dialog-scrollable">
           <div className="modal-content">
-            <div className="msg-head">
+            <div className="msg-head p-1">
               <div className="row">
                 <div className="col-8">
                   {/* header */}
-                  <div className="d-flex align-items-center">
-                    <span className="chat-icon">
-                      <img
-                        className="img-fluid"
-                        src="https://mehedihtml.com/chatbox/assets/img/arroleftt.svg"
-                        alt="image title"
-                      />
-                    </span>
+                  <div className="d-flex align-items-center">                  
                     <div className="flex-shrink-0">
                       <img
-                        className="img-fluid"
-                        src="https://mehedihtml.com/chatbox/assets/img/user.png"
+                        className="img-fluid contact_image rounded-circle"
+                        src={userInBox.image}
                         alt="user img"
                       />
                     </div>
                     <div className="flex-grow-1 ms-3">
-                      <h3>Mehedi Hasan</h3>
-                      <p>front end developer</p>
+                      <h3>{userInBox.userName}</h3>
+                      {/* <p>front end developer</p> */}
                     </div>
                   </div>
                 </div>
@@ -93,9 +65,9 @@ function ChatBox() {
             <div className="modal-body">
               <div className="msg-body">
                 <ul>
-                  <Sender></Sender>
-                  <Divider></Divider>
-                  {chatList}
+                  {/* <Sender></Sender>
+                  <Divider></Divider> */}
+                  {listMessage}
                 </ul>
               </div>
             </div>
@@ -121,7 +93,7 @@ function ChatBox() {
                 <button
                   type="button"
                   onClick={(event) => {
-                    handleSend(event);
+                    handleSend();
                   }}
                 >
                   <i className="fa fa-paper-plane" aria-hidden="true" />

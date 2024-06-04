@@ -86,7 +86,6 @@ public class AuthUserController {
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie1.toString());
 		response.addHeader(HttpHeaders.SET_COOKIE, cookie2.toString());
 
-
 		return result.getUserDto();
 
 	}

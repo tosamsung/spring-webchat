@@ -11,4 +11,6 @@ import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 
 public interface UserRepository extends MongoRepository<User, Long>{
 Optional<User> findByEmail(String email);
+Optional<User> findByUserName(String name);
+
 }

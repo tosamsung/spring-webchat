@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Contact from "../leftside/Contact"
 import ChatDetail from "./ChatDetail";
-function LeftSide(props) {
-  const [privateChat, setPrivateChat] = useState(new Map());
+import { ChatContext } from "../../../context/ChatContext";
 
-  useEffect(() => {}, []);
+function LeftSide(props) {
+  // const { listContact } = useContext(AppContext);
+
 
   const openDetil = () => {
     let Detail = document.getElementById("detail");
@@ -34,12 +35,13 @@ function LeftSide(props) {
       ButtonContact.classList.add("active");
     }
   };
+  const { listContact } = useContext(ChatContext);
   return (
     <>
       <div className="chatlist">
         <div className="modal-dialog-scrollable">
           <div className="modal-content">
-            <div className="chat-header">
+            <div className="chat-header pb-3">
               <div className="msg-search">
                 <input
                   type="text"
@@ -86,10 +88,10 @@ function LeftSide(props) {
                   <div className="tab-pane fade show active" id="listContacts">
                     {/* chat-list */}
                     <div className="chat-list">
-                      {[...privateChat.keys()].map(()=>{
-                        
-                      })}
-                      <Contact></Contact>
+                      
+                    {listContact.map((contact, index) => (
+                        <Contact key={contact.id} contact={contact} />
+                      ))}
                     
                     </div>
                     {/* chat-list */}

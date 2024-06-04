@@ -28,13 +28,12 @@ public class Message {
 	@Id
 	private Long id;
 	private Long groupId;
-	private String senderUserName;
-	private UserDto toUser;
+	private Long senderId;
+	private String message;
     private byte[] content;
 	private ContentType type;
 	private MessageStatus messageStatus;
 	private Date sendDate;
 	private List<UserInteract>listInteract;
-	
 	
 }

@@ -14,16 +14,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Member {
-	private String name;
+	private Long id;
+	private String userName;
 	private GroupRole groupRole;
 	private String image;
 	private Date joinDate;
 	public Member(User user) {
-		this.name = user.getUserName();
+		this.id=user.getId();
+		this.userName = user.getUserName();
 		this.image = user.getImage();
 	}
-	
-	
-	
-	
 }

@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Friend from "../components/friend/Friend";
 function FriendsPage() {
+  useEffect(
+    ()=>{
+      console.log("dd");
+    },[]
+  )
   return (
     <>
       <link rel="stylesheet" href="css/friendpage.css" />

@@ -40,11 +40,11 @@ function Layout() {
     }
   };
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/signin");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!auth) {
+  //     navigate("/signin");
+  //   }
+  // }, []);
 
   return (
     <>
