@@ -1,6 +1,10 @@
 package com.duanWebChat.WebChatApplication.service;
 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
 import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
+import com.duanWebChat.WebChatApplication.entity.user.RelationshipType;
 import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.repository.UserRepository;
@@ -41,7 +46,7 @@ public class UserService {
 		} catch (Exception e) {
 			throw e;
 		}
-		
+
 	}
 
 	public User findByEmail(String email) {
@@ -63,5 +68,131 @@ public class UserService {
 		return new UserDto(user);
 	}
 
+	public void sendFriendRequest(Long fromUserId, Long toUserId) {
+		User fromUser = userRepository.findById(fromUserId)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		User toUser = userRepository.findById(toUserId)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+		Relationships relationships = new Relationships(toUser);
+		relationships.setType(RelationshipType.AWAIT);
+		relationships.setConnectStatus(ConnectStatus.OFFLINE);
+
+		if (fromUser.getRelationships() == null) {
+			fromUser.setRelationships(new ArrayList<>());
+		}
+
+		fromUser.getRelationships().add(relationships);
+
+		Relationships relationships2 = new Relationships(fromUser);
+		relationships2.setType(RelationshipType.PENDING);
+		relationships2.setConnectStatus(ConnectStatus.OFFLINE);
+
+		if (toUser.getRelationships() == null) {
+			toUser.setRelationships(new ArrayList<>());
+		}
+
+		toUser.getRelationships().add(relationships2);
+
+		userRepository.save(fromUser);
+		userRepository.save(toUser);
+	}
+
+	public void acceptFriendRequest(long fromUserId, long toUserId) {
+		User fromUser = userRepository.findById(fromUserId)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		User toUser = userRepository.findById(toUserId)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+		List<Relationships> relationshipsFrom = fromUser.getRelationships();
+		List<Relationships> relationshipsTo = toUser.getRelationships();
+		for (Relationships relationships : relationshipsFrom) {
+			if (relationships.getId() == toUser.getId()) {
+				relationships.setType(RelationshipType.FRIEND);
+				fromUser.setRelationships(relationshipsFrom);
+				break;
+			}
+		}
+		for (Relationships relationships : relationshipsTo) {
+			if (relationships.getId() == fromUser.getId()) {
+				relationships.setType(RelationshipType.FRIEND);
+				toUser.setRelationships(relationshipsTo);
+				break;
+			}
+		}
+
+		userRepository.save(fromUser);
+		userRepository.save(toUser);
+
+	}
+
+//	public void rejectFriend(Long fromUserId, Long toUserId) {
+//		User toUser = userRepository.findById(toUserId)
+//				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//		Optional<Relationships> toRelationShip = toUser.getRelationships().stream()
+//				.filter(r-> r.getId().equals(fromUserId)).findFirst();
+//		toRelationShip.ifPresent(toUser.getRelationships()::remove);
+//		userRepository.save(toUser);
+//	}
+//
+//	public void cancelFriendRequest(Long fromUserId, Long toUserId) {
+//		User fromUser = userRepository.findById(fromUserId)
+//				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//		Optional<Relationships> fromRelationship = fromUser.getRelationships().stream()
+//				.filter(r -> r.getId().equals(toUserId)).findFirst();
+//		fromRelationship.ifPresent(fromUser.getRelationships()::remove);
+//		userRepository.save(fromUser);
+//	}
+
+	public void deleteFriend(Long fromUserId, Long toUserId) {
+		User fromUser = userRepository.findById(fromUserId)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		User toUser = userRepository.findById(toUserId)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+		// Remove relationship from fromUser
+		Optional<Relationships> fromRelationship = fromUser.getRelationships().stream()
+				.filter(r -> r.getId().equals(toUserId)).findFirst();
+		fromRelationship.ifPresent(fromUser.getRelationships()::remove);
+
+		// Remove relationship from toUser
+		Optional<Relationships> toRelationship = toUser.getRelationships().stream()
+				.filter(r -> r.getId().equals(fromUserId)).findFirst();
+		toRelationship.ifPresent(toUser.getRelationships()::remove);
+
+		userRepository.save(fromUser);
+		userRepository.save(toUser);
+	}
+
+	public List<User> getUsersNotInRelationship(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow();
+		List<Long> relationshipUserIds = user.getRelationships().stream().map(Relationships::getId)
+				.collect(Collectors.toList());
+		relationshipUserIds.add(userId);
+		return userRepository.findUsersNotInRelationships(relationshipUserIds);
+	}
+
+	public List<User> getUsersInRelationship(Long userId) {
+		return userRepository.getUsersInRelationship(userId);
+	}
+
+	// cach1
+//	public List<User> getPendingRequestUsers(Long userId) {
+//		User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//		List<Long> pendingUserIds = user.getRelationships().stream()
+//				.filter(relationship -> relationship.getType() == RelationshipType.PENDING).map(Relationships::getId)
+//				.collect(Collectors.toList());
+//
+//		return userRepository.findAllById(pendingUserIds);
+//	}
+
+	// cach2
+	public List<User> getPendingRequestUsers(Long userId) {
+		return userRepository.findUsersWithPendingRequests(userId);
+	}
+	
+	public List<User> getAwaitRequestUsers(Long userId) {
+		return userRepository.findUsersWithAwaitRequests(userId);
+	}
 }

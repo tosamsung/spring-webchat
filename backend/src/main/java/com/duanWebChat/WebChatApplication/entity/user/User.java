@@ -37,5 +37,4 @@ public class User {
 	private Gender gender;
 	private Date createDate;
 	private List<Relationships> relationships;
-
 }
