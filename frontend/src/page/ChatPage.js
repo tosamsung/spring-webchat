@@ -1,4 +1,4 @@
-import React,{useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import LeftSide from "../components/chat/leftside/LeftSide";
 import ChatBox from "../components/chat/chatbox/ChatBox";
 import { AppContext } from "../context/AppContext";
@@ -6,11 +6,9 @@ import SockJS from "sockjs-client";
 import { over } from "stompjs";
 var stompClient = null;
 function ChatPage() {
-  const {user}=useContext(AppContext);
+  const { user } = useContext(AppContext);
   const [privateChat, setPrivateChat] = useState(new Map());
   const [userData, setUserData] = useState({});
-
-
 
   const connectws = () => {
     console.log(user);
@@ -41,13 +39,11 @@ function ChatPage() {
   const onMessageReceived = (payload) => {
     var payloadData = JSON.parse(payload.body);
     console.log(payloadData);
-
   };
 
   const onPrivateMessage = (payload) => {
     console.log(payload);
     var payloadData = JSON.parse(payload.body);
-
   };
   window.addEventListener("beforeunload", () => {
     if (stompClient !== null) {
@@ -56,7 +52,7 @@ function ChatPage() {
       });
     }
   });
-  
+
   const onError = (err) => {
     console.log(err);
   };

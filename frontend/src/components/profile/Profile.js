@@ -164,7 +164,7 @@ function Profile() {
               />
             </div>
             <div className="modal-body p-0">
-              <Edit ></Edit>
+              <Edit></Edit>
             </div>
             <div className="modal-footer">
               <button

@@ -38,7 +38,7 @@ public class UserDto {
     private Date lastTimeActive;
     private Gender gender;
     private Date createDate;
-	private Map<Long,Relationships> relationships;
+	private List<Relationships> relationships;
 
     // Constructor to map User entity to UserDto
     public UserDto(User user) {
