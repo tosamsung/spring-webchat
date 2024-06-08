@@ -1,23 +1,89 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
-import Sender from "./Sender";
-import Reply from "./Reply";
-import Divider from "./Divider";
 import { ChatContext } from "../../../context/ChatContext";
-import ValidateUtil from "../../../util/ValidateUtil";
-import TimeUtil from "../../../util/TimeUtil";
+import { toast } from "react-toastify";
+import { analytics } from "../../../config/FireBaseConfig";
+import { v4 } from "uuid";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { AppContext } from "../../../context/AppContext";
+
 function ChatBox() {
-
   const inputRef = useRef(null);
-  const [chatList, setChatList] = useState([]);
-  const { userInBox,stompClient,handleSendMessage,listMessage } = useContext(ChatContext);
+  const [selectedFile, setSelectedFile] = useState("");
+  const [imageInput, setImageInput] = useState([]);
+  const [videoInput, setVideoInput] = useState([]);
+  const [fileInput, setfileInput] = useState([]);
+  const [info, setInfo] = useState({
+    image: "",
+    userName: "",
+  });
+  const { user } = useContext(AppContext);
+  const { handleSendMessage, listMessage, groupChat } = useContext(ChatContext);
 
+  const getContactInfo = () => {
+    if (groupChat.groupChatType === "PRIVATE") {
+      if (groupChat.members[0].userName === user.userName) {
+        setInfo(groupChat.members[1]);
+      } else {
+        setInfo(groupChat.members[0]);
+      }
+    }
+  };
+  useEffect(() => {
+    getContactInfo()
+  }, [groupChat]);
+  const onFileChange = (e) => {
+    const file = e;
+    const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
 
+    if (file.size > maxSizeInBytes) {
+      toast.error("File phải nhỏ hơn 10mb");
+      return;
+    }
 
-
+    if (file && file.type.startsWith("image/")) {
+      setImageInput([...imageInput, file]);
+    } else if (file && file.type.startsWith("video/")) {
+      setVideoInput([...videoInput, file]);
+    } else {
+      console.log("Selected file is not an image.");
+    }
+    console.log(imageInput);
+  };
+  const removeImage = (indexToRemove) => {
+    setImageInput((prevImages) =>
+      prevImages.filter((_, index) => index !== indexToRemove)
+    );
+  };
+  const removeVideo = (indexToRemove) => {
+    setVideoInput((prevImages) =>
+      prevImages.filter((_, index) => index !== indexToRemove)
+    );
+  };
   // --------------------------------send message----------------------------------
   const handleSend = (event) => {
-    handleSendMessage(getContent())
-    setContent("")
+    const imgRef = ref(analytics, `files/${v4()}`);
+    //     uploadBytes(imgRef,selectedFile).then(value=>{
+    //         getDownloadURL(value.ref).then(url=>{
+    //             setImageInput(data=>[...data,url])
+    //         })
+    //     })
+    imageInput.forEach((image) => {
+      uploadBytes(imgRef, image).then((value) => {
+        getDownloadURL(value.ref).then((url) => {
+          console.log(url);
+          handleSendMessage(url, "IMAGE");
+        });
+      });
+    });
+
+    // // Gửi tất cả video
+    videoInput.forEach((video) => {
+      handleSendMessage(video, "VIDEO");
+    });
+    handleSendMessage(getContent(), "TEXT");
+    setContent("");
+    setImageInput([]);
+    setVideoInput([]);
   };
 
   const getContent = () => {
@@ -34,8 +100,8 @@ function ChatBox() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    handleSendMessage(getContent())
-    setContent("")
+    handleSendMessage(getContent(), "TEXT");
+    setContent("");
   };
   return (
     <>
@@ -46,16 +112,16 @@ function ChatBox() {
               <div className="row">
                 <div className="col-8">
                   {/* header */}
-                  <div className="d-flex align-items-center">                  
+                  <div className="d-flex align-items-center">
                     <div className="flex-shrink-0">
                       <img
                         className="img-fluid contact_image rounded-circle"
-                        src={userInBox.image}
+                        src={info.image}
                         alt="user img"
                       />
                     </div>
                     <div className="flex-grow-1 ms-3">
-                      <h3>{userInBox.userName}</h3>
+                      <h3>{info.userName}</h3>
                       {/* <p>front end developer</p> */}
                     </div>
                   </div>
@@ -100,6 +166,49 @@ function ChatBox() {
                   Send
                 </button>
               </form>
+              {/*--------------------------------send file -----------------------------*/}
+
+              <div className="py-2">
+                {videoInput.length > 0 &&
+                  videoInput.map((video, index) => (
+                    <div
+                      key={index}
+                      className="position-relative d-inline-block me-2"
+                    >
+                      <video className="img-fluid image_input" controls>
+                        <source src={video} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <button
+                        className="btn btn-danger position-absolute top-0 end-0"
+                        onClick={() => removeVideo(index)}
+                        style={{ zIndex: 1 }}
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                {imageInput.length > 0 &&
+                  imageInput.map((image, index) => (
+                    <div
+                      key={index}
+                      className="position-relative d-inline-block me-2"
+                    >
+                      <img
+                        className="img-fluid image_input"
+                        src={image}
+                        alt={`image-${index}`}
+                      />
+                      <button
+                        className="btn btn-danger position-absolute top-0 end-0"
+                        onClick={() => removeImage(index)}
+                        style={{ zIndex: 1 }}
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+              </div>
               <div className="send-btns">
                 <div className="attach">
                   <div className="button-wrapper">
@@ -118,6 +227,7 @@ function ChatBox() {
                       className="upload-box"
                       placeholder="Upload File"
                       aria-label="Upload File"
+                      onChange={(e) => onFileChange(e.target.files[0])}
                     />
                   </div>
                   <select

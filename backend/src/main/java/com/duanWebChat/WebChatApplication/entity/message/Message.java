@@ -30,10 +30,8 @@ public class Message {
 	private Long groupId;
 	private Long senderId;
 	private String message;
-    private byte[] content;
 	private ContentType type;
 	private MessageStatus messageStatus;
 	private Date sendDate;
-	private List<UserInteract>listInteract;
 	
 }

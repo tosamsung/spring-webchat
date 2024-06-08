@@ -53,7 +53,7 @@ function Layout() {
           <div className="row h-100 p-1">
             <div className={`${styles.header_toggle} d-inline-block col`}>
               <i
-                className="fa-solid fa-bars text-white fs-2"
+                className={`${styles.menu_button} fa-solid fa-bars text-white fs-2`}
                 id="header-toggle"
                 onClick={() => {
                   showNavbar();
