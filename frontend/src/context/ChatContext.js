@@ -1,4 +1,4 @@
-import { useContext, createContext } from "react";
+import { useRef,useContext, createContext } from "react";
 import React, { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
@@ -12,18 +12,16 @@ export const ChatContext = createContext({});
 export const ChatProvider = ({ children }) => {
   const [stompClient, setStompClient] = useState(null);
 
-  const [userInBox, setUserInBox] = useState({});
   const [groupChat, setGroupChat] = useState({});
+  const groupChatRef = useRef(groupChat);
 
   const [listMessage, setListMessage] = useState([]);
-  // const [StoreListMessage, setStoreListMessage] = useState(new Map());
 
   const [listContact, setListContact] = useState([]);
 
   const { user, auth } = useContext(AppContext);
 
   const validateUtil = new ValidateUtil();
-  const timeUtil = new TimeUtil();
   //----------------------------- web socket----------------------
   const connectws = () => {
     let Sock = new SockJS("http://localhost:8080/ws");
@@ -43,14 +41,13 @@ export const ChatProvider = ({ children }) => {
   //-----------------------------handle message----------------------
 
   const loadListMessage = (groupChat) => {
-    setGroupChat(groupChat);
-    console.log(groupChat);
-    // setListMessage([])
-    const requestSocket = {
-      userName: user.userName,
-      groupId: groupChat.id,
-    };
-    stompClient.send("/app/getMessages", {}, JSON.stringify(requestSocket));
+    if (stompClient != null) {
+      const requestSocket = {
+        userName: user.userName,
+        groupId: groupChat.id,
+      };
+      stompClient.send("/app/getMessages", {}, JSON.stringify(requestSocket));
+    }
   };
 
   const onPrivateMessage = (payload) => {
@@ -58,60 +55,53 @@ export const ChatProvider = ({ children }) => {
     // console.log(groupChat);
     // console.log(payloadData);
     if (payloadData.type) {
-      switch (payloadData.type) {
-        case "TEXT":
-          let newChat = [
-            ...listMessage,
-            <Sender message={payloadData} key={listMessage.length} />,
-          ];
-
-          setListMessage(newChat);
-          break;
-        default:
-          break;
-      }
+      let newChat = [
+        ...listMessage,
+        <Sender
+          message={payloadData}
+          sender={findSender(payloadData.senderId)}
+          key={listMessage.length}
+        />,
+      ];
+      setListMessage(newChat);
     }
     if (payloadData.action) {
       switch (payloadData.action) {
         case "FIND_LIST_GROUPCHAT":
           setListContact(payloadData.data);
-          console.log(payloadData.data);
-          if (payloadData.data.length > 0) {
-            setUserInBox(payloadData.data[0].members[0]);
-            // loadListMessage(payloadData.data[0])
-            
+          if (payloadData.data) {
+            setGroupChat(payloadData.data[0]);
           }
           break;
         case "FIND_MESSAGE_BY_GROUPID":
-          if (listMessage && listMessage.length > 0) {
-            listMessage.length = 0;
-            setListMessage(listMessage);
-          }
-          payloadData.data.forEach((message) => {
-            if (message.senderId == user.id) {
-              listMessage.push(
-                <Reply message={message} key={listMessage.length} />
-              );
+          console.log(payloadData.data);
+          const newMessages = payloadData.data.map((message, index) => {
+            if (message.senderId === user.id) {
+              return <Reply message={message} key={index} />;
             } else {
-              listMessage.push(
-                <Sender message={message} key={listMessage.length} />
+              return (
+                <Sender
+                  message={message}
+                  sender={findSender(message.senderId)}
+                  key={index}
+                />
               );
             }
           });
-          setListMessage(listMessage);
+          setListMessage(newMessages);
           break;
         default:
           break;
       }
     }
   };
-  const handleSendMessage = (message) => {
+  const handleSendMessage = (message, typeMes) => {
     if (validateUtil.isEmptyString(message)) {
       console.log("empty");
       return;
     }
-    if (isEmpty(userInBox)) {
-      console.log("emptyuser");
+    if (isEmpty(groupChat)) {
+      console.log("emptyugroupchat");
       return;
     }
     // // console.log(timeUtil.getCurrentTime());
@@ -119,7 +109,7 @@ export const ChatProvider = ({ children }) => {
       groupId: groupChat.id,
       senderId: user.id,
       message: message,
-      type: "TEXT",
+      type: typeMes,
       messageStatus: "SENT",
     };
     stompClient.send("/app/private-message", {}, JSON.stringify(newMessage));
@@ -143,17 +133,31 @@ export const ChatProvider = ({ children }) => {
       }
     };
   }, [user, auth]);
+  useEffect(() => {
+    groupChatRef.current = groupChat; 
+    if (listMessage && listMessage.length > 0) {
+      listMessage.length = 0;
+      setListMessage(listMessage);
+    }
+    loadListMessage(groupChat);
+  }, [groupChat]);
+
+  // --------------------get sender-----------------
+  const findSender = (senderId) => {
+    console.log("Group chat in findSender:", groupChatRef.current);
+    if (groupChatRef.current && groupChatRef.current.members) {
+      return groupChatRef.current.members.find((member) => member.id === senderId);
+    }
+    return null;
+  };
   return (
     <ChatContext.Provider
       value={{
         listContact,
-        userInBox,
         stompClient,
         groupChat,
         listMessage,
-        loadListMessage,
-        setUserInBox,
-        setListMessage,
+        setGroupChat,
         handleSendMessage,
       }}
     >

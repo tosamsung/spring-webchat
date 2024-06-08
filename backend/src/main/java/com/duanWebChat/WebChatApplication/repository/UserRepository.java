@@ -28,5 +28,4 @@ public interface UserRepository extends MongoRepository<User, Long> {
 	
 	@Query("{ 'relationships': { '$elemMatch': { 'id': ?0, 'type': 'PENDING' } } }")
 	List<User> findUsersWithAwaitRequests(Long userId);
->>>>>>> master
 }
