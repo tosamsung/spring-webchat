@@ -70,11 +70,11 @@ function Layout() {
                 <span className={styles.nav_logo_name}>WebChat</span>
               </NavLink>
               <div className="nav_list">
-                <NavLink to="/chats" className={styles.nav_logo}>
+                <NavLink to="/chats" className={`${styles.nav_logo} text-white`}>
                   <i className={`${styles.nav_icon}  bx bx-conversation`}/>
                   <span className={styles.nav_name}>Chats</span>
                 </NavLink>
-                <NavLink to="/friends" className={styles.nav_logo}>
+                <NavLink to="/friends" className={`${styles.nav_logo} text-white`}>
                   <i className={`${styles.nav_icon}  bx bx-search-alt-2`}></i>
                   <span className={styles.nav_name}>Friends</span>
                 </NavLink>

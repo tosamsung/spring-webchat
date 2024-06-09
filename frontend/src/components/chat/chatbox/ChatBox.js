@@ -19,6 +19,8 @@ function ChatBox() {
   const { user } = useContext(AppContext);
   const { handleSendMessage, listMessage, groupChat } = useContext(ChatContext);
 
+  //---------------------------------- get info ---------------------------------
+
   const getContactInfo = () => {
     if (groupChat.groupChatType === "PRIVATE") {
       if (groupChat.members[0].userName === user.userName) {
@@ -29,8 +31,9 @@ function ChatBox() {
     }
   };
   useEffect(() => {
-    getContactInfo()
+    getContactInfo();
   }, [groupChat]);
+  //----------------------------------- Change file -------------------------------
   const onFileChange = (e) => {
     const file = e;
     const maxSizeInBytes = 10 * 1024 * 1024; // 10MB
@@ -40,13 +43,14 @@ function ChatBox() {
       return;
     }
 
-    if (file && file.type.startsWith("image/")) {
-      setImageInput([...imageInput, file]);
-    } else if (file && file.type.startsWith("video/")) {
-      setVideoInput([...videoInput, file]);
+    if (file.type.startsWith("image/")) {
+      setImageInput((prevImages) => [...prevImages, file]);
+    } else if (file.type.startsWith("video/")) {
+      setVideoInput((prevVideos) => [...prevVideos, file]);
     } else {
       console.log("Selected file is not an image.");
     }
+
     console.log(imageInput);
   };
   const removeImage = (indexToRemove) => {
@@ -61,13 +65,9 @@ function ChatBox() {
   };
   // --------------------------------send message----------------------------------
   const handleSend = (event) => {
-    const imgRef = ref(analytics, `files/${v4()}`);
-    //     uploadBytes(imgRef,selectedFile).then(value=>{
-    //         getDownloadURL(value.ref).then(url=>{
-    //             setImageInput(data=>[...data,url])
-    //         })
-    //     })
+
     imageInput.forEach((image) => {
+      const imgRef = ref(analytics, `files/${v4()}`); // Ensure each image gets a unique reference
       uploadBytes(imgRef, image).then((value) => {
         getDownloadURL(value.ref).then((url) => {
           console.log(url);
@@ -78,7 +78,13 @@ function ChatBox() {
 
     // // Gửi tất cả video
     videoInput.forEach((video) => {
-      handleSendMessage(video, "VIDEO");
+      const imgRef = ref(analytics, `files/${v4()}`); // Ensure each image gets a unique reference
+      uploadBytes(imgRef, video).then((value) => {
+        getDownloadURL(value.ref).then((url) => {
+          console.log(url);
+          handleSendMessage(url, "VIDEO");
+        });
+      });
     });
     handleSendMessage(getContent(), "TEXT");
     setContent("");
@@ -176,7 +182,10 @@ function ChatBox() {
                       className="position-relative d-inline-block me-2"
                     >
                       <video className="img-fluid image_input" controls>
-                        <source src={video} type="video/mp4" />
+                        <source
+                          src={URL.createObjectURL(video)}
+                          type="video/mp4"
+                        />
                         Your browser does not support the video tag.
                       </video>
                       <button
@@ -196,7 +205,7 @@ function ChatBox() {
                     >
                       <img
                         className="img-fluid image_input"
-                        src={image}
+                        src={URL.createObjectURL(image)}
                         alt={`image-${index}`}
                       />
                       <button
