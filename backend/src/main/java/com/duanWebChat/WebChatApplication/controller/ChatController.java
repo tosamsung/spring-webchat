@@ -55,9 +55,9 @@ public class ChatController {
 		GroupChat group = groupChatSerivce.findGroupChatsById(message.getGroupId());
 		List<Member> listMem = group.getMembers();
 		for (Member member : listMem) {
-			if (member.getId() != message.getSenderId()) {
+//			if (member.getId() != message.getSenderId()) {
 				simpMessagingTemplate.convertAndSendToUser(member.getUserName(), "/private", message);
-			}
+//			}
 		}
 		messageService.createMessage(message);
 		return message;

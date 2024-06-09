@@ -11,6 +11,7 @@ import Sender from "../components/chat/chatbox/Sender";
 export const ChatContext = createContext({});
 export const ChatProvider = ({ children }) => {
   const [stompClient, setStompClient] = useState(null);
+  const [isConnected, setIsConnected] = useState(false);
 
   const [groupChat, setGroupChat] = useState({});
   const groupChatRef = useRef(groupChat);
@@ -32,6 +33,8 @@ export const ChatProvider = ({ children }) => {
 
   const onConnected = (client) => {
     client.subscribe("/user/" + user.userName + "/private", onPrivateMessage);
+    setIsConnected(true);
+
   };
 
   const onError = (err) => {
@@ -55,15 +58,24 @@ export const ChatProvider = ({ children }) => {
     // console.log(groupChat);
     // console.log(payloadData);
     if (payloadData.type) {
-      let newChat = [
-        ...listMessage,
-        <Sender
-          message={payloadData}
-          sender={findSender(payloadData.senderId)}
-          key={listMessage.length}
-        />,
-      ];
-      setListMessage(newChat);
+      if (payloadData.senderId === user.id) {
+        setListMessage((prevListMessage) => [
+          ...prevListMessage,
+          <Reply
+            message={payloadData}
+            key={prevListMessage.length}
+          />
+        ]);
+      } else {
+        setListMessage((prevListMessage) => [
+          ...prevListMessage,
+          <Sender
+            message={payloadData}
+            sender={findSender(payloadData.senderId)}
+            key={prevListMessage.length}
+          />
+        ]);
+      }
     }
     if (payloadData.action) {
       switch (payloadData.action) {
@@ -74,7 +86,6 @@ export const ChatProvider = ({ children }) => {
           }
           break;
         case "FIND_MESSAGE_BY_GROUPID":
-          console.log(payloadData.data);
           const newMessages = payloadData.data.map((message, index) => {
             if (message.senderId === user.id) {
               return <Reply message={message} key={index} />;
@@ -101,10 +112,9 @@ export const ChatProvider = ({ children }) => {
       return;
     }
     if (isEmpty(groupChat)) {
-      console.log("emptyugroupchat");
+      console.log("empty group chat");
       return;
     }
-    // // console.log(timeUtil.getCurrentTime());
     const newMessage = {
       groupId: groupChat.id,
       senderId: user.id,
@@ -112,14 +122,13 @@ export const ChatProvider = ({ children }) => {
       type: typeMes,
       messageStatus: "SENT",
     };
-    stompClient.send("/app/private-message", {}, JSON.stringify(newMessage));
-
-    const newChat = [
-      ...listMessage,
-      <Reply message={newMessage} key={listMessage.length} />,
-    ];
-    setListMessage(newChat);
+    if (isConnected && stompClient) {
+      stompClient.send("/app/private-message", {}, JSON.stringify(newMessage));
+    } else {
+      console.log("WebSocket connection not established yet.");
+    }
   };
+
   useEffect(() => {
     if (user && user.userName) {
       connectws();
@@ -144,7 +153,6 @@ export const ChatProvider = ({ children }) => {
 
   // --------------------get sender-----------------
   const findSender = (senderId) => {
-    console.log("Group chat in findSender:", groupChatRef.current);
     if (groupChatRef.current && groupChatRef.current.members) {
       return groupChatRef.current.members.find((member) => member.id === senderId);
     }
