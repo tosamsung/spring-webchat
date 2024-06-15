@@ -22,7 +22,7 @@ function Signin() {
       })
       .catch((error) => {
         console.log("haha");
-        toast.error("haha");
+        toast.error("Username and password not found");
       });
   };
 

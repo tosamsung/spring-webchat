@@ -8,12 +8,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.entity.groupchat.GroupChat;
+import com.duanWebChat.WebChatApplication.entity.groupchat.Member;
+import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.service.GroupChatService;
 
 @RestController
@@ -24,17 +27,39 @@ public class GroupChatController {
 
 	@GetMapping("/testGroup")
 	public ResponseEntity<ReqRes> tesGroup() {
-		groupChatService.createPrivateChat(3L, 4L);
-		groupChatService.createPrivateChat(4L, 5L);
-		groupChatService.createPrivateChat(3L, 5L);
-		groupChatService.createPrivateChat(3L, 6L);
+		groupChatService.createPrivateChat(2L, 8L);
+
 		return ResponseEntity.ok(new ReqRes(200, "", "create success"));
+	}
+	
+	@GetMapping("/members-in-group-not-friend")
+	public ResponseEntity<List<User>> getFriendsInGroupNotFriend(@RequestParam Long userId, @RequestParam Long groupId) {
+		List<User> friendsInGroup = groupChatService.getNonFriendMembersInGroupChat(userId, groupId);
+		return new ResponseEntity<>(friendsInGroup, HttpStatus.OK);
+	}
+	
+	@GetMapping("/members-in-group")
+	public ResponseEntity<List<User>> getFriendsInGroup(@RequestParam Long userId, @RequestParam Long groupId) {
+		List<User> friendsInGroup = groupChatService.getFriendsInGroupChat(userId, groupId);
+		return new ResponseEntity<>(friendsInGroup, HttpStatus.OK);
+	}
+
+	@GetMapping("/members-not-in-group")
+	public ResponseEntity<List<User>> getFriendsNotInGroup(@RequestParam Long userId, @RequestParam Long groupId) {
+		List<User> friendsNotInGroup = groupChatService.getFriendsNotInGroupChat(userId, groupId);
+		return new ResponseEntity<>(friendsNotInGroup, HttpStatus.OK);
+	}
+
+	@PostMapping("/addMember/{groupId}")
+	public ResponseEntity<GroupChat> addMember(@PathVariable("groupId") Long groupId, @RequestBody Member newMember) {
+		GroupChat groupChat = groupChatService.addMemberToGroupChat(groupId, newMember);
+		return ResponseEntity.ok(groupChat);
 	}
 
 	@PostMapping("/createGroupChat")
-	public GroupChat createGroup(@RequestParam("idUser1") Long idUser1) {
-
-		return groupChatService.createGroupChat(idUser1);
+	public GroupChat createGroup(@RequestParam("idUser1") Long idUser1, @RequestParam("groupName") String groupName,
+			@RequestParam("groupImage") String groupImage) {
+		return groupChatService.createGroupChat(idUser1, groupName, groupImage);
 	}
 
 	@PostMapping("/createPrivateChat")

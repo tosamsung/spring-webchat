@@ -16,6 +16,7 @@ import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
 import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.User;
+import com.duanWebChat.WebChatApplication.service.GroupChatService;
 import com.duanWebChat.WebChatApplication.service.UserService;
 
 @RestController
@@ -24,6 +25,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private GroupChatService groupChatService;
 
 	@PutMapping("/update")
 	public UserDto updateUser(@RequestBody UserDto useDto) {
@@ -52,6 +56,7 @@ public class UserController {
 	@PostMapping("/acceptFriend/{fromUserId}/{toUserId}")
 	public String acceptFriend(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
 		userService.acceptFriendRequest(fromUserId, toUserId);
+		groupChatService.createPrivateChat(fromUserId, toUserId);
 		return "Friend request accepted";
 	}
 

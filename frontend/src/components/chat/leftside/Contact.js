@@ -1,18 +1,29 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../../context/AppContext";
 import { ChatContext } from "../../../context/ChatContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
+import ChatMember from "./ChatMember";
 
 function Contact(props) {
+  const { setCurrentChat, openDetil } = props;
   const [contact, setContact] = useState(props.contact);
   const [info, setInfo] = useState({
-    image:'',
-    userName:''
+    image: "",
+    userName: "",
   });
   const { user } = useContext(AppContext);
-  const {setListMessage,setGroupChat } = useContext(ChatContext);
+  const { setListMessage, setGroupChat } = useContext(ChatContext);
 
   const handleClick = () => {
-    setGroupChat(contact)
+    // setCurrentChat({ ...contact, user });
+    setGroupChat(contact);
+  };
+
+  const handleSettingsClick = (event) => {
+    event.stopPropagation();
+    setCurrentChat({ ...contact, user });
+    openDetil();
   };
 
   const getContactInfo = () => {
@@ -29,6 +40,11 @@ function Contact(props) {
           setInfo(contact.members[0]);
         }
       }
+    } else if (contact.groupChatType === "GROUP") {
+      setInfo({
+        image: contact.setting.image,
+        userName: contact.setting.name,
+      });
     }
   };
 
@@ -55,8 +71,12 @@ function Contact(props) {
           <h3>{info.userName}</h3>
           {/* <p className="text-muted">front end developer</p> */}
         </div>
+        <div className="ml-auto me-2" onClick={handleSettingsClick}>
+          <FontAwesomeIcon icon={faCog} />
+        </div>
       </a>
     </>
   );
 }
+
 export default Contact;
