@@ -1,11 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
-import Contact from "../leftside/Contact"
+import Contact from "../leftside/Contact";
 import ChatDetail from "./ChatDetail";
 import { ChatContext } from "../../../context/ChatContext";
+import NewGroupChat from "./NewGroupChat";
 
 function LeftSide(props) {
   // const { listContact } = useContext(AppContext);
-
+  const [currentChat, setCurrentChat] = useState(null); // Thêm state này
 
   const openDetil = () => {
     let Detail = document.getElementById("detail");
@@ -50,7 +51,12 @@ function LeftSide(props) {
                   placeholder="Search"
                   aria-label="search"
                 />
-                <a className="add" href="#">
+                <a
+                  className="add"
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#newGroupChatModal"
+                >
                   <img
                     className="img-fluid"
                     src="https://mehedihtml.com/chatbox/assets/img/add.svg"
@@ -88,18 +94,20 @@ function LeftSide(props) {
                   <div className="tab-pane fade show active" id="listContacts">
                     {/* chat-list */}
                     <div className="chat-list">
-                      
-                    {listContact.map((contact, index) => (
-                        <Contact key={contact.id} contact={contact} />
+                      {listContact.map((contact) => (
+                        <Contact
+                          key={contact.id}
+                          contact={contact}
+                          setCurrentChat={setCurrentChat} // Truyền setCurrentChat xuống Contact
+                          openDetil={openDetil} // Truyền hàm openDetil xuống Contact
+                        />
                       ))}
-                    
                     </div>
                     {/* chat-list */}
                   </div>
                   <div className="tab-pane fade w-100" id="detail">
                     {/* chat-list */}
-                    <ChatDetail></ChatDetail>
-                    {/* chat-list */}
+                    <ChatDetail currentChat={currentChat} /> {/* chat-list */}
                   </div>
                 </div>
               </div>
@@ -108,6 +116,7 @@ function LeftSide(props) {
           </div>
         </div>
       </div>
+      <NewGroupChat />
     </>
   );
 }
