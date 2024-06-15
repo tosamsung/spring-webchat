@@ -2,15 +2,14 @@ import axios from "axios";
 import api from "../util/AxiosUtil";
 
 class GroupService {
-  // static BASE_URL = "http://localhost:8080";
-  // static async getUser() {
-  //   try {
-  //     const user = await api.post(`/auth/user`);
-  //     return user.data;
-  //   } catch (error) {
-  //     throw error
-  //   }
-  // }
+  static async getGroupChatsByMembername(username) {
+    try {
+      const res = await api.get(`/group/groupchats/user?username=${username}`);
+      return res.data;
+    } catch (error) {
+      throw error
+    }
+  }
 
 
   //end

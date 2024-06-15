@@ -32,7 +32,6 @@ public class User {
 	private String password;
 	private Date birthDate;
 	private UserStatus userStatus;
-	private ConnectStatus connectStatus;
 	private Date lastTimeActive;
 	private Gender gender;
 	private Date createDate;
