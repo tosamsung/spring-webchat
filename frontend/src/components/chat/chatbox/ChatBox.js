@@ -8,6 +8,8 @@ import { AppContext } from "../../../context/AppContext";
 
 function ChatBox() {
   const inputRef = useRef(null);
+  const messageContainerRef = useRef(null);
+
   const [selectedFile, setSelectedFile] = useState("");
   const [imageInput, setImageInput] = useState([]);
   const [videoInput, setVideoInput] = useState([]);
@@ -67,7 +69,7 @@ function ChatBox() {
   const handleSend = (event) => {
 
     imageInput.forEach((image) => {
-      const imgRef = ref(analytics, `files/${v4()}`); // Ensure each image gets a unique reference
+      const imgRef = ref(analytics, `files/${v4()}`); 
       uploadBytes(imgRef, image).then((value) => {
         getDownloadURL(value.ref).then((url) => {
           console.log(url);
@@ -78,7 +80,7 @@ function ChatBox() {
 
     // // Gửi tất cả video
     videoInput.forEach((video) => {
-      const imgRef = ref(analytics, `files/${v4()}`); // Ensure each image gets a unique reference
+      const imgRef = ref(analytics, `files/${v4()}`);
       uploadBytes(imgRef, video).then((value) => {
         getDownloadURL(value.ref).then((url) => {
           console.log(url);
@@ -109,6 +111,12 @@ function ChatBox() {
     handleSendMessage(getContent(), "TEXT");
     setContent("");
   };
+  useEffect(() => {
+    const messageBody = messageContainerRef.current;
+    if (messageBody) {
+      messageBody.scrollTop = messageBody.scrollHeight;
+    }
+  }, []);
   return (
     <>
       <div className="chatbox">
@@ -134,7 +142,7 @@ function ChatBox() {
                 </div>
               </div>
             </div>
-            <div className="modal-body">
+            <div className="modal-body" ref={messageContainerRef}>
               <div className="msg-body">
                 <ul>
                   {/* <Sender></Sender>

@@ -47,4 +47,8 @@ public class GroupChatController {
 	public List<GroupChat> getGroupChatsByUserId(@PathVariable Long userId) {
 		return groupChatService.findGroupChatsByUserId(userId);
 	}
+	@GetMapping("/groupchats/user")
+	public List<GroupChat> getGroupChatsByMembername(@RequestParam("username") String name) {
+		return groupChatService.findGroupChatsByMemberName(name);
+	}
 }

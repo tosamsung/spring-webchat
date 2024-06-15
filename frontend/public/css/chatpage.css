@@ -146,7 +146,7 @@ table {
   }
   
   .contact-item:hover {
-    background-color: #f0f0f0; /* Thay đổi màu nền khi hover */
+    background-color: #c8c5c5c3; /* Thay đổi màu nền khi hover */
   }
 .textreply {
     word-wrap: break-word; /* Đảm bảo văn bản xuống dòng khi quá dài */
@@ -342,6 +342,9 @@ a.add img {
 .chat-area .nav-tabs .nav-link:hover {
     border-color: transparent transparent #000;
     isolation: isolate;
+}
+.contact-active{
+    background-color: rgb(144, 144, 144);
 }
 .image_input{
     max-width: 200px;

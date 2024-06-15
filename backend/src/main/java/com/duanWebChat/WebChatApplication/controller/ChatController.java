@@ -32,41 +32,24 @@ public class ChatController {
 	@Autowired
 	private MessageService messageService;
 
-	@Autowired
-	private SocketService socketService;
 
-//    private static Map<String,String> users=new HashMap<String,String>() ;
-
-	@MessageMapping("/message")
-	@SendTo("/chatroom/public")
-	public Map<String, String> receiveMessage(@Payload Message message) {
-//		System.out.println("recei : "+message.toString());
-//		GroupChat group=groupChatSerivce.findGroupChatsById(message.getGroupId());
-//		List<Member> listMem=group.getMembers();
-//		for (Member member : listMem) {
-//			users.put(message.getSenderUserName(), "");
-//		}
-//		
-		return null;
-	}
 
 	@MessageMapping("/private-message")
 	public Message recMessage(@Payload Message message) {
 		GroupChat group = groupChatSerivce.findGroupChatsById(message.getGroupId());
 		List<Member> listMem = group.getMembers();
 		for (Member member : listMem) {
-//			if (member.getId() != message.getSenderId()) {
-				simpMessagingTemplate.convertAndSendToUser(member.getUserName(), "/private", message);
-//			}
+			simpMessagingTemplate.convertAndSendToUser(member.getUserName(), "/private", message);
+
 		}
 		messageService.createMessage(message);
 		return message;
 	}
 
-	@MessageMapping("/getMessages")
-	public SocketRes getmessages(@Payload ReqSocket req) {
-		simpMessagingTemplate.convertAndSendToUser(req.getUserName(), "/private",
-				socketService.findMessagesByGroupId(req.getGroupId()));
-		return socketService.findMessagesByGroupId(req.getGroupId());
-	}
+//	@MessageMapping("/getMessages")
+//	public SocketRes getmessages(@Payload ReqSocket req) {
+//		simpMessagingTemplate.convertAndSendToUser(req.getUserName(), "/private",
+//				socketService.findMessagesByGroupId(req.getGroupId()));
+//		return socketService.findMessagesByGroupId(req.getGroupId());
+//	}
 }
