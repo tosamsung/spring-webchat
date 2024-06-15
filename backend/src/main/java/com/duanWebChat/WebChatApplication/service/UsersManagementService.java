@@ -45,13 +45,12 @@ public class UsersManagementService {
 			user.setLastName(registrationRequest.getLastName());
 			user.setUserName(registrationRequest.getUserName());
 			user.setImage("https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg");
-			user.setConnectStatus(ConnectStatus.OFFLINE);
 			user.setRelationships(new ArrayList<>());
 			user.setEmail(registrationRequest.getEmail());
 			user.setPhone(registrationRequest.getPhone());
 			user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 			user.setBirthDate(registrationRequest.getBirthDate());
-
+			
 			user.setUserStatus(UserStatus.ACTIVE);
 			user.setGender(registrationRequest.getGender());
 			user.setCreateDate(new Date());

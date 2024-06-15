@@ -48,6 +48,7 @@ public class GroupChatService {
 		groupSetting.setName(groupName);
 		groupSetting.setImage(groupImage);
 
+
 		User user = userRepository.findById(idLeader)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		Member member = new Member(user);

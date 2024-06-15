@@ -15,6 +15,8 @@ function Contact(props) {
   const { user } = useContext(AppContext);
   const { setListMessage, setGroupChat } = useContext(ChatContext);
 
+  const {groupChat,setGroupChat } = useContext(ChatContext);
+
   const handleClick = () => {
     // setCurrentChat({ ...contact, user });
     setGroupChat(contact);
@@ -56,19 +58,19 @@ function Contact(props) {
     <>
       <a
         href="#"
-        className="d-flex align-items-center contact-item py-2 px-1 rounded"
+        className={`d-flex align-items-center contact-item py-2 px-1 rounded ${groupChat.id == contact.id ? 'contact-active':''}`}
         onClick={handleClick}
       >
         <div className="flex-shrink-0">
           <img
-            className="img-fluid contact_image rounded-circle"
+            className="img-fluid contact_image rounded-circle border border-1 border-black"
             src={info.image}
             alt="user img"
           />
           <span className="active2" />
         </div>
         <div className="flex-grow-1 ms-3">
-          <h3>{info.userName}</h3>
+          <h3 className={groupChat.id == contact.id ? 'text-white':''}>{info.userName}</h3>
           {/* <p className="text-muted">front end developer</p> */}
         </div>
         <div className="ml-auto me-2" onClick={handleSettingsClick}>

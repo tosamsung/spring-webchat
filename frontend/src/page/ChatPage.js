@@ -1,14 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import LeftSide from "../components/chat/leftside/LeftSide";
 import ChatBox from "../components/chat/chatbox/ChatBox";
-import { AppContext } from "../context/AppContext";
-import SockJS from "sockjs-client";
-import { over } from "stompjs";
-var stompClient = null;
+
 function ChatPage() {
 
-  const { user } = useContext(AppContext);
-  const [privateChat, setPrivateChat] = useState(new Map());
+
 
 
 

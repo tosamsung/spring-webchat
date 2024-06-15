@@ -1,6 +1,8 @@
 package com.duanWebChat.WebChatApplication.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -27,23 +29,23 @@ public class SocketService {
 	private MessageRepository messageRepository;
 	@Autowired
 	UserRepository userRepository;
+	private final Map<String, Boolean> sessions = new ConcurrentHashMap<>();
 
-
-	public SocketRes findGroupChatsByUserName(String userName) {
-//		User user=userRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		List<GroupChat> list = groupChatRepository.findByMemberName(userName);
-		SocketRes res = new SocketRes();
-		res.setAction(SocketResAction.FIND_LIST_GROUPCHAT);
-		res.setData(list);
-		return res;
-	}
-	public SocketRes findMessagesByGroupId(Long id) {
-		List<Message> list=messageRepository.findByGroupId(id);		
-		SocketRes res = new SocketRes();
-		res.setAction(SocketResAction.FIND_MESSAGE_BY_GROUPID);
-		res.setData(list);
-		return res;
-	}
-
+//	public SocketRes findGroupChatsByUserName(String userName) {
+////		User user=userRepository.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//		List<GroupChat> list = groupChatRepository.findByMemberName(userName);
+//		SocketRes res = new SocketRes();
+//		res.setAction(SocketResAction.FIND_LIST_GROUPCHAT);
+//		res.setData(list);
+//		return res;
+//	}
+//
+//	public SocketRes findMessagesByGroupId(Long id) {
+//		List<Message> list = messageRepository.findByGroupId(id);
+//		SocketRes res = new SocketRes();
+//		res.setAction(SocketResAction.FIND_MESSAGE_BY_GROUPID);
+//		res.setData(list);
+//		return res;
+//	}
 
 }

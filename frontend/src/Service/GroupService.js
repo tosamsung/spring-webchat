@@ -7,6 +7,15 @@ class GroupService {
       return response.data;
     } catch (error) {
       throw error;
+       }
+  }
+
+  static async getGroupChatsByMembername(username) {
+    try {
+      const res = await api.get(`/group/groupchats/user?username=${username}`);
+      return res.data;
+    } catch (error) {
+      throw error
     }
   }
 

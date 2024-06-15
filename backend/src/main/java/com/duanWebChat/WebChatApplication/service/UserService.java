@@ -54,19 +54,7 @@ public class UserService {
 		return user;
 	}
 
-	public UserDto setUserOnline(Long id) {
-		User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		user.setConnectStatus(ConnectStatus.ONLINE);
-		userRepository.save(user);
-		return new UserDto(user);
-	}
 
-	public UserDto setUserOffline(Long id) {
-		User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		user.setConnectStatus(ConnectStatus.OFFLINE);
-		userRepository.save(user);
-		return new UserDto(user);
-	}
 
 	public void sendFriendRequest(Long fromUserId, Long toUserId) {
 		User fromUser = userRepository.findById(fromUserId)
@@ -76,7 +64,6 @@ public class UserService {
 
 		Relationships relationships = new Relationships(toUser);
 		relationships.setType(RelationshipType.AWAIT);
-		relationships.setConnectStatus(ConnectStatus.OFFLINE);
 
 		if (fromUser.getRelationships() == null) {
 			fromUser.setRelationships(new ArrayList<>());
@@ -86,7 +73,6 @@ public class UserService {
 
 		Relationships relationships2 = new Relationships(fromUser);
 		relationships2.setType(RelationshipType.PENDING);
-		relationships2.setConnectStatus(ConnectStatus.OFFLINE);
 
 		if (toUser.getRelationships() == null) {
 			toUser.setRelationships(new ArrayList<>());
