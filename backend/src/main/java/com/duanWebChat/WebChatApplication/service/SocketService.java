@@ -32,6 +32,10 @@ public class SocketService {
 	UserService userService;
 	private final Map<String, Boolean> userInSocket = new ConcurrentHashMap<>();
 
+	
+	
+	
+	
 	public void userConnected(String email) {
 		userInSocket.put(email, true);
 	}

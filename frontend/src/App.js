@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppProvider } from "./context/AppContext";
 import FriendsPage from "./page/FriendsPage";
-import { ChatProvider } from "./context/ChatContext";
+import { default as ChatProvider } from "./context/ChatContext";
 
 function App() {
   return (

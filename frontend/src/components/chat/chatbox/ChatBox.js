@@ -128,7 +128,6 @@ function ChatBox() {
             <div className="msg-head p-1">
               <div className="row">
                 <div className="col-8">
-                  {/* header */}
                   <div className="d-flex align-items-center">
                     <div className="flex-shrink-0">
                       <img
@@ -139,7 +138,6 @@ function ChatBox() {
                     </div>
                     <div className="flex-grow-1 ms-3">
                       <h3>{info.userName}</h3>
-                      {/* <p>front end developer</p> */}
                     </div>
                   </div>
                 </div>
@@ -148,8 +146,7 @@ function ChatBox() {
             <div className="modal-body" ref={messageContainerRef}>
               <div className="msg-body">
                 <ul>
-                  {/* <Sender></Sender>
-                  <Divider></Divider> */}
+
                   {listMessage}
                 </ul>
               </div>
@@ -157,16 +154,7 @@ function ChatBox() {
             {/* chat form */}
             <div className="send-box">
               <form onSubmit={handleSubmit}>
-                {/* <input
-                  type="text"
-                  className="form-control input_message"
-                  value={message.content}
-                  onChange={(event) => {
-                    handleContentMessage(event);
-                  }}
-                  aria-label="message…"
-                  placeholder="Write message…"
-                /> */}
+
                 <div
                   contentEditable="true"
                   className="form-control input_message"
@@ -250,15 +238,15 @@ function ChatBox() {
                       onChange={(e) => onFileChange(e.target.files[0])}
                     />
                   </div>
-                  <select
+                  {/* <select
                     className="form-control"
                     id="exampleFormControlSelect1"
                   >
                     <option>Select template</option>
                     <option>Template 1</option>
                     <option>Template 2</option>
-                  </select>
-                  <div className="add-apoint">
+                  </select> */}
+                  {/* <div className="add-apoint">
                     <a
                       href="#"
                       data-toggle="modal"
@@ -286,7 +274,7 @@ function ChatBox() {
                       </svg>{" "}
                       Appoinment
                     </a>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>
