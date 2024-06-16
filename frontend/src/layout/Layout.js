@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import styles from "../css/layout.module.css"
+import styles from "../css/layout.module.css";
 import UserService from "../Service/UserService";
 import Profile from "../components/profile/Profile";
 import { AppContext } from "../context/AppContext";
@@ -8,8 +8,6 @@ function Layout() {
   const navigate = useNavigate();
   const auth = useContext(AppContext).auth;
   const setAuth = useContext(AppContext).setAuth;
- 
-
 
   const handleLogout = () => {
     const confirm = window.confirm(
@@ -49,59 +47,62 @@ function Layout() {
   return (
     <>
       {/* <link rel="stylesheet" href="css/layout.css" /> */}
-        <header className={`${styles.header}  sticky-top`} id="header">
-          <div className="row h-100 p-1">
-            <div className={`${styles.header_toggle} d-inline-block col`}>
-              <i
-                className={`${styles.menu_button} fa-solid fa-bars text-white fs-2`}
-                id="header-toggle"
-                onClick={() => {
-                  showNavbar();
-                }}
-              />
+      <header className={`${styles.header}  sticky-top`} id="header">
+        <div className="row h-100 p-1">
+          <div className={`${styles.header_toggle} d-inline-block col`}>
+            <i
+              className={`${styles.menu_button} fa-solid fa-bars text-white fs-2`}
+              id="header-toggle"
+              onClick={() => {
+                showNavbar();
+              }}
+            />
+          </div>
+        </div>
+      </header>
+      <div className={styles.lNavbar} id="nav-bar">
+        <nav className={styles.nav}>
+          <div>
+            <NavLink to="/chats" className={styles.nav_logo}>
+              <i className={`${styles.nav_logo_icon}  bx bx-layer`} />
+              <span className={styles.nav_logo_name}>WebChat</span>
+            </NavLink>
+            <div className="nav_list">
+              <NavLink to="/chats" className={`${styles.nav_logo} text-white`}>
+                <i className={`${styles.nav_icon}  bx bx-conversation`} />
+                <span className={styles.nav_name}>Chats</span>
+              </NavLink>
+              <NavLink
+                to="/friends"
+                className={`${styles.nav_logo} text-white`}
+              >
+                <i className={`${styles.nav_icon}  bx bx-search-alt-2`}></i>
+                <span className={styles.nav_name}>Friends</span>
+              </NavLink>
+              <a
+                data-bs-toggle="modal"
+                href="#exampleModalToggle"
+                role="button"
+                className={styles.nav_link}
+              >
+                <i className={`${styles.nav_icon} bx bx-user`} />
+                <span className={styles.nav_name}>Users</span>
+                {/* chỉnh lại active */}
+              </a>
             </div>
           </div>
-        </header>
-        <div className={styles.lNavbar} id="nav-bar">
-          <nav className={styles.nav}>
-            <div>
-              <NavLink to="/chats" className={styles.nav_logo}>
-                <i className={`${styles.nav_logo_icon}  bx bx-layer`}/>
-                <span className={styles.nav_logo_name}>WebChat</span>
-              </NavLink>
-              <div className="nav_list">
-                <NavLink to="/chats" className={`${styles.nav_logo} text-white`}>
-                  <i className={`${styles.nav_icon}  bx bx-conversation`}/>
-                  <span className={styles.nav_name}>Chats</span>
-                </NavLink>
-                <NavLink to="/friends" className={`${styles.nav_logo} text-white`}>
-                  <i className={`${styles.nav_icon}  bx bx-search-alt-2`}></i>
-                  <span className={styles.nav_name}>Friends</span>
-                </NavLink>
-                <a
-                  data-bs-toggle="modal"
-                  href="#exampleModalToggle"
-                  role="button"
-                  className={styles.nav_link}
-                >
-                  <i className={`${styles.nav_icon} bx bx-user`} />
-                  <span className={styles.nav_name}>Users</span>
-                  {/* chỉnh lại active */}
-                </a>
-              </div>
-            </div>
-            <NavLink to="/" className={styles.nav_link} onClick={handleLogout}>
-              <i className={`${styles.nav_icon}  bx bx-log-out`}/>
-              <span className={styles.nav_name}>SignOut</span>
-            </NavLink>
-          </nav>
-        </div>
-        {/*Container Main start*/}
-        <div className="container-fluid ">
-          <Outlet></Outlet>
-        </div>
-        {/*Container Main end*/}
-        <Profile></Profile>
+          <NavLink to="/" className={styles.nav_link} onClick={handleLogout}>
+            <i className={`${styles.nav_icon}  bx bx-log-out`} />
+            <span className={styles.nav_name}>SignOut</span>
+          </NavLink>
+        </nav>
+      </div>
+      {/*Container Main start*/}
+      <div className="container-fluid ">
+        <Outlet></Outlet>
+      </div>
+      {/*Container Main end*/}
+      <Profile></Profile>
     </>
   );
 }

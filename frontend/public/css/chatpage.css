@@ -138,13 +138,20 @@ table {
     border-spacing: 0;
 }
 .contact_image{
+    min-width: 45px;
+    min-height: 45px;
     max-width: 45px;
     max-height: 45px;
 }
 .contact-item {
     transition: background-color 0.3s ease;
   }
-  
+  .detail-img{
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+  }
   .contact-item:hover {
     background-color: #c8c5c5c3; /* Thay đổi màu nền khi hover */
   }

@@ -1,19 +1,30 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../../context/AppContext";
 import { ChatContext } from "../../../context/ChatContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
+import ChatMember from "./ChatMember";
 
 function Contact(props) {
+  const { openDetil } = props;
   const [contact, setContact] = useState(props.contact);
   const [info, setInfo] = useState({
-    image:'',
-    userName:'',
-    status:'OFFLINE'
+    image: "",
+    userName: "",
+    status: "OFFLINE",
   });
   const { user } = useContext(AppContext);
-  const {groupChat,setGroupChat } = useContext(ChatContext);
+  const {  groupChat, setGroupChat } = useContext(ChatContext);
 
   const handleClick = () => {
-    setGroupChat(contact)
+    // setCurrentChat({ ...contact, user });
+    setGroupChat(contact);
+  };
+
+  const handleSettingsClick = (event) => {
+    event.stopPropagation();
+    setGroupChat(contact);
+    openDetil();
   };
 
   const getContactInfo = () => {
@@ -30,6 +41,11 @@ function Contact(props) {
           setInfo(contact.members[0]);
         }
       }
+    } else if (contact.groupChatType === "GROUP") {
+      setInfo({
+        image: contact.setting.image,
+        userName: contact.setting.name,
+      });
     }
   };
 
@@ -41,7 +57,9 @@ function Contact(props) {
     <>
       <a
         href="#"
-        className={`d-flex align-items-center contact-item py-2 px-1 rounded ${groupChat.id == contact.id ? 'contact-active':''}`}
+        className={`d-flex align-items-center contact-item py-2 px-1 rounded ${
+          groupChat.id == contact.id ? "contact-active" : ""
+        }`}
         onClick={handleClick}
       >
         <div className="flex-shrink-0">
@@ -50,18 +68,25 @@ function Contact(props) {
             src={info.image}
             alt="user img"
           />
-          {
-            contact.groupChatType === "PRIVATE" && info.status==="ONLINE" ?
-            <span className="online" />: <span className="offline" />
-          }
-          
+          {contact.groupChatType === "PRIVATE" && info.status === "ONLINE" && (
+            <span className="online" />
+          )}
+           {contact.groupChatType === "PRIVATE" && (
+            <span className="offline" />
+          )}
         </div>
         <div className="flex-grow-1 ms-3">
-          <h3 className={groupChat.id == contact.id ? 'text-white':''}>{info.userName}</h3>
+          <h3 className={groupChat.id == contact.id ? "text-white" : ""}>
+            {info.userName}
+          </h3>
           {/* <p className="text-muted">front end developer</p> */}
+        </div>
+        <div className="ml-auto me-2" onClick={handleSettingsClick}>
+          <FontAwesomeIcon icon={faCog} className={groupChat.id == contact.id ? "text-white" : ""}/>
         </div>
       </a>
     </>
   );
 }
+
 export default Contact;

@@ -29,6 +29,11 @@ function ChatBox() {
       } else {
         setInfo(groupChat.members[0]);
       }
+    } else if (groupChat.groupChatType === "GROUP") {
+      setInfo({
+        image: groupChat.setting.image,
+        userName: groupChat.setting.name,
+      });
     }
   };
   useEffect(() => {
@@ -66,7 +71,6 @@ function ChatBox() {
   };
   // --------------------------------send message----------------------------------
   const handleSend = (event) => {
-
     imageInput.forEach((image) => {
       const imgRef = ref(analytics, `files/${v4()}`); 
       uploadBytes(imgRef, image).then((value) => {

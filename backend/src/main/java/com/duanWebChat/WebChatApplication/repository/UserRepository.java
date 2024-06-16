@@ -18,14 +18,18 @@ public interface UserRepository extends MongoRepository<User, Long> {
 
 	@Query("{ 'id': { '$nin': ?0 } }")
 	List<User> findUsersNotInRelationships(List<Long> relationshipIds);
-	
+
 	@Query("{ 'relationships': { '$elemMatch': { 'id': ?0, 'type': 'FRIEND' } } }")
 	List<User> getUsersInRelationship(Long userId);
 
-	
 	@Query("{ 'relationships': { '$elemMatch': { 'id': ?0, 'type': 'AWAIT' } } }")
 	List<User> findUsersWithPendingRequests(Long userId);
-	
+
 	@Query("{ 'relationships': { '$elemMatch': { 'id': ?0, 'type': 'PENDING' } } }")
 	List<User> findUsersWithAwaitRequests(Long userId);
+
+
+	@Query("{ 'relationships': { '$elemMatch': { 'id': ?0, 'type': 'FRIEND' } } }")
+	List<User> findFriendsNotInGroup(Long userId);
+
 }

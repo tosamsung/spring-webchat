@@ -1,9 +1,13 @@
 package com.duanWebChat.WebChatApplication.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,14 +47,16 @@ public class GroupChatService {
 	}
 
 	public List<GroupChat> findPrivateChatByUserId(Long id) {
-		return groupChatRepository.findByGroupChatTypeAndMemberId(GroupChatType.PRIVATE,id);
+		return groupChatRepository.findByGroupChatTypeAndMemberId(GroupChatType.PRIVATE, id);
 
 	}
 
-	public GroupChat createGroupChat(Long idLeader) {
+	public GroupChat createGroupChat(Long idLeader, String groupName, String groupImage) {
 		GroupChat groupChat = new GroupChat();
 
 		GroupSetting groupSetting = new GroupSetting();
+		groupSetting.setName(groupName);
+		groupSetting.setImage(groupImage);
 
 		User user = userRepository.findById(idLeader)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -96,6 +102,73 @@ public class GroupChatService {
 		GroupChat result = groupChatRepository.save(groupChat);
 
 		return result;
+	}
+
+	public GroupChat addMemberToGroupChat(Long groupId, Member newMember) {
+		Optional<GroupChat> optionalGroupChat = groupChatRepository.findById(groupId);
+		
+		if (optionalGroupChat.isPresent()) {
+			newMember.setJoinDate(new Date());
+			GroupChat groupChat = optionalGroupChat.get();
+			groupChat.getMembers().add(newMember);
+			return groupChatRepository.save(groupChat);
+		}
+		throw new RuntimeException("Group not found");
+	}
+
+	public List<User> getFriendsNotInGroupChat(Long userId, Long groupId) {
+		// Lấy danh sách bạn bè của user
+		List<User> friends = userRepository.getUsersInRelationship(userId);
+
+		// Lấy danh sách thành viên của nhóm chat
+		Optional<GroupChat> groupChat = groupChatRepository.findById(groupId);
+		if (!groupChat.isPresent()) {
+			return friends; // Nếu không có nhóm chat, trả về toàn bộ bạn bè
+		}
+
+		List<Member> groupMembers = groupChat.get().getMembers();
+		Set<Long> groupMemberIds = groupMembers.stream().map(Member::getId).collect(Collectors.toSet());
+
+		// Lọc bạn bè không nằm trong nhóm chat
+		return friends.stream().filter(friend -> !groupMemberIds.contains(friend.getId())).collect(Collectors.toList());
+	}
+
+	public List<User> getFriendsInGroupChat(Long userId, Long groupId) {
+		// Lấy danh sách bạn bè của user
+		List<User> friends = userRepository.getUsersInRelationship(userId);
+
+		// Lấy danh sách thành viên của nhóm chat
+		Optional<GroupChat> groupChat = groupChatRepository.findById(groupId);
+		if (!groupChat.isPresent()) {
+			return friends; // Nếu không có nhóm chat, trả về toàn bộ bạn bè
+		}
+
+		List<Member> groupMembers = groupChat.get().getMembers();
+		Set<Long> groupMemberIds = groupMembers.stream().map(Member::getId).collect(Collectors.toSet());
+
+		// Lọc bạn bè không nằm trong nhóm chat
+		return friends.stream().filter(friend -> groupMemberIds.contains(friend.getId())).collect(Collectors.toList());
+	}
+
+	public List<User> getNonFriendMembersInGroupChat(Long userId, Long groupId) {
+		// Lấy danh sách bạn bè của user
+		List<User> friends = userRepository.getUsersInRelationship(userId);
+
+		// Lấy danh sách thành viên của nhóm chat
+		Optional<GroupChat> groupChat = groupChatRepository.findById(groupId);
+		if (!groupChat.isPresent()) {
+			return Collections.emptyList(); // Nếu không có nhóm chat, trả về danh sách rỗng
+		}
+
+		List<Member> groupMembers = groupChat.get().getMembers();
+		Set<Long> friendIds = friends.stream().map(User::getId).collect(Collectors.toSet());
+
+		// Lọc thành viên không nằm trong danh sách bạn bè
+		return groupMembers.stream().filter(member -> !friendIds.contains(member.getId()))
+				.map(member -> userRepository.findById(member.getId()).orElse(null)) // Lấy thông tin đầy đủ từ
+																						// userRepository
+				.filter(user -> user != null) // Lọc những người dùng không tìm thấy
+				.collect(Collectors.toList());
 	}
 
 }
