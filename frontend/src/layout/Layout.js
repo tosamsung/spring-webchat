@@ -4,18 +4,26 @@ import styles from "../css/layout.module.css";
 import UserService from "../Service/UserService";
 import Profile from "../components/profile/Profile";
 import { AppContext } from "../context/AppContext";
-function Layout() {
-  const navigate = useNavigate();
-  const auth = useContext(AppContext).auth;
-  const setAuth = useContext(AppContext).setAuth;
+import { ChatContext } from "../context/ChatContext";
 
+function Layout() {
+  const setAuth = useContext(AppContext).setAuth;
+  const { stompClient } = useContext(ChatContext);
   const handleLogout = () => {
     const confirm = window.confirm(
       "Are you sure you want to logout this user?"
     );
     if (confirm) {
-      UserService.logout();
-      setAuth();
+      if (stompClient && stompClient.connected) {
+        stompClient.disconnect(() => {
+          console.log("Disconnected from WebSocket");
+          UserService.logout();
+          setAuth(null); // Assuming `setAuth` clears authentication state
+        });
+      } else {
+        UserService.logout();
+        setAuth(null); // Assuming `setAuth` clears authentication state
+      }
     }
   };
 

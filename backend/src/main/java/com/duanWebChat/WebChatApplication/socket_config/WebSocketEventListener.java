@@ -14,17 +14,17 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 @Component
 public class WebSocketEventListener {
 
-
 	@EventListener
 	private void handleSessionConnected(SessionConnectEvent event) {
-	     StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-	        String email = headerAccessor.getUser().getName();
+		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+		String email = headerAccessor.getUser().getName();
+		System.out.println("connect");
 //	        System.out.println(headerAccessor.toString());
 	}
 
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
-
+		System.out.println("disconnect");
 	}
 
 	@EventListener
