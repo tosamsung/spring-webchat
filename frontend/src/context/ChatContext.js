@@ -33,6 +33,9 @@ export const ChatProvider = ({ children }) => {
 
   const onConnected = (client) => {
     client.subscribe("/user/" + user.userName + "/private", onPrivateMessage);
+    client.subscribe(`/user/${ user.userName}/topic/user-status`, (message) => {
+      alert(message.body); // Handle notification (e.g., display it to the user)
+    });
     setIsConnected(true);
   };
 
@@ -62,7 +65,7 @@ export const ChatProvider = ({ children }) => {
       }
     }
   };
-// function handle send message
+  // function handle send message
   const handleSendMessage = (message, typeMes) => {
     if (validateUtil.isEmptyString(message)) {
       console.log("empty");
@@ -94,14 +97,14 @@ export const ChatProvider = ({ children }) => {
       user.userName
     );
     setListContact(listGroup);
-    if (listGroup) {
+    if (listGroup.length > 0) {
       setGroupChat(listGroup[0]);
     }
   };
   const loadListMessage = async (groupId) => {
     if (groupId) {
       const result = await MessageService.getMessageByGroupId(groupId);
-      const newListMessage=result.map((message, index) => {
+      const newListMessage = result.map((message, index) => {
         if (message.senderId === user.id) {
           return <Reply message={message} key={index} />;
         } else {

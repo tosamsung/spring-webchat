@@ -6,7 +6,8 @@ function Contact(props) {
   const [contact, setContact] = useState(props.contact);
   const [info, setInfo] = useState({
     image:'',
-    userName:''
+    userName:'',
+    status:'OFFLINE'
   });
   const { user } = useContext(AppContext);
   const {groupChat,setGroupChat } = useContext(ChatContext);
@@ -45,11 +46,15 @@ function Contact(props) {
       >
         <div className="flex-shrink-0">
           <img
-            className="img-fluid contact_image rounded-circle border border-1 border-black"
+            className="img-fluid contact_image rounded-circle border border-1 border-light"
             src={info.image}
             alt="user img"
           />
-          <span className="active2" />
+          {
+            contact.groupChatType === "PRIVATE" && info.status==="ONLINE" ?
+            <span className="online" />: <span className="offline" />
+          }
+          
         </div>
         <div className="flex-grow-1 ms-3">
           <h3 className={groupChat.id == contact.id ? 'text-white':''}>{info.userName}</h3>

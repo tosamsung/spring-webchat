@@ -42,6 +42,11 @@ public class GroupChatService {
 
 	}
 
+	public List<GroupChat> findPrivateChatByUserId(Long id) {
+		return groupChatRepository.findByGroupChatTypeAndMemberId(GroupChatType.PRIVATE,id);
+
+	}
+
 	public GroupChat createGroupChat(Long idLeader) {
 		GroupChat groupChat = new GroupChat();
 

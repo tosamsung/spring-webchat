@@ -85,39 +85,54 @@ function Signup() {
         <div className="mask d-flex align-items-center h-100 gradient-custom-3">
           <div className="container h-100">
             <div className="row d-flex justify-content-center align-items-center h-100">
-              <div className="col-12 col-md-9 col-lg-7 col-xl-6">
+              <div className="col-12 col-md-9 col-lg-7 col-xl-6 py-3">
                 <div className="card" style={{ borderRadius: 15 }}>
-                  <div className="card-body p-5">
+                  <div className="card-body p-3">
                     <h2 className="text-uppercase text-center mb-5">
-                      Create an account
+                    <i class='bx bx-edit-alt'></i>&nbsp;Create an account
                     </h2>
                     <form onSubmit={handleSubmit}>
-                      <div data-mdb-input-init className="form-outline mb-4">
-                        <input
-                          name="firstName"
-                          value={formData.firstName}
-                          onChange={handleInputChange}
-                          type="text"
-                          id="form3Example1cg"
-                          className="form-control form-control-lg"
-                        />
-                        <label className="form-label" htmlFor="form3Example1cg">
-                          First Name
-                        </label>
+                      <div className="row">
+                        <div
+                          data-mdb-input-init
+                          className="form-outline mb-4 col"
+                        >
+                          <input
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleInputChange}
+                            type="text"
+                            id="form3Example1cg"
+                            className="form-control form-control-lg"
+                          />
+                          <label
+                            className="form-label"
+                            htmlFor="form3Example1cg"
+                          >
+                            First Name
+                          </label>
+                        </div>
+                        <div
+                          data-mdb-input-init
+                          className="form-outline mb-4 col"
+                        >
+                          <input
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleInputChange}
+                            type="text"
+                            id="form3Example1cg"
+                            className="form-control form-control-lg"
+                          />
+                          <label
+                            className="form-label"
+                            htmlFor="form3Example1cg"
+                          >
+                            Last Name
+                          </label>
+                        </div>
                       </div>
-                      <div data-mdb-input-init className="form-outline mb-4">
-                        <input
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleInputChange}
-                          type="text"
-                          id="form3Example1cg"
-                          className="form-control form-control-lg"
-                        />
-                        <label className="form-label" htmlFor="form3Example1cg">
-                          Last Name
-                        </label>
-                      </div>
+
                       <div data-mdb-input-init className="form-outline mb-4">
                         <input
                           name="userName"
@@ -171,39 +186,46 @@ function Signup() {
                           Password
                         </label>
                       </div>
+                      <div className="row">
+                        <div data-mdb-input-init className="form-outline mb-4 col">
+                          <input
+                            name="birthDate"
+                            value={formData.birthDate}
+                            onChange={handleInputChange}
+                            type="date"
+                            id="form3Example4cg"
+                            className="form-control form-control-lg"
+                          />
+                          <label
+                            className="form-label"
+                            htmlFor="form3Example4cg"
+                          >
+                            Birth Date
+                          </label>
+                        </div>
 
-                      <div data-mdb-input-init className="form-outline mb-4">
-                        <input
-                          name="birthDate"
-                          value={formData.birthDate}
-                          onChange={handleInputChange}
-                          type="date"
-                          id="form3Example4cg"
-                          className="form-control form-control-lg"
-                        />
-                        <label className="form-label" htmlFor="form3Example4cg">
-                          Birth Date
-                        </label>
+                        <div data-mdb-input-init className="form-outline mb-4 col">
+                          <select
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleInputChange}
+                            className="form-select form-select-lg"
+                            aria-label="Gender"
+                          >
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                          <label
+                            className="form-label"
+                            htmlFor="form3Example1cg"
+                          >
+                            Gender
+                          </label>
+                        </div>
                       </div>
 
-                      <div data-mdb-input-init className="form-outline mb-4">
-                        <select
-                          name="gender"
-                          value={formData.gender}
-                          onChange={handleInputChange}
-                          className="form-select form-select-lg"
-                          aria-label="Gender"
-                        >
-                          <option value="">Select Gender</option>
-                          <option value="Male">Male</option>
-                          <option value="Female">Female</option>
-                        </select>
-                        <label className="form-label" htmlFor="form3Example1cg">
-                          Gender
-                        </label>
-                      </div>
-
-                      <div className="form-check d-flex justify-content-center mb-5">
+                      <div className="form-check d-flex justify-content-center mb-3">
                         <input
                           className="form-check-input me-2"
                           type="checkbox"
@@ -214,7 +236,7 @@ function Signup() {
                           className="form-check-label"
                           htmlFor="form2Example3g"
                         >
-                          I agree all statements in{"{"}" "{"}"}
+                          I agree all statements in&nbsp;
                           <a href="#!" className="text-body">
                             <u>Terms of service</u>
                           </a>
@@ -230,8 +252,8 @@ function Signup() {
                           Register
                         </button>
                       </div>
-                      <p className="text-center text-muted mt-5 mb-0">
-                        Have already an account?{"{"}" "{"}"}
+                      <p className="text-center text-muted mt-3 mb-0">
+                        Have already an account ?&nbsp;
                         <a href="signIn" className="fw-bold text-body">
                           <u>Login here</u>
                         </a>

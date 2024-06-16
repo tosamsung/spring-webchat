@@ -51,4 +51,8 @@ public class GroupChatController {
 	public List<GroupChat> getGroupChatsByMembername(@RequestParam("username") String name) {
 		return groupChatService.findGroupChatsByMemberName(name);
 	}
+	@GetMapping("/private/user/{userId}")
+    public List<GroupChat> getPrivateGroupChatsByUserId(@PathVariable Long userId) {
+        return groupChatService.findPrivateChatByUserId(userId);
+    }
 }

@@ -10,7 +10,6 @@ function ChatBox() {
   const inputRef = useRef(null);
   const messageContainerRef = useRef(null);
 
-  const [selectedFile, setSelectedFile] = useState("");
   const [imageInput, setImageInput] = useState([]);
   const [videoInput, setVideoInput] = useState([]);
   const [fileInput, setfileInput] = useState([]);

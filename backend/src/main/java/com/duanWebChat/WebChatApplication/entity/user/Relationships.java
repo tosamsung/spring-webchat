@@ -1,6 +1,8 @@
  package com.duanWebChat.WebChatApplication.entity.user;
 
 
+import com.duanWebChat.WebChatApplication.entity.groupchat.ConnectStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

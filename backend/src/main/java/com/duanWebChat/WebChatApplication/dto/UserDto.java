@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 
-import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.Relationships;
+import com.duanWebChat.WebChatApplication.entity.groupchat.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.Gender;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserStatus;

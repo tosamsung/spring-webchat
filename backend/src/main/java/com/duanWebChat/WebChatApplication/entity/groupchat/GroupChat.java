@@ -25,6 +25,6 @@ public class GroupChat {
 	private Long id;
 	private GroupChatType groupChatType;
 	private GroupSetting setting;
-	private List<Member>Members;
+	private List<Member>members;
 	private Date createDate;
 }

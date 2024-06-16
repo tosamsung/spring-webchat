@@ -17,6 +17,7 @@ public class Member {
 	private Long id;
 	private String userName;
 	private GroupRole groupRole;
+	private ConnectStatus status;
 	private String image;
 	private Date joinDate;
 	public Member(User user) {
