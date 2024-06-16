@@ -21,27 +21,19 @@ function Member(props) {
     } catch (error) {
       console.error("Error adding member:", error);
     }
-  };
+  };  
 
   useEffect(() => {
-    console.log("groupChat:", groupChat);
-    console.log("user:", user);
-    if (groupChat && groupChat.Members) {
-      groupChat.Members.forEach((member) => {
+    if (groupChat && groupChat.members) {
+      groupChat.members.map((member,index) => {
         if (member.id === user.id && member.groupRole === "LEADER") {
           setIsLeader(true);
+         
         }
       });
     }
-  }, [groupChat, user]);
+  }, [groupChat]);
 
-  // Kiểm tra xem groupChat và groupChat.Members có tồn tại không
-  // const isLeader =
-  //   groupChat &&
-  //   groupChat.Members &&
-  //   groupChat.Members.some(
-  //     (member) => member.id === user.id && member.groupRole === "LEADER"
-  //   );
 
   return (
     <>
@@ -72,10 +64,10 @@ function Member(props) {
         {props.type == "MEMBER" && (
           <div className="ml-auto me-2 btn btn-primary">Message</div>
         )}
-        {props.type == "MEMBERNOTFRIEND" && (
+        {props.type == "MEMBERNOTFRIEND" && props.userName != user.userName && (
           <div className="ml-auto me-2 btn btn-primary">Add friend</div>
         )}
-        {isLeader && <div className="ml-auto me-2 btn btn-danger">DELETE</div>}
+        {isLeader &&  props.userName != user.userName && <div className="ml-auto me-2 btn btn-danger">DELETE</div>}
       </a>
     </>
   );

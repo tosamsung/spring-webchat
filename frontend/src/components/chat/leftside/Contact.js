@@ -6,16 +6,15 @@ import { faCog } from "@fortawesome/free-solid-svg-icons";
 import ChatMember from "./ChatMember";
 
 function Contact(props) {
-  const { setCurrentChat, openDetil } = props;
+  const { openDetil } = props;
   const [contact, setContact] = useState(props.contact);
   const [info, setInfo] = useState({
     image: "",
     userName: "",
+    status: "OFFLINE",
   });
   const { user } = useContext(AppContext);
-  const { setListMessage, setGroupChat } = useContext(ChatContext);
-
-  const {groupChat,setGroupChat } = useContext(ChatContext);
+  const {  groupChat, setGroupChat } = useContext(ChatContext);
 
   const handleClick = () => {
     // setCurrentChat({ ...contact, user });
@@ -24,7 +23,7 @@ function Contact(props) {
 
   const handleSettingsClick = (event) => {
     event.stopPropagation();
-    setCurrentChat({ ...contact, user });
+    setGroupChat(contact);
     openDetil();
   };
 
@@ -58,23 +57,32 @@ function Contact(props) {
     <>
       <a
         href="#"
-        className={`d-flex align-items-center contact-item py-2 px-1 rounded ${groupChat.id == contact.id ? 'contact-active':''}`}
+        className={`d-flex align-items-center contact-item py-2 px-1 rounded ${
+          groupChat.id == contact.id ? "contact-active" : ""
+        }`}
         onClick={handleClick}
       >
         <div className="flex-shrink-0">
           <img
-            className="img-fluid contact_image rounded-circle border border-1 border-black"
+            className="img-fluid contact_image rounded-circle border border-1 border-light"
             src={info.image}
             alt="user img"
           />
-          <span className="active2" />
+          {contact.groupChatType === "PRIVATE" && info.status === "ONLINE" && (
+            <span className="online" />
+          )}
+           {contact.groupChatType === "PRIVATE" && (
+            <span className="offline" />
+          )}
         </div>
         <div className="flex-grow-1 ms-3">
-          <h3 className={groupChat.id == contact.id ? 'text-white':''}>{info.userName}</h3>
+          <h3 className={groupChat.id == contact.id ? "text-white" : ""}>
+            {info.userName}
+          </h3>
           {/* <p className="text-muted">front end developer</p> */}
         </div>
         <div className="ml-auto me-2" onClick={handleSettingsClick}>
-          <FontAwesomeIcon icon={faCog} />
+          <FontAwesomeIcon icon={faCog} className={groupChat.id == contact.id ? "text-white" : ""}/>
         </div>
       </a>
     </>

@@ -7,6 +7,7 @@ import NewGroupChat from "./NewGroupChat";
 function LeftSide(props) {
   // const { listContact } = useContext(AppContext);
   const [currentChat, setCurrentChat] = useState(null); // Thêm state này
+  const { groupChat } = useContext(ChatContext);
 
   const openDetil = () => {
     let Detail = document.getElementById("detail");
@@ -98,7 +99,6 @@ function LeftSide(props) {
                         <Contact
                           key={contact.id}
                           contact={contact}
-                          setCurrentChat={setCurrentChat} // Truyền setCurrentChat xuống Contact
                           openDetil={openDetil} // Truyền hàm openDetil xuống Contact
                         />
                       ))}
@@ -107,7 +107,7 @@ function LeftSide(props) {
                   </div>
                   <div className="tab-pane fade w-100" id="detail">
                     {/* chat-list */}
-                    <ChatDetail currentChat={currentChat} /> {/* chat-list */}
+                    <ChatDetail currentChat={groupChat} /> {/* chat-list */}
                   </div>
                 </div>
               </div>

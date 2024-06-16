@@ -1,8 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import Contact from "./Contact";
-import ChatDetail from "./ChatDetail";
 import { ChatContext } from "../../../context/ChatContext";
-import NewGroupChat from "./NewGroupChat";
 import Member from "./Member";
 import { AppContext } from "../../../context/AppContext";
 import GroupService from "../../../Service/GroupService";
@@ -35,7 +32,9 @@ function ChatMember() {
         console.error("Error fetching members:", error);
       }
     };
-    fetchMembers();
+    if (groupChat.groupChatType==="GROUP") {
+      fetchMembers();
+    }
   }, [user.id, groupChat.id]);
 
   const openDetil = () => {

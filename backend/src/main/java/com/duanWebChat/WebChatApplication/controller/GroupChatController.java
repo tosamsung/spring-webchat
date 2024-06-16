@@ -27,7 +27,9 @@ public class GroupChatController {
 
 	@GetMapping("/testGroup")
 	public ResponseEntity<ReqRes> tesGroup() {
-		groupChatService.createPrivateChat(2L, 8L);
+		groupChatService.createPrivateChat(1L, 2L);
+		groupChatService.createPrivateChat(1L, 3L);
+		groupChatService.createPrivateChat(2L, 3L);
 
 		return ResponseEntity.ok(new ReqRes(200, "", "create success"));
 	}
@@ -76,4 +78,8 @@ public class GroupChatController {
 	public List<GroupChat> getGroupChatsByMembername(@RequestParam("username") String name) {
 		return groupChatService.findGroupChatsByMemberName(name);
 	}
+	@GetMapping("/private/user/{userId}")
+    public List<GroupChat> getPrivateGroupChatsByUserId(@PathVariable Long userId) {
+        return groupChatService.findPrivateChatByUserId(userId);
+    }
 }

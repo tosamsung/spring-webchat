@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
-import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
+import com.duanWebChat.WebChatApplication.entity.groupchat.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 import com.duanWebChat.WebChatApplication.entity.user.UserStatus;

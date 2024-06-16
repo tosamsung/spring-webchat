@@ -2,6 +2,7 @@ package com.duanWebChat.WebChatApplication.service;
 
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
-import com.duanWebChat.WebChatApplication.entity.user.ConnectStatus;
+import com.duanWebChat.WebChatApplication.entity.groupchat.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.RelationshipType;
 import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.User;
@@ -54,8 +55,29 @@ public class UserService {
 		return user;
 	}
 
-
-
+	public List<Relationships> getRelationshipsByType(RelationshipType type,User user) {
+		if (user != null) {
+			return user.getRelationships().stream().filter(relationship -> type.equals(relationship.getType()))
+					.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
+	public List<Relationships> getRelationshipsByType(RelationshipType type,Long id) {
+		User user=userRepository.findById(id).orElse(null);
+		if (user != null) {
+			return user.getRelationships().stream().filter(relationship -> type.equals(relationship.getType()))
+					.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
+	public List<Relationships> getRelationshipsByType(RelationshipType type,String email) {
+		User user=userRepository.findByEmail(email).orElse(null);
+		if (user != null) {
+			return user.getRelationships().stream().filter(relationship -> type.equals(relationship.getType()))
+					.collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
 	public void sendFriendRequest(Long fromUserId, Long toUserId) {
 		User fromUser = userRepository.findById(fromUserId)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -177,7 +199,7 @@ public class UserService {
 	public List<User> getPendingRequestUsers(Long userId) {
 		return userRepository.findUsersWithPendingRequests(userId);
 	}
-	
+
 	public List<User> getAwaitRequestUsers(Long userId) {
 		return userRepository.findUsersWithAwaitRequests(userId);
 	}

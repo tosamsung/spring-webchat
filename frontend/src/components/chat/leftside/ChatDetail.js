@@ -34,11 +34,11 @@ function ChatDetail({ currentChat }) {
     <>
       <div className="chat-list pt-2">
         <div className="container-fluid">
-          <div className="row p-3">
+          <div className="row p-3 d-flex justify-content-center">
             <img
               src={info.image}
               alt="User"
-              className="img-fluid rounded rounded-circle"
+              className="img-fluid rounded rounded-circle detail-img p-0"
             />
           </div>
           <div className="row justify-content-center">

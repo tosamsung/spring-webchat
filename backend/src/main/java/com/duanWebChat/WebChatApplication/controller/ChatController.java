@@ -45,7 +45,10 @@ public class ChatController {
 		messageService.createMessage(message);
 		return message;
 	}
-
+//	@MessageMapping("/userStatus")
+//	public Message userStatus(@Payload Message message) {
+//
+//	}
 //	@MessageMapping("/getMessages")
 //	public SocketRes getmessages(@Payload ReqSocket req) {
 //		simpMessagingTemplate.convertAndSendToUser(req.getUserName(), "/private",

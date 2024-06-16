@@ -1,15 +1,4 @@
 import React, { useContext, useState } from "react";
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-  MDBTypography,
-  MDBIcon,
-} from "mdb-react-ui-kit";
 import GroupService from "../../../Service/GroupService";
 import { AppContext } from "../../../context/AppContext";
 import { v4 as uuidv4 } from "uuid";

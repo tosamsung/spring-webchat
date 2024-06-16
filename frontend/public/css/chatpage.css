@@ -138,13 +138,20 @@ table {
     border-spacing: 0;
 }
 .contact_image{
+    min-width: 45px;
+    min-height: 45px;
     max-width: 45px;
     max-height: 45px;
 }
 .contact-item {
     transition: background-color 0.3s ease;
   }
-  
+  .detail-img{
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 100px;
+    max-height: 100px;
+  }
   .contact-item:hover {
     background-color: #c8c5c5c3; /* Thay đổi màu nền khi hover */
   }
@@ -374,7 +381,7 @@ a.add img {
     text-decoration: none;
 }
 
-.chat-list .active2 {
+.chat-list .online {
     display: block;
     content: '';
     clear: both;
@@ -385,9 +392,21 @@ a.add img {
     width: 12px;
     background: #00DB75;
     border-radius: 50%;
-    border: 2px solid #fff;
+    border: 1px solid #fff;
 }
-
+.chat-list .offline {
+    display: block;
+    content: '';
+    clear: both;
+    position: absolute;
+    bottom: 3px;
+    left: 34px;
+    height: 12px;
+    width: 12px;
+    background: #979e9b;
+    border-radius: 50%;
+    border: 1px solid #fff;
+}
 .msg-head h3 {
     color: #222;
     font-size: 18px;
