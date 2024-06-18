@@ -19,7 +19,8 @@ public interface GroupChatRepository extends MongoRepository<GroupChat, Long> {
 	List<GroupChat> findByGroupChatTypeAndMemberId(GroupChatType groupChatType, Long memberId);
 //	@Query("{'mapMembers.?*.name': ?0}")
 //	List<GroupChat> findByMemberName(String memberName);
-
+	@Query("{ 'groupChatType': 'PRIVATE', 'members._id': { $all: [?0, ?1] } }")
+    GroupChat findPrivateGroupChatsWithMembers(Long memberId1, Long memberId2);
 	@Query("{ 'Members.id': ?0 }")
 	List<GroupChat> findMemberIdsByGroupId(Long userId);
 

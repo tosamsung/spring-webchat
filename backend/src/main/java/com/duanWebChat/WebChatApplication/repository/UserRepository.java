@@ -15,7 +15,7 @@ import com.duanWebChat.WebChatApplication.entity.user.UserDetailImpl;
 @Repository
 public interface UserRepository extends MongoRepository<User, Long> {
 	Optional<User> findByEmail(String email);
-
+    User findByUserName(String userName);
 	@Query("{ 'id': { '$nin': ?0 } }")
 	List<User> findUsersNotInRelationships(List<Long> relationshipIds);
 

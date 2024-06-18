@@ -11,20 +11,25 @@ import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
+import com.duanWebChat.WebChatApplication.service.SocketService;
+
 @Component
 public class WebSocketEventListener {
-
+	@Autowired
+	SocketService socketService;
 	@EventListener
 	private void handleSessionConnected(SessionConnectEvent event) {
 		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
 		String email = headerAccessor.getUser().getName();
-		System.out.println("connect");
+//		socketService.handleUserOnline(email);
 //	        System.out.println(headerAccessor.toString());
 	}
 
 	@EventListener
 	private void handleSessionDisconnect(SessionDisconnectEvent event) {
-		System.out.println("disconnect");
+		StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+		String email = headerAccessor.getUser().getName();
+		socketService.handleUserOffline(email);
 	}
 
 	@EventListener

@@ -1,5 +1,7 @@
 import api from "../util/AxiosUtil";
 class FriendService {
+
+
   static async getAllNotFriend(userId) {
     try {
       const respone = await api.post(`user/non-relationships/${userId}`);
@@ -71,26 +73,26 @@ class FriendService {
     }
   }
 
-  static async rejectFriend(fromUserId, toUserId) {
-    try {
-      const respone = await api.post(
-        `user/rejectFriend/${fromUserId}/${toUserId}`
-      );
-      return respone.data;
-    } catch (error) {
-      throw error;
-    }
-  }
+  // static async rejectFriend(fromUserId, toUserId) {
+  //   try {
+  //     const respone = await api.post(
+  //       `user/rejectFriend/${fromUserId}/${toUserId}`
+  //     );
+  //     return respone.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
-  static async CancleRequest(fromUserId, toUserId) {
-    try {
-      const respone = await api.post(
-        `user/cancelFriend/${fromUserId}/${toUserId}`
-      );
-      return respone.data;
-    } catch (error) {
-      throw error;
-    }
-  }
+  // static async CancleRequest(fromUserId, toUserId) {
+  //   try {
+  //     const respone = await api.post(
+  //       `user/cancelFriend/${fromUserId}/${toUserId}`
+  //     );
+  //     return respone.data;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }
 export default FriendService;

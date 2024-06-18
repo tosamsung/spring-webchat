@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
+import com.duanWebChat.WebChatApplication.entity.groupchat.GroupChat;
 import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.User;
 import com.duanWebChat.WebChatApplication.service.GroupChatService;
@@ -25,7 +26,7 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private GroupChatService groupChatService;
 
@@ -56,7 +57,7 @@ public class UserController {
 	@PostMapping("/acceptFriend/{fromUserId}/{toUserId}")
 	public String acceptFriend(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
 		userService.acceptFriendRequest(fromUserId, toUserId);
-		groupChatService.createPrivateChat(fromUserId, toUserId);
+		groupChatService.createPrivateChatFriend(fromUserId, toUserId);
 		return "Friend request accepted";
 	}
 
@@ -75,6 +76,11 @@ public class UserController {
 	@PostMapping("/deleteFriend/{fromUserId}/{toUserId}")
 	public String deleteFriend(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
 		userService.deleteFriend(fromUserId, toUserId);
+		GroupChat groupChat = groupChatService.findPrivateChatByTwoUser(fromUserId, toUserId);
+		if (groupChat != null) {
+			groupChatService.deleteGroupChat(groupChat);
+		}
+
 		return "Friend request Delete";
 	}
 
@@ -82,18 +88,19 @@ public class UserController {
 	public List<User> getUsersNotInRelationship(@PathVariable Long userId) {
 		return userService.getUsersNotInRelationship(userId);
 	}
-	
+
 	@PostMapping("/relationships/{userId}")
-	public List<User> getUserInRelationship(@PathVariable Long userId){
+	public List<User> getUserInRelationship(@PathVariable Long userId) {
 		return userService.getUsersInRelationship(userId);
 	}
+
 	@PostMapping("/relationshipsRequestFriends/{userId}")
-	 public List<User> getPendingRequestUsers(@PathVariable Long userId) {
-        return userService.getPendingRequestUsers(userId);
-    }
-	
+	public List<User> getPendingRequestUsers(@PathVariable Long userId) {
+		return userService.getPendingRequestUsers(userId);
+	}
+
 	@PostMapping("invitation-sent/{userId}")
-	public List<User> getPendingAwaitUsers(@PathVariable Long userId){
+	public List<User> getPendingAwaitUsers(@PathVariable Long userId) {
 		return userService.getAwaitRequestUsers(userId);
 	}
 }

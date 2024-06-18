@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.duanWebChat.WebChatApplication.entity.groupchat.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.groupchat.GroupChat;
 import com.duanWebChat.WebChatApplication.entity.groupchat.GroupChatType;
 import com.duanWebChat.WebChatApplication.entity.groupchat.GroupRole;
@@ -41,6 +42,10 @@ public class GroupChatService {
 		return groupChatRepository.findById(id).orElseThrow();
 	}
 
+	public GroupChat findPrivateChatByTwoUser(Long member1, Long member2) {
+		return groupChatRepository.findPrivateGroupChatsWithMembers(member1, member2);
+	}
+
 	public List<GroupChat> findGroupChatsByMemberName(String name) {
 		return groupChatRepository.findByMemberName(name);
 
@@ -48,6 +53,11 @@ public class GroupChatService {
 
 	public List<GroupChat> findPrivateChatByUserId(Long id) {
 		return groupChatRepository.findByGroupChatTypeAndMemberId(GroupChatType.PRIVATE, id);
+
+	}
+
+	public void deleteGroupChat(GroupChat gr) {
+		groupChatRepository.delete(gr);
 
 	}
 
@@ -75,7 +85,37 @@ public class GroupChatService {
 		return result;
 	}
 
-	public GroupChat createPrivateChat(Long idUser1, Long idUser2) {
+	public GroupChat createPrivateChatFriend(Long idUser1, Long idUser2) {
+		GroupChat groupChat = new GroupChat();
+		GroupSetting groupSetting = new GroupSetting();
+
+		User user1 = userRepository.findById(idUser1)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		User user2 = userRepository.findById(idUser2)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+		Member member1 = new Member(user1);
+		member1.setJoinDate(new Date());
+		member1.setGroupRole(GroupRole.LEADER);
+		member1.setStatus(ConnectStatus.OFFLINE);
+
+		Member member2 = new Member(user2);
+		member2.setJoinDate(new Date());
+		member2.setGroupRole(GroupRole.LEADER);
+		member2.setStatus(ConnectStatus.OFFLINE);
+
+		groupChat.setId(sequenceGeneratorService.generateSequence(GroupChat.SEQUENCE_NAME));
+		groupChat.setGroupChatType(GroupChatType.PRIVATE);
+		groupChat.setSetting(groupSetting);
+		groupChat.setMembers(new ArrayList<Member>());
+		groupChat.getMembers().add(member1);
+		groupChat.getMembers().add(member2);
+		groupChat.setCreateDate(new Date());
+		GroupChat result = groupChatRepository.save(groupChat);
+
+		return result;
+	}
+	public GroupChat createPrivateChatUser(Long idUser1, Long idUser2) {
 		GroupChat groupChat = new GroupChat();
 		GroupSetting groupSetting = new GroupSetting();
 
@@ -103,10 +143,9 @@ public class GroupChatService {
 
 		return result;
 	}
-
 	public GroupChat addMemberToGroupChat(Long groupId, Member newMember) {
 		Optional<GroupChat> optionalGroupChat = groupChatRepository.findById(groupId);
-		
+
 		if (optionalGroupChat.isPresent()) {
 			newMember.setJoinDate(new Date());
 			GroupChat groupChat = optionalGroupChat.get();

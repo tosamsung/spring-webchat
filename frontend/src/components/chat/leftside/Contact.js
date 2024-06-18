@@ -11,16 +11,18 @@ function Contact(props) {
   const [info, setInfo] = useState({
     image: "",
     userName: "",
-    status: "OFFLINE",
+    status:"OFFLINE"
   });
   const { user } = useContext(AppContext);
-  const {  groupChat, setGroupChat } = useContext(ChatContext);
+  const { groupChat, setGroupChat } = useContext(ChatContext);
 
   const handleClick = () => {
     // setCurrentChat({ ...contact, user });
     setGroupChat(contact);
   };
-
+  useEffect(() => {
+    setContact(props.contact)
+  }, [props.contact]);
   const handleSettingsClick = (event) => {
     event.stopPropagation();
     setGroupChat(contact);
@@ -35,6 +37,7 @@ function Contact(props) {
         contact.members &&
         contact.members.length === 2
       ) {
+        console.log(contact.members);
         if (contact.members[0].userName === user.userName) {
           setInfo(contact.members[1]);
         } else {
@@ -48,10 +51,12 @@ function Contact(props) {
       });
     }
   };
-
+  // useEffect(() => {
+  //  console.log(info);
+  // }, [info]);
   useEffect(() => {
     getContactInfo();
-  }, []);
+  }, [contact]);
 
   return (
     <>
@@ -71,7 +76,7 @@ function Contact(props) {
           {contact.groupChatType === "PRIVATE" && info.status === "ONLINE" && (
             <span className="online" />
           )}
-           {contact.groupChatType === "PRIVATE" && (
+          {contact.groupChatType === "PRIVATE" && info.status === "OFFLINE" && (
             <span className="offline" />
           )}
         </div>
@@ -82,7 +87,10 @@ function Contact(props) {
           {/* <p className="text-muted">front end developer</p> */}
         </div>
         <div className="ml-auto me-2" onClick={handleSettingsClick}>
-          <FontAwesomeIcon icon={faCog} className={groupChat.id == contact.id ? "text-white" : ""}/>
+          <FontAwesomeIcon
+            icon={faCog}
+            className={groupChat.id == contact.id ? "text-white" : ""}
+          />
         </div>
       </a>
     </>

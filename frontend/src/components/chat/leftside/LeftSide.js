@@ -6,8 +6,20 @@ import NewGroupChat from "./NewGroupChat";
 
 function LeftSide(props) {
   // const { listContact } = useContext(AppContext);
-  const [currentChat, setCurrentChat] = useState(null); // Thêm state này
-  const { groupChat } = useContext(ChatContext);
+  const [listContactDto, setListContactDto] = useState([]);
+
+  const { listContact, groupChat } = useContext(ChatContext);
+
+useEffect(()=>{
+  // console.log("left side");
+  // console.log(listContact);
+  setListContactDto([...listContact]);
+},[listContact])
+
+// useEffect(()=>{
+//   console.log(listContactDto);
+
+// },[listContactDto])
 
   const openDetil = () => {
     let Detail = document.getElementById("detail");
@@ -37,7 +49,6 @@ function LeftSide(props) {
       ButtonContact.classList.add("active");
     }
   };
-  const { listContact } = useContext(ChatContext);
   return (
     <>
       <div className="chatlist">
@@ -95,7 +106,7 @@ function LeftSide(props) {
                   <div className="tab-pane fade show active" id="listContacts">
                     {/* chat-list */}
                     <div className="chat-list">
-                      {listContact.map((contact) => (
+                      {listContactDto.map((contact) => (
                         <Contact
                           key={contact.id}
                           contact={contact}

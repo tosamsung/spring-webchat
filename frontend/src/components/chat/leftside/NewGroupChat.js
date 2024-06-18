@@ -6,12 +6,15 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { analytics } from "../../../config/FireBaseConfig";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { ChatContext } from "../../../context/ChatContext";
 
 function NewGroupChat() {
   const Navigate = useNavigate();
   const [groupName, setGroupName] = useState("");
   const [groupImage, setGroupImage] = useState(null);
   const { user } = useContext(AppContext);
+  const {getGroupChat  } = useContext(ChatContext);
+
   const handleGroupNameChange = (event) => {
     setGroupName(event.target.value);
   };
@@ -37,8 +40,9 @@ function NewGroupChat() {
       formData.append("groupImage", groupImageUrl);
 
       const newGroup = await GroupService.createGroupChat(formData);
+      getGroupChat()
       toast.success("Creat new group chat successfully");
-      Navigate("/chats");
+      // Navigate("/chats");
     } catch (error) {
       console.error("Error creating group chat:", error);
     }
