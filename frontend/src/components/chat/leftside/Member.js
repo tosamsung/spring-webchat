@@ -18,6 +18,7 @@ function Member(props) {
       };
       await GroupService.addMember(groupChat.id, newMember);
       toast.success("Add member successfully");
+      props.fetch()
     } catch (error) {
       console.error("Error adding member:", error);
     }
@@ -67,7 +68,7 @@ function Member(props) {
         {props.type == "MEMBERNOTFRIEND" && props.userName != user.userName && (
           <div className="ml-auto me-2 btn btn-primary">Add friend</div>
         )}
-        {isLeader &&  props.userName != user.userName && <div className="ml-auto me-2 btn btn-danger">DELETE</div>}
+        {isLeader &&  props.userName != user.userName && props.type == "MEMBER" && <div className="ml-auto me-2 btn btn-danger">DELETE</div>}
       </a>
     </>
   );

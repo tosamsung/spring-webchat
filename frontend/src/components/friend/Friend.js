@@ -2,12 +2,26 @@ import React, { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import FriendService from "../../Service/FriendService";
 import { toast } from "react-toastify";
+import { ChatContext } from "../../context/ChatContext";
 
 function Friend(props) {
-  const { user } = useContext(AppContext);
+  const { user, fetchAllRelatiohsips } = useContext(AppContext);
+  const { stompClient } = useContext(ChatContext);
+  const sendReqFetchFriend = (toUserId) => {
+    const req = {
+      senderId: user.id,
+      receiverId:toUserId,
+
+    };
+    if (stompClient) {
+      stompClient.send("/app/friendAction", {}, JSON.stringify(req));
+    }
+  };
   const handleSendFriendRequest = async (toUserId) => {
     try {
       await FriendService.sendFriendRequest(user.id, toUserId);
+      fetchAllRelatiohsips();
+      sendReqFetchFriend(toUserId)
       toast.success("Friend request sent");
     } catch (error) {
       toast.error("Failed to send friend request");
@@ -17,41 +31,27 @@ function Friend(props) {
   const handleAcceptFriend = async (toUserId) => {
     try {
       await FriendService.acceptFriend(user.id, toUserId);
+      fetchAllRelatiohsips();
+      sendReqFetchFriend(toUserId)
+
       toast.success("Friend request accepted");
     } catch (error) {
       toast.success("Failed accept friend");
     }
   };
 
-  const handleDeleteFriend = async (toUserId) => {
+  const handleDeleteRelationships = async (toUserId) => {
     try {
-      await FriendService.deleteFriend(user.id, toUserId).then((respone) => {
-        console.log(respone);
-        props.setFriends(respone);
-      });
+      await FriendService.deleteFriend(user.id, toUserId);
+      fetchAllRelatiohsips();
+      sendReqFetchFriend(toUserId)
+
       toast.success("Delete friend succes");
     } catch (error) {
       toast.success("Delete friend Failed");
     }
   };
 
-  const handleRejectFriend = async (toUserId) => {
-    try {
-      await FriendService.rejectFriend(user.id, toUserId);
-      toast.success("Friend request rejected");
-    } catch (error) {
-      toast.success("Failed friend request rejected");
-    }
-  };
-
-  const handleCancelRequest = async (toUserId) => {
-    try {
-      await FriendService.CancleRequest(user.id, toUserId);
-      toast.success("Friend cancel request");
-    } catch (error) {
-      toast.success("Failed cancel request");
-    }
-  };
   return (
     <>
       <div className="col-sm-6 col-lg-4">
@@ -89,7 +89,7 @@ function Friend(props) {
             {props.type == "FRIEND" && (
               <li className="position-relative px-1">
                 <button
-                  onClick={() => handleDeleteFriend(props.id)}
+                  onClick={() => handleDeleteRelationships(props.id)}
                   type="button"
                   className="btn btn-outline-danger"
                 >
@@ -112,7 +112,7 @@ function Friend(props) {
             {props.type == "PENDING" && (
               <li className="position-relative px-1">
                 <button
-                  onClick={() => handleRejectFriend(props.id)}
+                  onClick={() => handleDeleteRelationships(props.id)}
                   type="button"
                   className="btn btn-outline-danger"
                 >
@@ -124,7 +124,7 @@ function Friend(props) {
             {props.type == "AWAIT" && (
               <li className="position-relative px-1">
                 <button
-                  onClick={() => handleCancelRequest(props.id)}
+                  onClick={() => handleDeleteRelationships(props.id)}
                   type="button"
                   className="btn btn-outline-danger"
                 >
