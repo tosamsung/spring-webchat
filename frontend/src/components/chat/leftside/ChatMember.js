@@ -12,29 +12,30 @@ function ChatMember() {
   const { user } = useContext(AppContext);
   const { groupChat } = useContext(ChatContext);
 
-  useEffect(() => {
-    const fetchMembers = async () => {
-      try {
-        const membersInGroupNotFriend =
-          await GroupService.getMembersInGroupNotFriend(user.id, groupChat.id);
-        const membersInGroup = await GroupService.getMembersInGroup(
-          user.id,
-          groupChat.id
-        );
-        const membersNotInGroup = await GroupService.getMembersNotIngroup(
-          user.id,
-          groupChat.id
-        );
-        setMembersInGroupNotFriend(membersInGroupNotFriend);
-        setMembersInGroup(membersInGroup);
-        setMembersNotInGroup(membersNotInGroup);
-      } catch (error) {
-        console.error("Error fetching members:", error);
-      }
-    };
-    if (groupChat.groupChatType==="GROUP") {
-      fetchMembers();
+  const fetchMembers = async () => {
+    try {
+      const membersInGroupNotFriend =
+        await GroupService.getMembersInGroupNotFriend(user.id, groupChat.id);
+      const membersInGroup = await GroupService.getMembersInGroup(
+        user.id,
+        groupChat.id
+      );
+      const membersNotInGroup = await GroupService.getMembersNotIngroup(
+        user.id,
+        groupChat.id
+      );
+      setMembersInGroupNotFriend(membersInGroupNotFriend);
+      setMembersInGroup(membersInGroup);
+      setMembersNotInGroup(membersNotInGroup);
+    } catch (error) {
+      console.error("Error fetching members:", error);
     }
+  };
+
+  useEffect(() => {
+    if(groupChat.groupChatType === "GROUP")
+      fetchMembers();
+    
   }, [user.id, groupChat.id]);
 
   const openDetil = () => {
@@ -139,6 +140,7 @@ function ChatMember() {
                                   userName={member.userName}
                                   id={member.id}
                                   img={member.image}
+                                  fetch={fetchMembers}
                                 />
                               ))}
                             </div>
@@ -152,6 +154,7 @@ function ChatMember() {
                                   userName={member.userName}
                                   id={member.id}
                                   img={member.image}
+                                  fetch={fetchMembers}
                                 />
                               ))}
                               {membersInGroup.map((member) => (
@@ -161,6 +164,7 @@ function ChatMember() {
                                   userName={member.userName}
                                   id={member.id}
                                   img={member.image}
+                                  fetch={fetchMembers}
                                 />
                               ))}
                             </div>

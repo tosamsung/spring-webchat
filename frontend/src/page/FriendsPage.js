@@ -1,57 +1,22 @@
-
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import Friend from "../components/friend/Friend";
 import { AppContext } from "../context/AppContext";
 import FriendService from "../Service/FriendService";
+// import FriendService from "../Service/FriendService";
 function FriendsPage() {
+  const {
+    user,
+    requestFriends,
+    friends,
+    sentRequest,
+    notFriends,
+    fetchAllRelatiohsips,
+  } = useContext(AppContext);
 
-  const { user } = useContext(AppContext);
-  const [notFriends, setNotFriends] = useState([]);
-  const [friends, setFriends] = useState([]);
-  const [requestFriends, setRequestFriends] = useState([]);
-  const [sentRequest, setSentRequest] = useState([]);
   useEffect(() => {
-    const fetchNotFriend = async () => {
-      try {
-        const notFriends = await FriendService.getAllNotFriend(user.id);
-        setNotFriends(notFriends);
-        // console.log("Not friends:", notFriends);
-      } catch (error) {
-        console.error("Error fetching not friends:", error);
-      }
-    };
-
-    const fetchFriend = async () => {
-      try {
-        const Friends = await FriendService.getAllFriend(user.id);
-        setFriends(Friends);
-      } catch (error) {
-        console.error("Error fetching friends:", error);
-      }
-    };
-
-    const fetchRequestFriends = async () => {
-      try {
-        const requestFriends = await FriendService.getRequestFriend(user.id);
-        setRequestFriends(requestFriends);
-      } catch (error) {
-        console.error("Error fetching request friends:", error);
-      }
-    };
-
-    const fectSentRequest = async () => {
-      try {
-        const sentRequest = await FriendService.getSentRequest(user.id);
-        setSentRequest(sentRequest);
-      } catch (error) {
-        console.error("Error fetching sent request:", error);
-      }
-    };
-
-    fetchNotFriend();
-    fetchFriend();
-    fetchRequestFriends();
-    fectSentRequest();
+    if (user && user.id) {
+      fetchAllRelatiohsips();
+    }
   }, [user]); // Thêm user như một dependency để re-run effect nếu user thay đổi
   return (
     <>

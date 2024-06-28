@@ -1,9 +1,8 @@
 package com.duanWebChat.WebChatApplication.service;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.duanWebChat.WebChatApplication.dto.ReqRes;
 import com.duanWebChat.WebChatApplication.dto.UserDto;
-import com.duanWebChat.WebChatApplication.entity.groupchat.ConnectStatus;
 import com.duanWebChat.WebChatApplication.entity.user.RelationshipType;
 import com.duanWebChat.WebChatApplication.entity.user.Relationships;
 import com.duanWebChat.WebChatApplication.entity.user.User;
@@ -28,6 +25,29 @@ public class UserService {
 	public List<UserDto> findAll() {
 		List<User> list = userRepository.findAll();
 		return list.stream().map(UserDto::new).collect(Collectors.toList());
+	}
+
+	public User findByid(Long id) {
+
+		return userRepository.findById(id).orElse(null);
+	}
+	public User findByUsername(String username) {
+
+		return userRepository.findByUserName(username);
+	}
+
+	public void updateLasTimeActive(User user) {
+		user.setLastTimeActive(new Date());
+		userRepository.save(user);
+	}
+
+	public void updateLasTimeActive(Long id) {
+		User user = userRepository.findById(id).orElse(null);
+		if (user != null) {
+			user.setLastTimeActive(new Date());
+			userRepository.save(user);
+		}
+
 	}
 
 	public UserDto updateUser(UserDto UserDto) {
@@ -51,33 +71,36 @@ public class UserService {
 	}
 
 	public User findByEmail(String email) {
-		User user = userRepository.findByEmail(email).orElseThrow();
+		User user = userRepository.findByEmail(email).orElse(null);
 		return user;
 	}
 
-	public List<Relationships> getRelationshipsByType(RelationshipType type,User user) {
+	public List<Relationships> getRelationshipsByType(RelationshipType type, User user) {
 		if (user != null) {
 			return user.getRelationships().stream().filter(relationship -> type.equals(relationship.getType()))
 					.collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}
-	public List<Relationships> getRelationshipsByType(RelationshipType type,Long id) {
-		User user=userRepository.findById(id).orElse(null);
+
+	public List<Relationships> getRelationshipsByType(RelationshipType type, Long id) {
+		User user = userRepository.findById(id).orElse(null);
 		if (user != null) {
 			return user.getRelationships().stream().filter(relationship -> type.equals(relationship.getType()))
 					.collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}
-	public List<Relationships> getRelationshipsByType(RelationshipType type,String email) {
-		User user=userRepository.findByEmail(email).orElse(null);
+
+	public List<Relationships> getRelationshipsByType(RelationshipType type, String email) {
+		User user = userRepository.findByEmail(email).orElse(null);
 		if (user != null) {
 			return user.getRelationships().stream().filter(relationship -> type.equals(relationship.getType()))
 					.collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}
+
 	public void sendFriendRequest(Long fromUserId, Long toUserId) {
 		User fromUser = userRepository.findById(fromUserId)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));

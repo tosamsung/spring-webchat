@@ -20,8 +20,6 @@ import lombok.Setter;
 public class UserDetailImpl implements UserDetails {
 	private User user;
 
-	 
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub

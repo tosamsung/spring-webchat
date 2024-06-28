@@ -20,7 +20,9 @@ function Contact(props) {
     // setCurrentChat({ ...contact, user });
     setGroupChat({ ...contact, user });
   };
-
+  useEffect(() => {
+    setContact(props.contact);
+  }, [props.contact]);
   const handleSettingsClick = (event) => {
     event.stopPropagation();
     setGroupChat({ ...contact, user });
@@ -48,10 +50,12 @@ function Contact(props) {
       });
     }
   };
-
+  // useEffect(() => {
+  //  console.log(info);
+  // }, [info]);
   useEffect(() => {
     getContactInfo();
-  }, []);
+  }, [contact]);
 
   return (
     <>
@@ -71,7 +75,10 @@ function Contact(props) {
           {contact.groupChatType === "PRIVATE" && info.status === "ONLINE" && (
             <span className="online" />
           )}
-          {contact.groupChatType === "PRIVATE" && <span className="offline" />}
+
+          {contact.groupChatType === "PRIVATE" && info.status === "OFFLINE" && (
+            <span className="offline" />
+          )}
         </div>
         <div className="flex-grow-1 ms-3">
           <h3 className={groupChat.id == contact.id ? "text-white" : ""}>

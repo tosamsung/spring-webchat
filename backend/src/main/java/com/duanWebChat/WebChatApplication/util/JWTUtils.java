@@ -23,7 +23,7 @@ import io.jsonwebtoken.security.SignatureException;
 @Component
 public class JWTUtils {
 	private SecretKey secretKey;
-	private static final long EXPIRATION_TIME_ACCESS_TOKEN = 15*60*1000; //10p
+	private static final long EXPIRATION_TIME_ACCESS_TOKEN = 40*1000; //10p
 	private static final long EXPIRATION_TIME_REFRESH_TOKEN = 5*24*60*60*1000; //5 day
 	
 	public JWTUtils() {

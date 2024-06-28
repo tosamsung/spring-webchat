@@ -27,7 +27,6 @@ public class GroupChatController {
 
 	@GetMapping("/testGroup")
 	public ResponseEntity<ReqRes> tesGroup() {
-		groupChatService.createPrivateChat(1L, 18L);
 
 
 		return ResponseEntity.ok(new ReqRes(200, "", "create success"));
@@ -66,7 +65,7 @@ public class GroupChatController {
 	@PostMapping("/createPrivateChat")
 	public GroupChat createPrivate(@RequestParam("idUser1") Long idUser1, @RequestParam("idUser2") Long idUser2) {
 
-		return groupChatService.createPrivateChat(idUser1, idUser2);
+		return groupChatService.createPrivateChatUser(idUser1, idUser2);
 	}
 
 	@GetMapping("/groupchats/user/{userId}")
