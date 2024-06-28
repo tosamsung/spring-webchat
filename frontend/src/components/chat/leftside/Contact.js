@@ -37,7 +37,6 @@ function Contact(props) {
         contact.members &&
         contact.members.length === 2
       ) {
-        console.log(contact.members);
         if (contact.members[0].userName === user.userName) {
           setInfo(contact.members[1]);
         } else {
