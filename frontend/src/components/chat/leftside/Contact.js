@@ -14,16 +14,16 @@ function Contact(props) {
     status: "OFFLINE",
   });
   const { user } = useContext(AppContext);
-  const {  groupChat, setGroupChat } = useContext(ChatContext);
+  const { groupChat, setGroupChat } = useContext(ChatContext);
 
   const handleClick = () => {
     // setCurrentChat({ ...contact, user });
-    setGroupChat(contact);
+    setGroupChat({ ...contact, user });
   };
 
   const handleSettingsClick = (event) => {
     event.stopPropagation();
-    setGroupChat(contact);
+    setGroupChat({ ...contact, user });
     openDetil();
   };
 
@@ -71,9 +71,7 @@ function Contact(props) {
           {contact.groupChatType === "PRIVATE" && info.status === "ONLINE" && (
             <span className="online" />
           )}
-           {contact.groupChatType === "PRIVATE" && (
-            <span className="offline" />
-          )}
+          {contact.groupChatType === "PRIVATE" && <span className="offline" />}
         </div>
         <div className="flex-grow-1 ms-3">
           <h3 className={groupChat.id == contact.id ? "text-white" : ""}>
@@ -82,7 +80,10 @@ function Contact(props) {
           {/* <p className="text-muted">front end developer</p> */}
         </div>
         <div className="ml-auto me-2" onClick={handleSettingsClick}>
-          <FontAwesomeIcon icon={faCog} className={groupChat.id == contact.id ? "text-white" : ""}/>
+          <FontAwesomeIcon
+            icon={faCog}
+            className={groupChat.id == contact.id ? "text-white" : ""}
+          />
         </div>
       </a>
     </>

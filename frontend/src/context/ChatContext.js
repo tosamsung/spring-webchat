@@ -2,7 +2,7 @@ import { useRef, useContext, createContext } from "react";
 import React, { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
 import { over } from "stompjs";
-import Stomp from 'stompjs';
+import Stomp from "stompjs";
 
 import { AppContext } from "../context/AppContext";
 
@@ -29,18 +29,20 @@ const ChatProvider = ({ children }) => {
   const connectws = () => {
     const socket = new SockJS("http://localhost:8080/ws");
     const stompClient = Stomp.over(socket);
-    
-    stompClient.connect({}, () => {
-      setIsConnected(true);
-      onConnected(stompClient);
-     
-    }, onError);
+
+    stompClient.connect(
+      {},
+      () => {
+        setIsConnected(true);
+        onConnected(stompClient);
+      },
+      onError
+    );
 
     stompClientRef.current = stompClient;
   };
 
   const onConnected = (client) => {
-    
     client.subscribe(`/user/${user.userName}/private`, onPrivateMessage);
     client.subscribe(`/user/${user.userName}/topic/user-status`, (message) => {
       alert(message.body); // Handle notification (e.g., display it to the user)
@@ -104,7 +106,9 @@ const ChatProvider = ({ children }) => {
 
   const getGroupChat = async () => {
     try {
-      const listGroup = await GroupService.getGroupChatsByMembername(user.userName);
+      const listGroup = await GroupService.getGroupChatsByMembername(
+        user.userName
+      );
       setListContact(listGroup);
       if (listGroup.length > 0) {
         setGroupChat(listGroup[0]);
@@ -158,7 +162,7 @@ const ChatProvider = ({ children }) => {
         });
       }
     };
-  
+
     // Return cleanup function for useEffect
     return cleanup;
   }, [user]);

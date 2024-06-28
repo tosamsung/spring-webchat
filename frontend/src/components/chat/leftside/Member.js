@@ -21,19 +21,17 @@ function Member(props) {
     } catch (error) {
       console.error("Error adding member:", error);
     }
-  };  
+  };
 
   useEffect(() => {
     if (groupChat && groupChat.members) {
-      groupChat.members.map((member,index) => {
+      groupChat.members.map((member, index) => {
         if (member.id === user.id && member.groupRole === "LEADER") {
           setIsLeader(true);
-         
         }
       });
     }
   }, [groupChat]);
-
 
   return (
     <>
@@ -67,7 +65,11 @@ function Member(props) {
         {props.type == "MEMBERNOTFRIEND" && props.userName != user.userName && (
           <div className="ml-auto me-2 btn btn-primary">Add friend</div>
         )}
-        {isLeader &&  props.userName != user.userName && <div className="ml-auto me-2 btn btn-danger">DELETE</div>}
+        {isLeader &&
+          props.userName != user.userName &&
+          props.type != "ADDMEMBER" && (
+            <div className="ml-auto me-2 btn btn-danger">DELETE</div>
+          )}
       </a>
     </>
   );
