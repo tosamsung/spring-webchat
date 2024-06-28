@@ -20,18 +20,23 @@ const api = axios.create({
 
 
 api.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    if(response.data.statusCode===401){
+      await refreshToken();
+      return api(response.config)
+    }
+    // console.log(response);
     return response;
   },
-  async (error) => {
-    if (error.response.status === 401 ) {
-      try {
-        const tokenData = await refreshToken();
-        return api(error.config);
-      } catch (refreshError) {
-        return Promise.reject(refreshError);
-      }
-    }
+   (error) => {
+    // if (error.response.status === 401 ) {
+    //   try {
+    //     const tokenData = await refreshToken();
+    //     return api(error.config);
+    //   } catch (refreshError) {
+    //     return Promise.reject(refreshError);
+    //   }
+    // }
 
     return Promise.reject(error);
   }

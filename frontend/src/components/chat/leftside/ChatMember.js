@@ -33,6 +33,7 @@ function ChatMember() {
   };
 
   useEffect(() => {
+    if(groupChat.groupChatType === "GROUP")
       fetchMembers();
     
   }, [user.id, groupChat.id]);
